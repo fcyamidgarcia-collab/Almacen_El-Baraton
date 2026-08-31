@@ -1,7 +1,3 @@
-/* ==========================================
-   SCRIPT - Página de Inicio
-   Industrial Supply Co.
-   ========================================== */
 
 // ===== Efecto scroll en la barra de navegación =====
 const barraNav = document.getElementById('barraNav');
