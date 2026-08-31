@@ -1,0 +1,369 @@
+/* ========== HERO HISTORIA ========== */
+.hero-historia {
+    position: relative;
+    height: 400px;
+    background-image: url('https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?auto=format&fit=crop&q=80&w=2000');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(13, 27, 42, 0.7);
+}
+
+.hero-contenido {
+    position: relative;
+    z-index: 1;
+    max-width: 800px;
+    padding: 0 20px;
+}
+
+.hero-contenido h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+}
+
+.hero-contenido p {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    opacity: 0.9;
+}
+
+/* ========== MISIÓN ========== */
+.mision-seccion {
+    padding: 60px 20px;
+    background-color: #f8f9fa;
+}
+
+.mision-contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+.mision-texto {
+    margin-bottom: 40px;
+}
+
+.mision-texto h2 {
+    font-size: 1.8rem;
+    color: #1a1a1a;
+    margin-bottom: 20px;
+}
+
+.mision-texto p {
+    color: #4a4a4a;
+    line-height: 1.6;
+}
+
+.valores-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.valor-card {
+    padding: 30px;
+    border: 1px solid #eaeaea;
+    border-radius: 8px;
+    text-align: left;
+}
+
+.valor-icono-wrapper {
+    width: 48px;
+    height: 48px;
+    background-color: #f0f4f8;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.valor-icono {
+    font-size: 24px;
+}
+
+.valor-card h3 {
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    margin-bottom: 15px;
+}
+
+.valor-card p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ========== EVOLUCIÓN ========== */
+.evolucion-seccion {
+    padding: 80px 20px;
+    background-color: #f0f4f8;
+}
+
+.evolucion-contenedor {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.evolucion-contenedor h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #1a1a1a;
+    margin-bottom: 60px;
+}
+
+.timeline {
+    position: relative;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.timeline-line {
+    position: absolute;
+    width: 2px;
+    background-color: #cbd5e1;
+    top: 0;
+    bottom: 0;
+    left: 50%;
+    margin-left: -1px;
+}
+
+.timeline-item {
+    padding: 10px 40px;
+    position: relative;
+    background-color: inherit;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 60px;
+    box-sizing: border-box;
+}
+
+.timeline-item.derecha {
+    left: 50%;
+    justify-content: flex-start;
+}
+
+.timeline-item.izquierda {
+    left: 0;
+}
+
+.timeline-item.derecha .timeline-imagen {
+    order: 2;
+    margin-left: 40px;
+}
+.timeline-item.derecha .timeline-contenido.texto {
+    order: 1;
+    text-align: right;
+}
+
+.timeline-item.izquierda .timeline-imagen {
+    order: 2;
+    margin-left: 40px;
+}
+.timeline-item.izquierda .timeline-contenido.texto {
+    order: 1;
+    text-align: right;
+}
+
+/* Fix ordering properly for left vs right */
+.timeline-item.izquierda {
+    flex-direction: row;
+}
+
+.timeline-item.derecha {
+    flex-direction: row-reverse;
+}
+
+.timeline-item.derecha .timeline-imagen {
+    margin-left: 0;
+    margin-right: 40px;
+}
+
+.timeline-item.derecha .timeline-contenido.texto {
+    text-align: left;
+}
+
+
+.timeline-punto {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    right: -10px;
+    background-color: white;
+    border: 3px solid #333;
+    border-radius: 50%;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 1;
+}
+
+.timeline-item.derecha .timeline-punto {
+    left: -10px;
+}
+
+.timeline-punto.final {
+    background-color: #9c6f19;
+    border-color: #9c6f19;
+}
+
+.timeline-contenido.texto {
+    width: 250px;
+}
+
+.ano {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1a1a1a;
+}
+
+.hito {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #9c6f19;
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+}
+
+.timeline-contenido p {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.timeline-imagen {
+    width: 250px;
+    height: 150px;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.timeline-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ========== LIDERAZGO ========== */
+.liderazgo-seccion {
+    padding: 80px 20px;
+    background-color: #fafafa;
+}
+
+.liderazgo-contenedor {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.liderazgo-contenedor h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #1a1a1a;
+    margin-bottom: 50px;
+}
+
+.liderazgo-grid {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.lider-card {
+    background: white;
+    padding: 40px;
+    border-radius: 8px;
+    border: 1px solid #eaeaea;
+    width: calc(50% - 20px);
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.02);
+}
+
+.lider-imagen {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px;
+}
+
+.lider-imagen img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.lider-info h3 {
+    font-size: 1.2rem;
+    color: #1a1a1a;
+    margin-bottom: 5px;
+}
+
+.lider-info .cargo {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #9c6f19;
+    margin-bottom: 20px;
+}
+
+.lider-info .descripcion {
+    color: #666;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+/* ========== RESPONSIVE ========== */
+@media screen and (max-width: 768px) {
+    .timeline-line {
+        left: 31px;
+    }
+    
+    .timeline-item {
+        width: 100%;
+        padding-left: 70px;
+        padding-right: 25px;
+        flex-direction: column-reverse !important;
+        align-items: flex-start;
+    }
+    
+    .timeline-item.izquierda, .timeline-item.derecha {
+        left: 0;
+    }
+    
+    .timeline-punto {
+        left: 21px !important;
+        right: auto;
+    }
+    
+    .timeline-item.izquierda .timeline-imagen, .timeline-item.derecha .timeline-imagen {
+        margin: 0 0 20px 0;
+        width: 100%;
+    }
+    
+    .timeline-contenido.texto {
+        width: 100%;
+        text-align: left !important;
+    }
+    
+    .lider-card {
+        width: 100%;
+    }
+}
