@@ -1,0 +1,619 @@
+/* Importar tipografía */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+/* ==========================================
+   VARIABLES Y RESET (Basado en inicio.css)
+   ========================================== */
+:root {
+    --oscuro: #0f1923;
+    --nav-fondo: #111827;
+    --naranja: #f59e0b; /* Ajustado al botón de pago */
+    --naranja-hover: #d97706;
+    --naranja-claro: rgba(245, 158, 11, 0.15);
+    --blanco: #ffffff;
+    --gris: #9ca3af;
+    --gris-claro: #f3f4f6;
+    --gris-medio: #d1d5db;
+    --gris-oscuro: #4b5563;
+    --texto-oscuro: #111827;
+    --texto-medio: #374151;
+    --borde: #e5e7eb;
+    --fondo-claro: #f9fafb; /* Fondo general de la página de carrito */
+    --fuente: 'Inter', sans-serif;
+    --radio: 8px;
+    --sombra: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    --sombra-tarjeta: 0 1px 3px rgba(0,0,0,0.1);
+    --transicion: all 0.3s ease;
+    --verde-stock: #b48530; /* Color particular del "En Stock" en la imagen */
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente);
+    color: var(--texto-oscuro);
+    background: var(--fondo-claro); /* Fondo claro para que resalte la tarjeta blanca */
+    line-height: 1.6;
+    padding-top: 64px; /* Espacio para el nav fijo */
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul { list-style: none; }
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+.contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* ==========================================
+   BARRA DE NAVEGACIÓN (Copia de inicio.css)
+   ========================================== */
+.barra-nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background: var(--nav-fondo);
+    border-bottom: 1px solid #1f2937;
+}
+
+.nav-contenedor {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    height: 64px;
+    gap: 24px;
+}
+
+.logo {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--blanco);
+    white-space: nowrap;
+}
+
+.barra-busqueda {
+    display: flex;
+    align-items: center;
+    background: #1f2937;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 8px 12px;
+    flex: 0 1 260px;
+    gap: 8px;
+}
+
+.icono-busqueda {
+    width: 16px;
+    height: 16px;
+    color: var(--gris);
+    flex-shrink: 0;
+}
+
+.barra-busqueda input {
+    background: none;
+    border: none;
+    color: var(--blanco);
+    font-size: 0.85rem;
+    outline: none;
+    width: 100%;
+    font-family: var(--fuente);
+}
+.barra-busqueda input::placeholder { color: var(--gris); }
+
+.nav-enlaces {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: auto;
+}
+
+.nav-enlaces a {
+    color: var(--gris);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 8px 14px;
+    border-radius: 6px;
+    transition: var(--transicion);
+}
+
+.nav-enlaces a:hover,
+.nav-enlaces a.activo {
+    color: var(--blanco);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-iconos {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.icono-btn {
+    background: none;
+    border: none;
+    color: var(--gris);
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    position: relative;
+    transition: var(--transicion);
+}
+
+.icono-btn:hover, .icono-btn.activo {
+    color: var(--blanco);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+.icono-btn svg {
+    width: 20px;
+    height: 20px;
+}
+
+.badge-carrito {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background: var(--naranja);
+    color: var(--blanco);
+    font-size: 0.65rem;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+.menu-hamburguesa { display: none; }
+
+/* ==========================================
+   CARRITO DE COMPRAS
+   ========================================== */
+.carrito-principal {
+    padding: 40px 0 80px 0;
+}
+
+.carrito-encabezado {
+    margin-bottom: 30px;
+}
+
+.carrito-encabezado h1 {
+    font-size: 2.2rem;
+    color: #1a202c;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.carrito-encabezado p {
+    color: var(--texto-medio);
+    font-size: 1rem;
+}
+
+.carrito-grid {
+    display: grid;
+    grid-template-columns: 1fr 350px;
+    gap: 30px;
+    align-items: start;
+}
+
+/* --- Tabla de Productos --- */
+.carrito-productos {
+    background: transparent;
+    padding-right: 15px; /* Separación con la tarjeta derecha */
+}
+
+.productos-cabecera {
+    display: flex;
+    align-items: center;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--borde);
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--gris-oscuro);
+    letter-spacing: 0.5px;
+}
+
+.col-producto { flex: 2; min-width: 250px; }
+.col-cantidad { flex: 1; text-align: center; display: flex; justify-content: center; }
+.col-precio { flex: 1; text-align: center; }
+.col-subtotal { flex: 1; text-align: right; }
+
+.producto-item {
+    display: flex;
+    align-items: center;
+    padding: 30px 0;
+    border-bottom: 1px solid var(--borde);
+}
+
+.info-producto {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+}
+
+.producto-img {
+    width: 100px;
+    height: 100px;
+    border-radius: var(--radio);
+    border: 1px solid var(--borde);
+    padding: 8px;
+    background: var(--blanco);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.producto-img img {
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.producto-detalles {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.marca-badge {
+    background: #e2e8f0;
+    color: #475569;
+    font-size: 0.65rem;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 4px;
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 6px;
+    letter-spacing: 0.5px;
+}
+
+.producto-detalles h3 {
+    font-size: 0.95rem;
+    color: #1f2937;
+    font-weight: 700;
+    margin-bottom: 4px;
+    line-height: 1.3;
+}
+
+.producto-sku {
+    font-size: 0.85rem;
+    color: var(--gris-oscuro);
+    margin-bottom: 6px;
+}
+
+.producto-stock {
+    font-size: 0.8rem;
+    color: var(--verde-stock);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.producto-stock svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* Controles de cantidad */
+.control-cantidad {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--borde);
+    border-radius: 4px;
+    width: 100px;
+    height: 38px;
+    margin: 0 auto;
+    background: var(--blanco);
+}
+
+.control-cantidad button {
+    background: none;
+    border: none;
+    width: 32px;
+    height: 100%;
+    font-size: 1.1rem;
+    color: var(--texto-medio);
+    cursor: pointer;
+    transition: var(--transicion);
+}
+.control-cantidad button:hover {
+    background: var(--fondo-claro);
+    color: var(--texto-oscuro);
+}
+
+.control-cantidad input {
+    width: 36px;
+    text-align: center;
+    border: none;
+    border-left: 1px solid var(--borde);
+    border-right: 1px solid var(--borde);
+    height: 100%;
+    font-family: var(--fuente);
+    font-weight: 600;
+    color: var(--texto-oscuro);
+    outline: none;
+    background: var(--blanco);
+}
+/* Ocultar flechas del input number */
+.control-cantidad input::-webkit-outer-spin-button,
+.control-cantidad input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.precio-valor {
+    font-weight: 600;
+    color: var(--gris-oscuro);
+}
+
+.subtotal-valor {
+    font-weight: 700;
+    color: var(--texto-oscuro);
+}
+
+/* --- Resumen del Pedido --- */
+.resumen-tarjeta {
+    background: var(--blanco);
+    border: 1px solid var(--borde);
+    border-radius: var(--radio);
+    padding: 25px;
+    box-shadow: var(--sombra-tarjeta);
+}
+
+.resumen-tarjeta h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    color: #1f2937;
+}
+
+.resumen-filas {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--borde);
+}
+
+.resumen-fila {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.95rem;
+    color: var(--texto-medio);
+}
+
+.resumen-fila span:last-child {
+    font-weight: 600;
+    color: var(--texto-oscuro);
+}
+
+.texto-gratis {
+    color: var(--verde-stock) !important;
+}
+
+.resumen-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+}
+
+.resumen-total span:first-child {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--texto-oscuro);
+}
+
+.total-valor {
+    font-size: 1.7rem;
+    font-weight: 800;
+    color: var(--texto-oscuro);
+}
+
+.btn-pagar {
+    width: 100%;
+    background: var(--naranja);
+    color: var(--blanco);
+    border: none;
+    border-radius: 4px;
+    padding: 14px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    transition: var(--transicion);
+    margin-bottom: 15px;
+}
+
+.btn-pagar:hover {
+    background: var(--naranja-hover);
+}
+
+.btn-pagar svg {
+    width: 18px;
+    height: 18px;
+}
+
+.seguridad-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.8rem;
+    color: var(--gris-oscuro);
+}
+.seguridad-info svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ==========================================
+   FOOTER (Copia de inicio.css)
+   ========================================== */
+.pie-pagina {
+    background: #0f172a;
+    color: var(--gris);
+    padding: 60px 0 0;
+    margin-top: 40px;
+}
+
+.pie-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.pie-logo {
+    color: var(--blanco);
+    font-size: 1.25rem;
+    font-weight: 800;
+    margin-bottom: 16px;
+}
+
+.pie-principal p {
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+    max-width: 300px;
+}
+
+.pie-boletin-titulo {
+    color: var(--blanco);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.formulario-boletin {
+    display: flex;
+    gap: 0;
+}
+
+.formulario-boletin input {
+    flex: 1;
+    padding: 10px 12px;
+    border: 1px solid #334155;
+    background: #1e293b;
+    color: var(--blanco);
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    font-family: var(--fuente);
+}
+
+.btn-suscribir {
+    background: var(--naranja);
+    color: var(--blanco);
+    border: none;
+    padding: 0 16px;
+    font-weight: 600;
+    border-radius: 0 4px 4px 0;
+    cursor: pointer;
+    transition: var(--transicion);
+}
+.btn-suscribir:hover { background: var(--naranja-hover); }
+
+.pie-columna h4 {
+    color: var(--blanco);
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-bottom: 20px;
+    letter-spacing: 0.05em;
+}
+
+.pie-columna ul {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.pie-columna a {
+    font-size: 0.9rem;
+    transition: var(--transicion);
+}
+.pie-columna a:hover { color: var(--blanco); }
+
+.redes-sociales {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 20px;
+}
+
+.redes-sociales a {
+    color: var(--gris);
+    transition: var(--transicion);
+}
+.redes-sociales a:hover { color: var(--blanco); }
+
+.pie-contacto {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+}
+
+.pie-inferior {
+    border-top: 1px solid #1e293b;
+    padding: 20px 24px;
+    text-align: center;
+    font-size: 0.85rem;
+    background: #1e293b;
+    width: 100%;
+}
+
+/* ==========================================
+   MEDIA QUERIES (Básico)
+   ========================================== */
+@media (max-width: 900px) {
+    .carrito-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .pie-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+@media (max-width: 600px) {
+    .pie-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .productos-cabecera {
+        display: none; /* Ocultar cabeceras en movil */
+    }
+    .producto-item {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .col-producto {
+        width: 100%;
+        min-width: 100%;
+    }
+    .col-cantidad, .col-precio, .col-subtotal {
+        width: auto;
+        text-align: left;
+    }
+}

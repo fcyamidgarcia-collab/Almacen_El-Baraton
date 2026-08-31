@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras | Industrial Supply Co.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="carrito.css">
+</head>
+<body>
+
+    <!-- ========== BARRA DE NAVEGACIÓN ========== -->
+    <nav class="barra-nav" id="barraNav">
+        <div class="nav-contenedor">
+            <a href="../inicio/inicio.html" class="logo">Industrial Supply Co.</a>
+
+            <div class="barra-busqueda">
+                <svg class="icono-busqueda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" placeholder="Buscar inventario..." id="inputBusqueda">
+            </div>
+
+            <ul class="nav-enlaces" id="navEnlaces">
+                <li><a href="../inicio/inicio.html">Inicio</a></li>
+                <li><a href="../productos/productos.html">Tienda</a></li>
+                <li><a href="../nosotros/nosotros.html">Nosotros</a></li>
+                <li><a href="../contacto/contacto.html">Contacto</a></li>
+            </ul>
+
+            <div class="nav-iconos">
+                <button class="icono-btn activo" id="btnCarrito" aria-label="Carrito de compras">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span class="badge-carrito">3</span>
+                </button>
+                <button class="icono-btn" id="btnUsuario" aria-label="Cuenta de usuario">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </button>
+            </div>
+
+            <button class="menu-hamburguesa" id="btnMenu" aria-label="Menú">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========== CONTENIDO PRINCIPAL CARACTERISTICA CARRO ========== -->
+    <main class="carrito-principal">
+        <div class="contenedor carrito-contenedor">
+            <div class="carrito-encabezado">
+                <h1>Carrito de Compras</h1>
+                <p>Revisa los artículos de tu pedido antes de proceder al pago seguro.</p>
+            </div>
+
+            <div class="carrito-grid">
+                <!-- Columna Izquierda: Lista de Productos -->
+                <div class="carrito-productos">
+                    <!-- Cabeceras de tabla -->
+                    <div class="productos-cabecera">
+                        <div class="col-producto">PRODUCTO</div>
+                        <div class="col-cantidad">CANTIDAD</div>
+                        <div class="col-precio">PRECIO UNITARIO</div>
+                        <div class="col-subtotal">SUBTOTAL</div>
+                    </div>
+
+                    <!-- Producto 1 -->
+                    <div class="producto-item">
+                        <div class="col-producto info-producto">
+                            <div class="producto-img">
+                                <img src="../../img/producto1.jpg" alt="Llave de Impacto Neumática 1/2' PRO-X">
+                            </div>
+                            <div class="producto-detalles">
+                                <span class="marca-badge">DEWALT</span>
+                                <h3>Llave de Impacto Neumática 1/2" PRO-X</h3>
+                                <span class="producto-sku">SKU: DW-9982-IP</span>
+                                <span class="producto-stock">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    En Stock
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-cantidad">
+                            <div class="control-cantidad">
+                                <button class="btn-restar">-</button>
+                                <input type="number" value="2" min="1" readonly>
+                                <button class="btn-sumar">+</button>
+                            </div>
+                        </div>
+                        <div class="col-precio precio-valor">$245.00</div>
+                        <div class="col-subtotal subtotal-valor">$490.00</div>
+                    </div>
+
+                    <!-- Producto 2 -->
+                    <div class="producto-item">
+                        <div class="col-producto info-producto">
+                            <div class="producto-img">
+                                <img src="../../img/producto2.jpg" alt="Set Brocas HSS-Co Cobalto 19 Pzas">
+                            </div>
+                            <div class="producto-detalles">
+                                <span class="marca-badge">BOSCH</span>
+                                <h3>Set Brocas HSS-Co Cobalto 19 Pzas</h3>
+                                <span class="producto-sku">SKU: BO-2608-CO</span>
+                                <span class="producto-stock">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    En Stock
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-cantidad">
+                            <div class="control-cantidad">
+                                <button class="btn-restar">-</button>
+                                <input type="number" value="1" min="1" readonly>
+                                <button class="btn-sumar">+</button>
+                            </div>
+                        </div>
+                        <div class="col-precio precio-valor">$89.50</div>
+                        <div class="col-subtotal subtotal-valor">$89.50</div>
+                    </div>
+                </div>
+
+                <!-- Columna Derecha: Resumen -->
+                <div class="carrito-resumen">
+                    <div class="resumen-tarjeta">
+                        <h2>Resumen del Pedido</h2>
+                        <div class="resumen-filas">
+                            <div class="resumen-fila">
+                                <span>Subtotal (3 artículos)</span>
+                                <span>$579.50</span>
+                            </div>
+                            <div class="resumen-fila">
+                                <span>Impuestos (IVA 16%)</span>
+                                <span>$92.72</span>
+                            </div>
+                            <div class="resumen-fila">
+                                <span>Envío Estimado</span>
+                                <span class="texto-gratis">Gratis</span>
+                            </div>
+                        </div>
+                        <div class="resumen-total">
+                            <span>Total</span>
+                            <span class="total-valor">$672.22</span>
+                        </div>
+                        <button class="btn-pagar">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                                <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                            </svg>
+                            PROCEDER AL PAGO
+                        </button>
+                        <div class="seguridad-info">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            </svg>
+                            Transacción Segura 256-bit SSL
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="pie-pagina" id="contacto">
+        <div class="contenedor">
+            <div class="pie-grid">
+                <div class="pie-columna pie-principal">
+                    <h3 class="pie-logo">Industrial Supply Co.</h3>
+                    <p>Precisión y Confiabilidad para tu almacén. Únete a miles de profesionales que confían en nosotros.</p>
+                    <p class="pie-boletin-titulo">Suscríbete a nuestro boletín</p>
+                    <form class="formulario-boletin" id="formBoletin">
+                        <input type="email" placeholder="Tu correo electrónico" required id="inputEmail">
+                        <button type="submit" class="btn-suscribir">Suscribir</button>
+                    </form>
+                </div>
+                <div class="pie-columna">
+                    <h4>LEGAL</h4>
+                    <ul>
+                        <li><a href="#">Política de Privacidad</a></li>
+                        <li><a href="#">Términos de Servicio</a></li>
+                        <li><a href="#">Garantías</a></li>
+                    </ul>
+                </div>
+                <div class="pie-columna">
+                    <h4>SERVICIO AL CLIENTE</h4>
+                    <ul>
+                        <li><a href="#">Información de Envío</a></li>
+                        <li><a href="#">Devoluciones</a></li>
+                        <li><a href="#">Preguntas Frecuentes</a></li>
+                        <li><a href="#">Catálogo PDF</a></li>
+                    </ul>
+                </div>
+                <div class="pie-columna">
+                    <h4>CONECTAR</h4>
+                    <div class="redes-sociales">
+                        <a href="#" aria-label="Email">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+                                <polyline points="22,6 12,13 2,6"></polyline>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Teléfono">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Ubicación">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                                <circle cx="12" cy="10" r="3"></circle>
+                            </svg>
+                        </a>
+                    </div>
+                    <p class="pie-contacto">Llámanos: 1-800-INDUSTRIA</p>
+                    <p class="pie-contacto">Soporte 24/7 disponible</p>
+                </div>
+            </div>
+        </div>
+        <div class="pie-inferior">
+            <p>&copy; 2024 Industrial Supply Co. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script src="carrito.js"></script>
+</body>
+</html>
