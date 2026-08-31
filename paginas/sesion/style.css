@@ -6,9 +6,9 @@
     --bg-color: #f5f5f5;
     --white: #ffffff;
     --border-color: #e0e0e0;
-    --footer-bg: #0b192c;
-    --footer-bottom: #081220;
-    --footer-text: #a0aec0;
+    --pie-pagina-bg: #0b192c;
+    --parte-inferior-pie: #081220;
+    --pie-pagina-text: #a0aec0;
 }
 
 * {
@@ -27,7 +27,7 @@ body {
 }
 
 /* Header */
-.header {
+.encabezado {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -45,7 +45,7 @@ body {
     color: var(--text-color);
 }
 
-.search-bar {
+.barra-busqueda {
     display: flex;
     align-items: center;
     background-color: #f0f2f5;
@@ -54,12 +54,12 @@ body {
     width: 300px;
 }
 
-.search-icon {
+.icono-busqueda {
     color: #888;
     margin-right: 8px;
 }
 
-.search-bar input {
+.barra-busqueda input {
     border: none;
     background: transparent;
     outline: none;
@@ -67,12 +67,12 @@ body {
     font-size: 0.9rem;
 }
 
-.nav-links {
+.enlaces-navegacion {
     display: flex;
     gap: 24px;
 }
 
-.nav-links a {
+.enlaces-navegacion a {
     text-decoration: none;
     color: var(--text-light);
     font-weight: 500;
@@ -82,11 +82,11 @@ body {
     top: 12px;
 }
 
-.nav-links a:hover, .nav-links a.active {
+.enlaces-navegacion a:hover, .enlaces-navegacion a.activo {
     color: var(--text-color);
 }
 
-.nav-links a.active::after {
+.enlaces-navegacion a.activo::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -96,18 +96,18 @@ body {
     background-color: var(--primary-color);
 }
 
-.header-icons {
+.iconos-encabezado {
     display: flex;
     gap: 20px;
     color: var(--text-color);
 }
 
-.header-icons svg {
+.iconos-encabezado svg {
     cursor: pointer;
 }
 
 /* Main Content */
-.main-content {
+.contenido-principal {
     flex: 1;
     display: flex;
     justify-content: center;
@@ -117,7 +117,7 @@ body {
     padding: 60px 20px;
 }
 
-.main-content::before {
+.contenido-principal::before {
     content: '';
     position: absolute;
     top: 0;
@@ -128,7 +128,7 @@ body {
 }
 
 /* Login Card */
-.login-card {
+.tarjeta-acceso {
     background-color: var(--white);
     padding: 40px;
     border-radius: 8px;
@@ -140,31 +140,31 @@ body {
     text-align: center;
 }
 
-.login-card h2 {
+.tarjeta-acceso h2 {
     font-size: 1.75rem;
     font-weight: 700;
     margin-bottom: 8px;
 }
 
-.subtitle {
+.subtitulo {
     color: var(--text-light);
     font-size: 0.95rem;
     margin-bottom: 30px;
 }
 
-.input-group {
+.grupo-entrada {
     text-align: left;
     margin-bottom: 20px;
 }
 
-.input-group label {
+.grupo-entrada label {
     display: block;
     font-size: 0.85rem;
     font-weight: 600;
     margin-bottom: 8px;
 }
 
-.input-wrapper {
+.envoltorio-entrada {
     display: flex;
     align-items: center;
     border: 1px solid var(--border-color);
@@ -173,19 +173,19 @@ body {
     background-color: var(--white);
 }
 
-.input-wrapper svg {
+.envoltorio-entrada svg {
     color: var(--text-light);
     margin-right: 10px;
 }
 
-.input-wrapper input {
+.envoltorio-entrada input {
     border: none;
     outline: none;
     width: 100%;
     font-size: 0.95rem;
 }
 
-.form-actions {
+.acciones-formulario {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -193,7 +193,7 @@ body {
     font-size: 0.85rem;
 }
 
-.remember-me {
+.recordarme {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -201,13 +201,13 @@ body {
     color: var(--text-light);
 }
 
-.forgot-password {
+.olvido-contrasena {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
 }
 
-.btn-primary {
+.btn-principal {
     width: 100%;
     padding: 12px;
     background-color: var(--primary-color);
@@ -221,29 +221,29 @@ body {
     margin-bottom: 20px;
 }
 
-.btn-primary:hover {
+.btn-principal:hover {
     background-color: var(--primary-hover);
 }
 
-.register-link {
+.enlace-registro {
     font-size: 0.85rem;
     color: var(--text-light);
 }
 
-.register-link a {
+.enlace-registro a {
     color: var(--primary-color);
     text-decoration: none;
     font-weight: 600;
 }
 
 /* Footer */
-.footer {
-    background-color: var(--footer-bg);
-    color: var(--footer-text);
+.pie-pagina {
+    background-color: var(--pie-pagina-bg);
+    color: var(--pie-pagina-text);
     font-size: 0.85rem;
 }
 
-.footer-top {
+.parte-superior-pie {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 40px;
@@ -252,32 +252,32 @@ body {
     margin: 0 auto;
 }
 
-.company-info h3 {
+.info-empresa h3 {
     color: var(--white);
     font-size: 1.2rem;
     margin-bottom: 12px;
 }
 
-.company-info p {
+.info-empresa p {
     margin-bottom: 20px;
     line-height: 1.5;
 }
 
-.subscribe-section {
+.seccion-suscripcion {
     margin-top: 20px;
 }
 
-.subscribe-section p {
+.seccion-suscripcion p {
     font-weight: 600;
     color: var(--white);
     margin-bottom: 10px;
 }
 
-.subscribe-form {
+.formulario-suscripcion {
     display: flex;
 }
 
-.subscribe-form input {
+.formulario-suscripcion input {
     padding: 10px;
     border: none;
     border-radius: 4px 0 0 4px;
@@ -287,7 +287,7 @@ body {
     width: 200px;
 }
 
-.subscribe-form button {
+.formulario-suscripcion button {
     padding: 10px 16px;
     border: none;
     border-radius: 0 4px 4px 0;
@@ -297,64 +297,64 @@ body {
     cursor: pointer;
 }
 
-.footer-column h4 {
+.columna-pie h4 {
     color: var(--white);
     margin-bottom: 16px;
     font-size: 0.9rem;
     letter-spacing: 0.5px;
 }
 
-.footer-column a {
+.columna-pie a {
     display: block;
-    color: var(--footer-text);
+    color: var(--pie-pagina-text);
     text-decoration: none;
     margin-bottom: 10px;
     transition: color 0.2s;
 }
 
-.footer-column a:hover {
+.columna-pie a:hover {
     color: var(--white);
 }
 
-.social-icons {
+.iconos-sociales {
     display: flex;
     gap: 12px;
     margin-bottom: 16px;
     color: var(--white);
 }
 
-.contact-info p {
+.info-contacto p {
     margin-bottom: 8px;
 }
 
-.footer-bottom {
-    background-color: var(--footer-bottom);
+.parte-inferior-pie {
+    background-color: var(--parte-inferior-pie);
     text-align: center;
     padding: 16px;
     border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 @media (max-width: 900px) {
-    .footer-top {
+    .parte-superior-pie {
         grid-template-columns: 1fr 1fr;
     }
 }
 
 @media (max-width: 600px) {
-    .header {
+    .encabezado {
         flex-direction: column;
         height: auto;
         padding: 15px;
         gap: 15px;
     }
-    .search-bar {
+    .barra-busqueda {
         width: 100%;
     }
-    .nav-links a {
+    .enlaces-navegacion a {
         top: 0;
         padding-bottom: 5px;
     }
-    .footer-top {
+    .parte-superior-pie {
         grid-template-columns: 1fr;
     }
 }
