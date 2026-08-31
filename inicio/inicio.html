@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Industrial Supply Co. - Suministros industriales de grado profesional, equipos de seguridad y herramientas de precisión.">
+    <title>Industrial Supply Co. | Suministros Industriales</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="inicio.css">
+</head>
+<body>
+
+    <!-- ========== BARRA DE NAVEGACIÓN ========== -->
+    <nav class="barra-nav" id="barraNav">
+        <div class="nav-contenedor">
+            <a href="#" class="logo">Industrial Supply Co.</a>
+
+            <div class="barra-busqueda">
+                <svg class="icono-busqueda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" placeholder="Buscar inventario..." id="inputBusqueda">
+            </div>
+
+            <ul class="nav-enlaces" id="navEnlaces">
+                <li><a href="#inicio" class="activo">Inicio</a></li>
+                <li><a href="#tienda">Tienda</a></li>
+                <li><a href="#nosotros">Nosotros</a></li>
+                <li><a href="#contacto">Contacto</a></li>
+            </ul>
+
+            <div class="nav-iconos">
+                <button class="icono-btn" id="btnCarrito" aria-label="Carrito de compras">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+                    </svg>
+                    <span class="badge-carrito">3</span>
+                </button>
+                <button class="icono-btn" id="btnUsuario" aria-label="Cuenta de usuario">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                        <circle cx="12" cy="7" r="4"/>
+                    </svg>
+                </button>
+            </div>
+
+            <button class="menu-hamburguesa" id="btnMenu" aria-label="Menú">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- ========== SECCIÓN HERO ========== -->
+    <section class="hero" id="inicio">
+        <img src="../../img/hero.jpg" alt="Almacén industrial" class="hero-imagen">
+        <div class="hero-overlay"></div>
+        <div class="hero-contenido">
+            <span class="hero-etiqueta">PRECISIÓN A ESCALA</span>
+            <h1>Equipe su Operación para <span class="texto-resaltado">Máxima Eficiencia</span></h1>
+            <p class="hero-descripcion">
+                Suministros de grado industrial, equipo de seguridad confiable y herramientas
+                de precisión entregados con velocidad sin concesiones para mantener su
+                almacén funcionando sin problemas.
+            </p>
+            <div class="hero-botones">
+                <a href="#tienda" class="btn btn-primario">
+                    Explorar Catálogo
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+                <a href="#contacto" class="btn btn-secundario">Solicitar Presupuesto por Volumen</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CARACTERÍSTICAS ========== -->
+    <section class="caracteristicas">
+        <div class="contenedor">
+            <div class="caracteristicas-grid">
+                <div class="caracteristica-tarjeta">
+                    <div class="caracteristica-icono">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                        </svg>
+                    </div>
+                    <div class="caracteristica-texto">
+                        <h3>ENVÍO GLOBAL RÁPIDO</h3>
+                        <p>Entregas en 24-48h para pedidos urgentes.</p>
+                    </div>
+                </div>
+                <div class="caracteristica-tarjeta">
+                    <div class="caracteristica-icono">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
+                        </svg>
+                    </div>
+                    <div class="caracteristica-texto">
+                        <h3>SOPORTE 24/7</h3>
+                        <p>Asistencia técnica especializada siempre disponible.</p>
+                    </div>
+                </div>
+                <div class="caracteristica-tarjeta">
+                    <div class="caracteristica-icono">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>
+                            <path d="m9 12 2 2 4-4"/>
+                        </svg>
+                    </div>
+                    <div class="caracteristica-texto">
+                        <h3>CALIDAD CERTIFICADA</h3>
+                        <p>Productos bajo normas ISO y estándares industriales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== MARCAS ========== -->
+    <section class="marcas">
+        <div class="contenedor">
+            <p class="marcas-titulo">CON LA CONFIANZA DE LAS MEJORES MARCAS</p>
+            <div class="marcas-grid">
+                <span class="marca">BOSCH</span>
+                <span class="marca">DEWALT</span>
+                <span class="marca">3M</span>
+                <span class="marca">MAKITA</span>
+                <span class="marca">STANLEY</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== CATEGORÍAS ========== -->
+    <section class="categorias" id="tienda">
+        <div class="contenedor">
+            <div class="categorias-cabecera">
+                <div>
+                    <h2>Categorías Destacadas</h2>
+                    <p class="subtitulo">Equipo esencial para entornos industriales.</p>
+                </div>
+                <a href="#" class="enlace-ver-todo">
+                    Ver Todas las Categorías
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="16" height="16">
+                        <path d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </a>
+            </div>
+            <div class="categorias-grid">
+                <div class="categoria-tarjeta">
+                    <div class="categoria-imagen">
+                        <img src="../../img/herramientas.jpg" alt="Herramientas Eléctricas">
+                    </div>
+                    <div class="categoria-info">
+                        <div class="categoria-nombre">
+                            <h3>Herramientas Eléctricas</h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                        <p>Taladros, sierras e instrumentos de precisión.</p>
+                    </div>
+                </div>
+                <div class="categoria-tarjeta">
+                    <div class="categoria-imagen">
+                        <img src="../../img/seguridad.jpg" alt="Seguridad y EPP">
+                    </div>
+                    <div class="categoria-info">
+                        <div class="categoria-nombre">
+                            <h3>Seguridad y EPP</h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                        <p>Cascos, guantes y ropa protectora.</p>
+                    </div>
+                </div>
+                <div class="categoria-tarjeta">
+                    <div class="categoria-imagen">
+                        <img src="../../img/ferreteria.jpg" alt="Ferretería Pesada">
+                    </div>
+                    <div class="categoria-info">
+                        <div class="categoria-nombre">
+                            <h3>Ferretería Pesada</h3>
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M5 12h14M12 5l7 7-7 7"/>
+                            </svg>
+                        </div>
+                        <p>Sujetadores, metales y componentes estructurales.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ESTADÍSTICAS ========== -->
+    <section class="estadisticas" id="nosotros">
+        <div class="contenedor">
+            <h2>¿Por qué elegir Industrial Supply Co.?</h2>
+            <div class="estadisticas-grid">
+                <div class="estadistica">
+                    <span class="estadistica-numero" data-valor="35">0</span><span class="estadistica-sufijo">+</span>
+                    <p>AÑOS DE EXPERIENCIA</p>
+                </div>
+                <div class="estadistica">
+                    <span class="estadistica-numero" data-valor="50">0</span><span class="estadistica-sufijo">k+</span>
+                    <p>PRODUCTOS EN STOCK</p>
+                </div>
+                <div class="estadistica">
+                    <span class="estadistica-numero" data-valor="500">0</span><span class="estadistica-sufijo">k</span>
+                    <p>PIES CUADRADOS</p>
+                </div>
+                <div class="estadistica">
+                    <span class="estadistica-numero" data-valor="99">0</span><span class="estadistica-sufijo">%</span>
+                    <p>ENTREGA A TIEMPO</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== TESTIMONIOS ========== -->
+    <section class="testimonios">
+        <div class="contenedor">
+            <h2>Lo que dicen nuestros clientes</h2>
+            <div class="testimonios-grid">
+                <div class="testimonio-tarjeta">
+                    <div class="estrellas">★★★★★</div>
+                    <p class="testimonio-texto">
+                        "El nivel de servicio y la rapidez de entrega son incomparables. Nos han atendido en
+                        múltiples ocasiones con repuestos urgentes."
+                    </p>
+                    <div class="testimonio-autor">
+                        <div class="autor-avatar" style="background-color: #3b82f6;">J</div>
+                        <div>
+                            <strong>Javier Gómez</strong>
+                            <span>Jefe de Mantenimiento, AceroCorp</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonio-tarjeta">
+                    <div class="estrellas">★★★★★</div>
+                    <p class="testimonio-texto">
+                        "La calidad de las herramientas y el EPP que proveen ha mejorado significativamente
+                        nuestros índices de seguridad en planta."
+                    </p>
+                    <div class="testimonio-autor">
+                        <div class="autor-avatar" style="background-color: #a855f7;">M</div>
+                        <div>
+                            <strong>María Silva</strong>
+                            <span>Directora de Operaciones, Logística Sur</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonio-tarjeta">
+                    <div class="estrellas">★★★★★</div>
+                    <p class="testimonio-texto">
+                        "Su catálogo es enormemente extenso y el equipo de soporte técnico siempre nos
+                        ayuda a encontrar la especificación exacta que necesitamos."
+                    </p>
+                    <div class="testimonio-autor">
+                        <div class="autor-avatar" style="background-color: #f97316;">C</div>
+                        <div>
+                            <strong>Carlos Ruiz</strong>
+                            <span>Ingeniero de Proyectos, ConstruUnión</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="pie-pagina" id="contacto">
+        <div class="contenedor">
+            <div class="pie-grid">
+                <div class="pie-columna pie-principal">
+                    <h3 class="pie-logo">Industrial Supply Co.</h3>
+                    <p>Precisión y Confiabilidad para la industria. Damos a miles de profesionales lo que necesitan.</p>
+                    <p class="pie-boletin-titulo">Suscríbete a nuestro boletín</p>
+                    <form class="formulario-boletin" id="formBoletin">
+                        <input type="email" placeholder="Tu correo electrónico" required id="inputEmail">
+                        <button type="submit" class="btn-suscribir">Suscribir</button>
+                    </form>
+                </div>
+                <div class="pie-columna">
+                    <h4>LEGAL</h4>
+                    <ul>
+                        <li><a href="#">Política de Privacidad</a></li>
+                        <li><a href="#">Términos de Servicio</a></li>
+                        <li><a href="#">Garantías</a></li>
+                    </ul>
+                </div>
+                <div class="pie-columna">
+                    <h4>SERVICIO AL CLIENTE</h4>
+                    <ul>
+                        <li><a href="#">Información de Envío</a></li>
+                        <li><a href="#">Devoluciones</a></li>
+                        <li><a href="#">Preguntas Frecuentes</a></li>
+                        <li><a href="#">Catálogo PDF</a></li>
+                    </ul>
+                </div>
+                <div class="pie-columna">
+                    <h4>CONECTAR</h4>
+                    <div class="redes-sociales">
+                        <a href="#" aria-label="Facebook">
+                            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+                                <path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Teléfono">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/>
+                            </svg>
+                        </a>
+                        <a href="#" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
+                                <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                                <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                            </svg>
+                        </a>
+                    </div>
+                    <p class="pie-contacto">Llamanos: 1-800-INDUSTRIA</p>
+                    <p class="pie-contacto">Soporte 24/7 disponible</p>
+                </div>
+            </div>
+            <div class="pie-inferior">
+                <p>&copy; 2024 Industrial Supply Co. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="../inicio.js"></script>
+</body>
+</html>
