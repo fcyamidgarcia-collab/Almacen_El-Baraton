@@ -2,21 +2,21 @@
    VARIABLES Y RESET
    ========================================== */
 :root {
-    --oscuro: #0f1923;
-    --nav-fondo: #111827;
-    --naranja: #e67e22;
-    --naranja-hover: #d35400;
-    --naranja-claro: rgba(230, 126, 34, 0.15);
+    --oscuro: #1e293b; /* Softer dark for sections */
+    --nav-fondo: #0f172a;
+    --naranja: #f97316; /* Vibrant modern orange */
+    --naranja-hover: #ea580c;
+    --naranja-claro: rgba(249, 115, 22, 0.1);
     --blanco: #ffffff;
-    --gris: #9ca3af;
-    --texto-oscuro: #1f2937;
-    --borde: #1f2937;
-    --tarjeta: #1a2332;
-    --fondo-claro: #f9fafb;
+    --gris: #64748b;
+    --texto-oscuro: #0f172a;
+    --borde: #e2e8f0;
+    --tarjeta: #ffffff;
+    --fondo-claro: #f8fafc;
     --fuente: 'Inter', sans-serif;
-    --radio: 12px;
-    --sombra: 0 4px 20px rgba(0, 0, 0, 0.1);
-    --transicion: all 0.3s ease;
+    --radio: 16px; /* Rounder corners */
+    --sombra: 0 10px 40px -10px rgba(15, 23, 42, 0.08); /* Premium soft shadow */
+    --transicion: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother transition */
 }
 
 * {
@@ -32,7 +32,7 @@ html {
 body {
     font-family: var(--fuente);
     color: var(--texto-oscuro);
-    background: var(--blanco);
+    background: var(--fondo-claro); /* Changed to slightly off-white to make cards pop */
     line-height: 1.6;
 }
 
@@ -361,8 +361,9 @@ img {
 }
 
 .caracteristica-tarjeta:hover {
-    border-color: var(--naranja);
-    transform: translateY(-2px);
+    border-color: rgba(249, 115, 22, 0.3);
+    transform: translateY(-4px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3); /* Shadow for dark card on dark bg */
 }
 
 .caracteristica-icono {
@@ -478,14 +479,15 @@ img {
     border-radius: var(--radio);
     overflow: hidden;
     border: 1px solid #e5e7eb;
-    background: white;
+    background: var(--blanco);
+    box-shadow: var(--sombra);
     transition: var(--transicion);
     cursor: pointer;
 }
 
 .categoria-tarjeta:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.15);
     border-color: var(--naranja);
 }
 
@@ -599,10 +601,11 @@ img {
 }
 
 .testimonio-tarjeta {
-    background: white;
+    background: var(--blanco);
     border-radius: var(--radio);
     padding: 28px;
-    border: 1px solid #e5e7eb;
+    border: 1px solid var(--borde);
+    box-shadow: var(--sombra);
     transition: var(--transicion);
     position: relative;
 }
@@ -619,8 +622,8 @@ img {
 }
 
 .testimonio-tarjeta:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--sombra);
+    transform: translateY(-6px);
+    box-shadow: 0 20px 40px -10px rgba(15, 23, 42, 0.15);
 }
 
 .estrellas {
