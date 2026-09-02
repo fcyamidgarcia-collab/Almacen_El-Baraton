@@ -119,7 +119,7 @@ formBoletin.addEventListener('submit', (e) => {
     const btnSuscribir = formBoletin.querySelector('.btn-suscribir');
     const textoOriginal = btnSuscribir.textContent;
 
-    btnSuscribir.textContent = '✓ Enviado';
+    btnSuscribir.innerHTML = '<i class="fi fi-rr-check"></i> Enviado';
     btnSuscribir.style.backgroundColor = '#27ae60';
 
     setTimeout(() => {

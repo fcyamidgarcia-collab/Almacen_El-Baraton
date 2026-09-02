@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
             btn2FA.disabled = true;
             
             setTimeout(() => {
-                btn2FA.textContent = '✓ 2FA Activado';
+                btn2FA.innerHTML = '<i class="fi fi-rr-check"></i> 2FA Activado';
                 btn2FA.style.background = '#10b981';
                 
                 setTimeout(() => {
