@@ -140,26 +140,46 @@
     <div class="superposicion-modal" id="modalUsuario">
         <div class="contenedor-modal modal-mediano">
             <div class="encabezado-modal">
-                <h3>Crear Nuevo Usuario</h3>
+                <h3 id="tituloModalUsuario">Crear Nuevo Usuario</h3>
                 <button class="boton-cerrar-modal" id="btnCerrarModalUsuario">&times;</button>
             </div>
             <form id="formularioUsuario">
                 <div class="cuerpo-modal">
                     <div class="rejilla-formulario">
-                        <div class="grupo-formulario"><label>Nombre Completo *</label><input type="text" id="usrNombre" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Correo Electrónico *</label><input type="email" id="usrEmail" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Rol *</label>
+                        <div class="grupo-formulario">
+                            <label>Nombre *</label>
+                            <input type="text" id="usrNombre" required placeholder="Ej: Juan" class="entrada-filtro">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Apellido *</label>
+                            <input type="text" id="usrApellido" required placeholder="Ej: Pérez" class="entrada-filtro">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Correo Electrónico *</label>
+                            <input type="email" id="usrEmail" required placeholder="usuario@empresa.com" class="entrada-filtro">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Contraseña *</label>
+                            <input type="password" id="usrPassword" placeholder="Mínimo 8 caracteres" class="entrada-filtro" autocomplete="new-password">
+                            <small style="color:#64748b;font-size:11px">Dejar en blanco para no cambiar (solo al editar)</small>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Rol *</label>
                             <select id="usrRol" class="seleccion-filtro">
-                                <option value="Administrador">Administrador</option>
-                                <option value="Vendedor">Vendedor</option>
-                                <option value="Supervisor">Supervisor de Inventario</option>
+                                <option value="1">Administrador</option>
+                                <option value="2">Empleado</option>
+                                <option value="3" selected>Cliente</option>
                             </select>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Teléfono</label>
+                            <input type="text" id="usrTelefono" placeholder="Ej: 3001234567" class="entrada-filtro">
                         </div>
                     </div>
                 </div>
                 <div class="pie-modal">
                     <button type="button" class="boton boton-secundario" id="btnCancelarUsuario">Cancelar</button>
-                    <button type="submit" class="boton boton-principal">Guardar Usuario</button>
+                    <button type="submit" class="boton boton-principal"><i class="fas fa-save"></i> Guardar Usuario</button>
                 </div>
             </form>
         </div>
@@ -212,6 +232,8 @@
         </div>
     </footer>
 
+    <script src="../js/api.js"></script>
+    <script src="../js/sesion.js"></script>
     <script src="usuarios.js"></script>
 </body>
 </html>

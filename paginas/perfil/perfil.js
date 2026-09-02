@@ -1,64 +1,56 @@
-// ========== PERFIL JS ==========
+// ========== PERFIL JS (CONECTADO A MYSQL) ==========
 
-// --- Navbar scroll effect ---
-const barraNav = document.getElementById('barraNav');
-window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-        barraNav.classList.add('scrolled');
-    } else {
-        barraNav.classList.remove('scrolled');
-    }
-});
-
-// --- Menú hamburguesa (Mobile) ---
-const btnMenu = document.getElementById('btnMenu');
-const navEnlaces = document.getElementById('navEnlaces');
-
-if (btnMenu) {
-    btnMenu.addEventListener('click', () => {
-        navEnlaces.classList.toggle('nav-abierto');
-        btnMenu.classList.toggle('activo');
-    });
-}
-
-// --- Animaciones Básicas de Botones ---
-document.addEventListener('DOMContentLoaded', () => {
-    // Editar perfil
-    const btnEditar = document.querySelector('.tarjeta-perfil .btn-outline');
-    if (btnEditar) {
-        btnEditar.addEventListener('click', () => {
-            console.log('Abrir modal de edición de perfil');
-            // Aquí iría la lógica para abrir un modal
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- Navbar scroll effect ---
+    const barraNav = document.getElementById('barraNav');
+    if (barraNav) {
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) barraNav.classList.add('scrolled');
+            else barraNav.classList.remove('scrolled');
         });
     }
 
-    // Cambiar contraseña
-    const btnPass = document.querySelectorAll('.tarjeta-seguridad .btn-outline')[0];
-    if (btnPass) {
-        btnPass.addEventListener('click', () => {
-            console.log('Iniciar flujo de cambio de contraseña');
+    // --- Menú hamburguesa (Mobile) ---
+    const btnMenu = document.getElementById('btnMenu');
+    const navEnlaces = document.getElementById('navEnlaces');
+    if (btnMenu && navEnlaces) {
+        btnMenu.addEventListener('click', () => {
+            navEnlaces.classList.toggle('nav-abierto');
+            btnMenu.classList.toggle('activo');
         });
     }
 
-    // Configurar 2FA
-    const btn2FA = document.querySelector('.tarjeta-seguridad .btn-solid-brown');
-    if (btn2FA) {
-        btn2FA.addEventListener('click', () => {
-            const originalText = btn2FA.textContent;
-            btn2FA.textContent = 'Configurando...';
-            btn2FA.disabled = true;
-            
-            setTimeout(() => {
-                btn2FA.textContent = '✓ 2FA Activado';
-                btn2FA.style.background = '#10b981';
-                
-                setTimeout(() => {
-                    btn2FA.textContent = originalText;
-                    btn2FA.style.background = '';
-                    btn2FA.disabled = false;
-                }, 3000);
-            }, 1500);
-        });
+    // --- Cargar datos del usuario desde MySQL / Sesión ---
+    const usuario = API.getUsuarioActual();
+    if (usuario) {
+        // Nombre del encabezado del perfil
+        const nombrePerfil = document.querySelector('.tarjeta-perfil h2') || document.querySelector('.perfil-usuario h2');
+        if (nombrePerfil) nombrePerfil.textContent = usuario.nombre;
+
+        const emailPerfil = document.querySelector('.tarjeta-perfil p') || document.querySelector('.perfil-usuario p');
+        if (emailPerfil) emailPerfil.textContent = `${usuario.email} • Rol: ${usuario.rol_nombre || usuario.rol || 'Cliente'}`;
+
+        // Cargar pedidos del usuario en la pestaña de historial
+        try {
+            const pedidos = await API.getPedidos({ id_usuario: usuario.id_usuario });
+            const tablaHistorial = document.querySelector('#historial tbody, #pedidos-usuario tbody');
+            if (tablaHistorial && pedidos.length > 0) {
+                tablaHistorial.innerHTML = '';
+                pedidos.forEach(p => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td><strong>${p.id}</strong></td>
+                        <td>${p.fecha}</td>
+                        <td>$ ${Number(p.total).toLocaleString('es-CO')}</td>
+                        <td><span class="estado estado-enviado">● ${p.estado}</span></td>
+                        <td><a href="../pago/pago.html" style="color: #ea580c; font-weight: 600;">Ver Factura</a></td>
+                    `;
+                    tablaHistorial.appendChild(tr);
+                });
+            }
+        } catch (e) {
+            console.warn('No se pudo cargar historial de pedidos:', e.message);
+        }
     }
 
     // --- Lógica de Pestañas (Sidebar) ---
@@ -72,19 +64,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 if(!targetId) return;
                 e.preventDefault();
 
-                // Remover 'activo' de todos los items
                 menuItems.forEach(link => link.classList.remove('activo'));
-                // Añadir 'activo' al clickeado
                 item.classList.add('activo');
 
-                // Ocultar todos los tabs
                 tabs.forEach(tab => tab.classList.remove('activa'));
-                // Mostrar el target
                 const targetTab = document.getElementById(targetId);
-                if(targetTab) {
-                    targetTab.classList.add('activa');
-                }
+                if(targetTab) targetTab.classList.add('activa');
             });
+        });
+    }
+
+    // Botón Cerrar Sesión
+    const btnSalir = document.querySelector('.menu-item.texto-peligro, .btn-cerrar-sesion');
+    if (btnSalir) {
+        btnSalir.addEventListener('click', (e) => {
+            e.preventDefault();
+            API.cerrarSesion();
         });
     }
 });

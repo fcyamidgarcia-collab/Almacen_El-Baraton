@@ -37,7 +37,7 @@
             <h2>Acceso al Portal</h2>
             <p class="subtitulo">Ingrese sus credenciales corporativas.</p>
 
-            <form id="formulario-acceso" onsubmit="event.preventDefault(); window.location.href='../perfil/perfil.html';">
+            <form id="formulario-acceso">
                 <div class="grupo-entrada">
                     <label for="correo">Email Corporativo</label>
                     <div class="envoltorio-entrada">
@@ -62,7 +62,7 @@
                     <a href="#" class="olvido-contrasena">¿Olvidó su contraseña?</a>
                 </div>
 
-                <button type="submit" class="btn-principal">INICIAR SESIÓN</button>
+                <button type="submit" class="btn-principal" id="btn-submit-login">INICIAR SESIÓN</button>
 
                 <div class="enlace-registro">
                     ¿No tiene una cuenta? <a href="../registro/registro.html">Regístrese aquí</a>
@@ -119,7 +119,9 @@
         </div>
     </footer>
 
-<script src="script.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/sesion.js"></script>
+    <script src="script.js"></script>
     
 </body>
 </html>

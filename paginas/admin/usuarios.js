@@ -1,54 +1,132 @@
-// USUARIOS JS (ESPAÑOL)
-document.addEventListener('DOMContentLoaded', () => {
-    let datosUsuarios = [
-        { nombre: 'Admin Principal', email: 'admin@industrialsupply.com', rol: 'Administrador', ultimoAcceso: 'Hace 5 minutos', estado: 'Activo' },
-        { nombre: 'Sandra Milena Pérez', email: 'sperez@industrialsupply.com', rol: 'Vendedor', ultimoAcceso: 'Hoy 10:45 a.m.', estado: 'Activo' },
-        { nombre: 'Jorge Iván Ospina', email: 'jospina@industrialsupply.com', rol: 'Supervisor', ultimoAcceso: 'Ayer 17:30', estado: 'Activo' }
-    ];
+// ========== USUARIOS ADMIN - CONECTADO A MYSQL ==========
 
-    const cuerpoTablaUsuarios = document.getElementById('cuerpoTablaUsuarios');
-    const modalUsuario = document.getElementById('modalUsuario');
-    const btnNuevoUsuario = document.getElementById('btnNuevoUsuario');
-    const btnCerrarModalUsuario = document.getElementById('btnCerrarModalUsuario');
-    const btnCancelarUsuario = document.getElementById('btnCancelarUsuario');
-    const formularioUsuario = document.getElementById('formularioUsuario');
+document.addEventListener('DOMContentLoaded', async () => {
+    let datos = [];
+    let modoEdicion = null;
 
-    function renderizarTabla() {
-        cuerpoTablaUsuarios.innerHTML = '';
-        datosUsuarios.forEach(u => {
+    const tbody = document.getElementById('cuerpoTablaUsuarios');
+    const modal = document.getElementById('modalUsuario');
+    const btnNuevo = document.getElementById('btnNuevoUsuario');
+    const btnCerrar = document.getElementById('btnCerrarModalUsuario');
+    const btnCancelar = document.getElementById('btnCancelarUsuario');
+    const form = document.getElementById('formularioUsuario');
+
+    // Mapa de roles de la BD
+    const ROLES = { 1: 'administrador', 2: 'empleado', 3: 'cliente' };
+    const ROLES_ID = { 'administrador': 1, 'empleado': 2, 'cliente': 3 };
+
+    async function cargar() {
+        try {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando usuarios...</td></tr>`;
+            datos = await API.getUsuarios();
+            renderizar();
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error: ${err.message}</td></tr>`;
+        }
+    }
+
+    function renderizar() {
+        tbody.innerHTML = '';
+        if (datos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:25px;color:#64748b">No hay usuarios registrados.</td></tr>`;
+            return;
+        }
+
+        datos.forEach(u => {
             const tr = document.createElement('tr');
+            const esActivo = u.estado === 'activo';
+            const rolNombre = u.nombre_rol || ROLES[u.id_rol] || 'cliente';
+            const fecha = u.fecha_registro ? new Date(u.fecha_registro).toLocaleDateString('es-CO') : 'N/A';
             tr.innerHTML = `
-                <td><span class="nombre-usuario-tabla">${u.nombre}</span></td>
-                <td>${u.email}</td>
-                <td><span class="insignia-rol">${u.rol}</span></td>
-                <td>${u.ultimoAcceso}</td>
-                <td><span class="texto-verde">● ${u.estado}</span></td>
-                <td style="text-align: center;">
-                    <button class="boton-accion" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="boton-accion" title="Bloquear"><i class="fas fa-user-lock"></i></button>
+                <td><span class="nombre-usuario-tabla">${u.nombre} ${u.apellido || ''}</span></td>
+                <td>${u.correo}</td>
+                <td><span class="insignia-rol">${rolNombre}</span></td>
+                <td>${fecha}</td>
+                <td><span class="${esActivo ? 'texto-verde' : 'texto-rojo'}">● ${u.estado}</span></td>
+                <td style="text-align:center;display:flex;gap:6px;justify-content:center">
+                    <button class="boton-accion btn-editar-usr" data-id="${u.id_usuario}" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="boton-accion btn-toggle-usr" data-id="${u.id_usuario}" title="${esActivo ? 'Desactivar' : 'Activar'}" style="color:${esActivo ? '#ef4444' : '#22c55e'}">
+                        <i class="fas ${esActivo ? 'fa-user-slash' : 'fa-user-check'}"></i>
+                    </button>
                 </td>
             `;
-            cuerpoTablaUsuarios.appendChild(tr);
+            tbody.appendChild(tr);
+        });
+
+        // Editar
+        document.querySelectorAll('.btn-editar-usr').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                const usr = datos.find(u => u.id_usuario === id);
+                if (!usr) return;
+                modoEdicion = id;
+                document.getElementById('usrNombre').value = usr.nombre || '';
+                document.getElementById('usrApellido').value = usr.apellido || '';
+                document.getElementById('usrEmail').value = usr.correo || '';
+                document.getElementById('usrPassword').value = '';
+                document.getElementById('usrRol').value = usr.id_rol || 3;
+                const telEl = document.getElementById('usrTelefono');
+                if (telEl) telEl.value = usr.telefono || '';
+                const titulo = document.getElementById('tituloModalUsuario');
+                if (titulo) titulo.textContent = 'Editar Usuario';
+                modal.classList.add('activo');
+            });
+        });
+
+        // Toggle activo/inactivo
+        document.querySelectorAll('.btn-toggle-usr').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-id');
+                try {
+                    const res = await API.toggleEstadoUsuario(id);
+                    await cargar();
+                } catch (err) { alert('Error: ' + err.message); }
+            });
         });
     }
 
-    btnNuevoUsuario.addEventListener('click', () => { formularioUsuario.reset(); modalUsuario.classList.add('activo'); });
-    btnCerrarModalUsuario.addEventListener('click', () => modalUsuario.classList.remove('activo'));
-    btnCancelarUsuario.addEventListener('click', () => modalUsuario.classList.remove('activo'));
+    btnNuevo?.addEventListener('click', () => {
+        modoEdicion = null;
+        form.reset();
+        const titulo = document.getElementById('tituloModalUsuario');
+        if (titulo) titulo.textContent = 'Crear Nuevo Usuario';
+        modal.classList.add('activo');
+    });
+    btnCerrar?.addEventListener('click', () => modal.classList.remove('activo'));
+    btnCancelar?.addEventListener('click', () => modal.classList.remove('activo'));
 
-    formularioUsuario.addEventListener('submit', (e) => {
+    form?.addEventListener('submit', async e => {
         e.preventDefault();
-        const nuevo = {
-            nombre: document.getElementById('usrNombre').value.trim(),
-            email: document.getElementById('usrEmail').value.trim(),
-            rol: document.getElementById('usrRol').value,
-            ultimoAcceso: 'Justo ahora',
-            estado: 'Activo'
-        };
-        datosUsuarios.push(nuevo);
-        modalUsuario.classList.remove('activo');
-        renderizarTabla();
+        const nombre = document.getElementById('usrNombre').value.trim();
+        const apellido = document.getElementById('usrApellido')?.value.trim() || '';
+        const correo = document.getElementById('usrEmail').value.trim();
+        const contrasena = document.getElementById('usrPassword')?.value.trim() || '';
+        const id_rol = parseInt(document.getElementById('usrRol')?.value) || 3;
+        const telefono = document.getElementById('usrTelefono')?.value.trim() || '';
+
+        if (!modoEdicion && !contrasena) {
+            alert('La contraseña es obligatoria para crear un usuario.');
+            return;
+        }
+
+        const payload = { nombre, apellido, correo, id_rol, estado: 'activo' };
+        if (telefono) payload.telefono = telefono;
+        if (contrasena) payload.contrasena = contrasena;
+
+        try {
+            if (modoEdicion) {
+                await API.actualizarUsuario(modoEdicion, payload);
+                alert('¡Usuario actualizado exitosamente!');
+            } else {
+                await API.crearUsuario(payload);
+                alert('¡Usuario creado exitosamente en MySQL!');
+            }
+            modal.classList.remove('activo');
+            form.reset();
+            modoEdicion = null;
+            await cargar();
+        } catch (err) { alert('Error: ' + err.message); }
     });
 
-    renderizarTabla();
+    await cargar();
 });

@@ -1,54 +1,107 @@
-// PROVEEDORES JS (ESPAÑOL)
-document.addEventListener('DOMContentLoaded', () => {
-    let datosProveedores = [
-        { nombre: 'Bosch Industrial S.A.', contacto: 'Martín Serna', categoria: 'Herramientas Eléctricas', telefono: '+57 (601) 488-2900', calificacion: 4.9 },
-        { nombre: 'Lincoln Electric Colombia', contacto: 'Diana Suárez', categoria: 'Maquinaria & Equipos', telefono: '+57 (604) 312-7000', calificacion: 4.8 },
-        { nombre: '3M Colombia S.A.', contacto: 'Jorge Mendoza', categoria: 'EPP & Seguridad', telefono: '+57 (601) 607-0707', calificacion: 5.0 }
-    ];
+// ========== PROVEEDORES ADMIN - CONECTADO A MYSQL ==========
 
-    const cuerpoTablaProveedores = document.getElementById('cuerpoTablaProveedores');
-    const modalProveedor = document.getElementById('modalProveedor');
-    const btnNuevoProveedor = document.getElementById('btnNuevoProveedor');
-    const btnCerrarModalProveedor = document.getElementById('btnCerrarModalProveedor');
-    const btnCancelarProveedor = document.getElementById('btnCancelarProveedor');
-    const formularioProveedor = document.getElementById('formularioProveedor');
+document.addEventListener('DOMContentLoaded', async () => {
+    let datos = [];
+    let modoEdicion = null;
 
-    function renderizarTabla() {
-        cuerpoTablaProveedores.innerHTML = '';
-        datosProveedores.forEach(p => {
+    const tbody = document.getElementById('cuerpoTablaProveedores');
+    const modal = document.getElementById('modalProveedor');
+    const btnNuevo = document.getElementById('btnNuevoProveedor');
+    const btnCerrar = document.getElementById('btnCerrarModalProveedor');
+    const btnCancelar = document.getElementById('btnCancelarProveedor');
+    const form = document.getElementById('formularioProveedor');
+
+    async function cargar() {
+        try {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>`;
+            datos = await API.getProveedores();
+            renderizar();
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error: ${err.message}</td></tr>`;
+        }
+    }
+
+    function renderizar() {
+        tbody.innerHTML = '';
+        if (datos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:25px;color:#64748b">No hay proveedores registrados.</td></tr>`;
+            return;
+        }
+        datos.forEach(p => {
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><span class="nombre-proveedor">${p.nombre}</span></td>
-                <td><strong>${p.contacto}</strong></td>
-                <td>${p.categoria}</td>
-                <td>${p.telefono}</td>
-                <td><span class="calificacion-estrella"><i class="fas fa-star"></i> ${p.calificacion}</span></td>
-                <td style="text-align: center;">
-                    <button class="boton-accion" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="boton-accion" title="Contactar"><i class="fas fa-envelope"></i></button>
+                <td><span class="nombre-proveedor">${p.nombre_proveedor}</span></td>
+                <td><strong>${p.contacto || 'Contacto directo'}</strong></td>
+                <td>${p.correo || 'Sin correo'}</td>
+                <td>${p.telefono || 'Sin teléfono'}</td>
+                <td>${p.direccion || 'Sin dirección'}</td>
+                <td style="text-align:center;display:flex;gap:6px;justify-content:center">
+                    <button class="boton-accion btn-editar-prov" data-id="${p.id_proveedor}" title="Editar"><i class="fas fa-edit"></i></button>
+                    <a href="mailto:${p.correo || ''}" class="boton-accion" title="Enviar correo"><i class="fas fa-envelope"></i></a>
+                    <button class="boton-accion btn-eliminar-prov" data-id="${p.id_proveedor}" title="Eliminar" style="color:#ef4444"><i class="fas fa-trash"></i></button>
                 </td>
             `;
-            cuerpoTablaProveedores.appendChild(tr);
+            tbody.appendChild(tr);
+        });
+
+        document.querySelectorAll('.btn-editar-prov').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                const prov = datos.find(p => p.id_proveedor === id);
+                if (!prov) return;
+                modoEdicion = id;
+                document.getElementById('provNombre').value = prov.nombre_proveedor || '';
+                document.getElementById('provContacto').value = prov.contacto || '';
+                document.getElementById('provTelefono').value = prov.telefono || '';
+                const emailEl = document.getElementById('provEmail') || document.getElementById('provCat');
+                if (emailEl) emailEl.value = prov.correo || '';
+                const dirEl = document.getElementById('provDireccion');
+                if (dirEl) dirEl.value = prov.direccion || '';
+                modal.classList.add('activo');
+            });
+        });
+
+        document.querySelectorAll('.btn-eliminar-prov').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-id');
+                if (!confirm('¿Eliminar este proveedor?')) return;
+                try {
+                    await API.eliminarProveedor(id);
+                    await cargar();
+                } catch (err) { alert('Error: ' + err.message); }
+            });
         });
     }
 
-    btnNuevoProveedor.addEventListener('click', () => { formularioProveedor.reset(); modalProveedor.classList.add('activo'); });
-    btnCerrarModalProveedor.addEventListener('click', () => modalProveedor.classList.remove('activo'));
-    btnCancelarProveedor.addEventListener('click', () => modalProveedor.classList.remove('activo'));
+    btnNuevo?.addEventListener('click', () => { modoEdicion = null; form.reset(); modal.classList.add('activo'); });
+    btnCerrar?.addEventListener('click', () => modal.classList.remove('activo'));
+    btnCancelar?.addEventListener('click', () => modal.classList.remove('activo'));
 
-    formularioProveedor.addEventListener('submit', (e) => {
+    form?.addEventListener('submit', async e => {
         e.preventDefault();
-        const nuevo = {
-            nombre: document.getElementById('provNombre').value.trim(),
+        const emailEl = document.getElementById('provEmail') || document.getElementById('provCat');
+        const dirEl = document.getElementById('provDireccion');
+        const payload = {
+            nombre_proveedor: document.getElementById('provNombre').value.trim(),
             contacto: document.getElementById('provContacto').value.trim(),
-            categoria: document.getElementById('provCat').value.trim(),
             telefono: document.getElementById('provTelefono').value.trim(),
-            calificacion: 5.0
+            correo: emailEl?.value.trim() || '',
+            direccion: dirEl?.value.trim() || ''
         };
-        datosProveedores.unshift(nuevo);
-        modalProveedor.classList.remove('activo');
-        renderizarTabla();
+        try {
+            if (modoEdicion) {
+                await API.actualizarProveedor(modoEdicion, payload);
+                alert('¡Proveedor actualizado!');
+            } else {
+                await API.crearProveedor(payload);
+                alert('¡Proveedor registrado en MySQL!');
+            }
+            modal.classList.remove('activo');
+            form.reset();
+            modoEdicion = null;
+            await cargar();
+        } catch (err) { alert('Error: ' + err.message); }
     });
 
-    renderizarTabla();
+    await cargar();
 });

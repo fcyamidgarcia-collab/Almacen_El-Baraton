@@ -140,21 +140,37 @@
     <div class="superposicion-modal" id="modalProveedor">
         <div class="contenedor-modal modal-mediano">
             <div class="encabezado-modal">
-                <h3>Registrar Nuevo Proveedor</h3>
+                <h3 id="tituloModalProveedor">Registrar Nuevo Proveedor</h3>
                 <button class="boton-cerrar-modal" id="btnCerrarModalProveedor">&times;</button>
             </div>
             <form id="formularioProveedor">
                 <div class="cuerpo-modal">
                     <div class="rejilla-formulario">
-                        <div class="grupo-formulario"><label>Nombre / Razón Social *</label><input type="text" id="provNombre" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Categoría Principal *</label><input type="text" id="provCat" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Persona de Contacto *</label><input type="text" id="provContacto" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Teléfono *</label><input type="text" id="provTelefono" required class="entrada-filtro"></div>
+                        <div class="grupo-formulario" style="grid-column:1/-1">
+                            <label>Nombre / Razón Social *</label>
+                            <input type="text" id="provNombre" required placeholder="Ej: Distribuidora El Tornillo S.A." class="entrada-filtro">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Persona de Contacto</label>
+                            <input type="text" id="provContacto" placeholder="Ej: Carlos López" class="entrada-filtro">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Teléfono</label>
+                            <input type="text" id="provTelefono" placeholder="Ej: 3001234567" class="entrada-filtro">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Correo Electrónico</label>
+                            <input type="email" id="provEmail" placeholder="proveedor@empresa.com" class="entrada-filtro">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Dirección</label>
+                            <input type="text" id="provDireccion" placeholder="Ej: Calle 80 # 30-45, Bogotá" class="entrada-filtro">
+                        </div>
                     </div>
                 </div>
                 <div class="pie-modal">
                     <button type="button" class="boton boton-secundario" id="btnCancelarProveedor">Cancelar</button>
-                    <button type="submit" class="boton boton-principal">Guardar Proveedor</button>
+                    <button type="submit" class="boton boton-principal"><i class="fas fa-save"></i> Guardar Proveedor</button>
                 </div>
             </form>
         </div>
@@ -207,6 +223,8 @@
         </div>
     </footer>
 
+    <script src="../js/api.js"></script>
+    <script src="../js/sesion.js"></script>
     <script src="proveedores.js"></script>
 </body>
 </html>

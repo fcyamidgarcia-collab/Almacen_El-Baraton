@@ -261,35 +261,33 @@
             <form id="formularioProducto">
                 <div class="cuerpo-modal">
                     <div class="rejilla-formulario">
-                        <div class="grupo-formulario">
-                            <label>Código SKU *</label>
-                            <input type="text" id="prodSku" required placeholder="Ej: IND-9921" class="entrada-filtro">
-                        </div>
-                        <div class="grupo-formulario">
+                        <div class="grupo-formulario" style="grid-column:1/-1">
                             <label>Nombre del Producto *</label>
                             <input type="text" id="prodNombre" required placeholder="Ej: Esmeriladora Angular 9'' 2200W" class="entrada-filtro">
                         </div>
                         <div class="grupo-formulario">
                             <label>Categoría *</label>
-                            <select id="prodCategoria" class="seleccion-filtro">
-                                <option value="Herramientas Eléctricas">Herramientas Eléctricas</option>
-                                <option value="Ferretería Pesada">Ferretería Pesada</option>
-                                <option value="EPP & Seguridad">EPP & Seguridad</option>
-                                <option value="Maquinaria & Equipos">Maquinaria & Equipos</option>
-                                <option value="Eléctricos e Iluminación">Eléctricos e Iluminación</option>
+                            <select id="prodCategoria" class="seleccion-filtro" required>
+                                <option value="">Cargando categorías...</option>
+                            </select>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Proveedor *</label>
+                            <select id="prodProveedor" class="seleccion-filtro" required>
+                                <option value="">Cargando proveedores...</option>
                             </select>
                         </div>
                         <div class="grupo-formulario">
                             <label>Precio Unitario ($ COP) *</label>
-                            <input type="number" id="prodPrecio" required placeholder="850000" min="100" class="entrada-filtro">
+                            <input type="number" id="prodPrecio" required placeholder="85000" min="1" class="entrada-filtro">
                         </div>
                         <div class="grupo-formulario">
-                            <label>Stock Disponible *</label>
-                            <input type="number" id="prodStock" required placeholder="45" min="0" class="entrada-filtro">
+                            <label>Stock Inicial</label>
+                            <input type="number" id="prodStock" placeholder="0" min="0" value="0" class="entrada-filtro">
                         </div>
-                        <div class="grupo-formulario">
-                            <label>Proveedor</label>
-                            <input type="text" id="prodProveedor" placeholder="Ej: Bosch Industrial S.A." class="entrada-filtro">
+                        <div class="grupo-formulario" style="grid-column:1/-1">
+                            <label>Descripción</label>
+                            <input type="text" id="prodDescripcion" placeholder="Descripción breve del producto" class="entrada-filtro">
                         </div>
                     </div>
                 </div>
@@ -350,6 +348,8 @@
 
     <div class="contenedor-notificaciones" id="contenedorNotificaciones"></div>
 
+    <script src="../js/api.js"></script>
+    <script src="../js/sesion.js"></script>
     <script src="productos.js"></script>
 </body>
 </html>

@@ -1,61 +1,115 @@
-// CLIENTES JS (ESPAÑOL)
-document.addEventListener('DOMContentLoaded', () => {
-    let datosClientes = [
-        { nombre: 'Constructora Andina S.A.', nit: '900.824.119-3', contacto: 'Ing. Carlos Morales', email: 'cmorales@andina.com.co', ciudad: 'Bogotá D.C.', credito: 25000000, pedidos: 14, estado: 'activo' },
-        { nombre: 'Industrias Metalmecánicas', nit: '860.512.443-1', contacto: 'Dra. Elena Gómez', email: 'egomez@metalmecanicas.com', ciudad: 'Bucaramanga', credito: 15000000, pedidos: 8, estado: 'activo' },
-        { nombre: 'Logística del Norte Ltda.', nit: '901.229.088-5', contacto: 'Rodrigo Pardo', email: 'rpardo@logisticanorte.com', ciudad: 'Barranquilla', credito: 30000000, pedidos: 22, estado: 'activo' }
-    ];
+// ========== CLIENTES ADMIN - CONECTADO A MYSQL ==========
 
-    const cuerpoTablaClientes = document.getElementById('cuerpoTablaClientes');
-    const modalCliente = document.getElementById('modalCliente');
-    const btnNuevoCliente = document.getElementById('btnNuevoCliente');
-    const btnCerrarModalCliente = document.getElementById('btnCerrarModalCliente');
-    const btnCancelarCliente = document.getElementById('btnCancelarCliente');
-    const formularioCliente = document.getElementById('formularioCliente');
+document.addEventListener('DOMContentLoaded', async () => {
+    let datos = [];
+    let modoEdicion = null;
 
-    function formatearMoneda(val) { return '$ ' + Number(val).toLocaleString('es-CO'); }
+    const tbody = document.getElementById('cuerpoTablaClientes');
+    const modal = document.getElementById('modalCliente');
+    const btnNuevo = document.getElementById('btnNuevoCliente');
+    const btnCerrar = document.getElementById('btnCerrarModalCliente');
+    const btnCancelar = document.getElementById('btnCancelarCliente');
+    const form = document.getElementById('formularioCliente');
 
-    function renderizarTabla() {
-        cuerpoTablaClientes.innerHTML = '';
-        datosClientes.forEach(c => {
+    function fmt(val) { return '$ ' + Number(val || 0).toLocaleString('es-CO'); }
+
+    async function cargar() {
+        try {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando clientes...</td></tr>`;
+            datos = await API.getClientes();
+            renderizar();
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error: ${err.message}</td></tr>`;
+        }
+    }
+
+    function renderizar() {
+        tbody.innerHTML = '';
+        if (datos.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:25px;color:#64748b">No hay clientes registrados.</td></tr>`;
+            return;
+        }
+        datos.forEach(c => {
             const tr = document.createElement('tr');
-            const insigniaEstado = c.estado === 'activo' ? '<span class="estado estado-enviado">● Activo</span>' : '<span class="estado estado-pendiente">● En Revisión</span>';
+            const estado = c.estado === 'activo'
+                ? '<span class="estado estado-enviado">● Activo</span>'
+                : '<span class="estado estado-pendiente">● Inactivo</span>';
             tr.innerHTML = `
-                <td><span class="nombre-cliente-tabla">${c.nombre}</span><span class="nit-cliente-tabla">NIT: ${c.nit}</span></td>
-                <td><strong>${c.contacto}</strong><br><small style="color:#64748b;">${c.email}</small></td>
-                <td>${c.ciudad}</td>
-                <td><strong>${formatearMoneda(c.credito)}</strong></td>
-                <td><span class="insignia" style="background:#f1f5f9; color:#334155;">${c.pedidos} pedidos</span></td>
-                <td>${insigniaEstado}</td>
-                <td style="text-align: center;">
-                    <button class="boton-accion" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="boton-accion" title="Ver Historial"><i class="fas fa-eye"></i></button>
+                <td>
+                    <span class="nombre-cliente-tabla">${c.nombre} ${c.apellido || ''}</span>
+                    <span class="nit-cliente-tabla">Doc: ${c.documento_identidad || 'N/A'}</span>
+                </td>
+                <td><strong>${c.nombre} ${c.apellido || ''}</strong><br><small style="color:#64748b">${c.correo || 'Sin correo'}</small></td>
+                <td>${c.ciudad || 'N/A'}</td>
+                <td>${c.telefono || 'Sin teléfono'}</td>
+                <td><span class="insignia" style="background:#f1f5f9;color:#334155">${c.total_pedidos || 0} pedidos</span></td>
+                <td>${estado}</td>
+                <td style="text-align:center;display:flex;gap:6px;justify-content:center">
+                    <button class="boton-accion btn-editar-cli" data-id="${c.id_cliente}" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="boton-accion btn-desactivar-cli" data-id="${c.id_cliente}" title="Desactivar" style="color:#ef4444"><i class="fas fa-user-slash"></i></button>
                 </td>
             `;
-            cuerpoTablaClientes.appendChild(tr);
+            tbody.appendChild(tr);
+        });
+
+        document.querySelectorAll('.btn-editar-cli').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                const cli = datos.find(c => c.id_cliente === id);
+                if (!cli) return;
+                modoEdicion = id;
+                document.getElementById('cliNombre').value = cli.nombre || '';
+                document.getElementById('cliNit').value = cli.documento_identidad || '';
+                const cliContacto = document.getElementById('cliContacto');
+                if (cliContacto) cliContacto.value = cli.telefono || '';
+                const cliEmail = document.getElementById('cliEmail');
+                if (cliEmail) cliEmail.value = cli.correo || '';
+                const cliCiudad = document.getElementById('cliCiudad');
+                if (cliCiudad) cliCiudad.value = cli.ciudad || '';
+                modal.classList.add('activo');
+            });
+        });
+
+        document.querySelectorAll('.btn-desactivar-cli').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-id');
+                if (!confirm('¿Desactivar este cliente?')) return;
+                try {
+                    await API.eliminarCliente(id);
+                    await cargar();
+                } catch (err) { alert('Error: ' + err.message); }
+            });
         });
     }
 
-    btnNuevoCliente.addEventListener('click', () => { formularioCliente.reset(); modalCliente.classList.add('activo'); });
-    btnCerrarModalCliente.addEventListener('click', () => modalCliente.classList.remove('activo'));
-    btnCancelarCliente.addEventListener('click', () => modalCliente.classList.remove('activo'));
+    btnNuevo?.addEventListener('click', () => { modoEdicion = null; form.reset(); modal.classList.add('activo'); });
+    btnCerrar?.addEventListener('click', () => modal.classList.remove('activo'));
+    btnCancelar?.addEventListener('click', () => modal.classList.remove('activo'));
 
-    formularioCliente.addEventListener('submit', (e) => {
+    form?.addEventListener('submit', async e => {
         e.preventDefault();
-        const nuevo = {
+        const payload = {
             nombre: document.getElementById('cliNombre').value.trim(),
-            nit: document.getElementById('cliNit').value.trim(),
-            contacto: document.getElementById('cliContacto').value.trim(),
-            email: document.getElementById('cliEmail').value.trim(),
-            ciudad: document.getElementById('cliCiudad').value.trim(),
-            credito: parseFloat(document.getElementById('cliCredito').value) || 10000000,
-            pedidos: 0,
+            apellido: document.getElementById('cliApellido')?.value.trim() || '',
+            documento_identidad: document.getElementById('cliNit').value.trim(),
+            telefono: document.getElementById('cliContacto')?.value.trim() || '',
+            ciudad: document.getElementById('cliCiudad')?.value.trim() || '',
             estado: 'activo'
         };
-        datosClientes.unshift(nuevo);
-        modalCliente.classList.remove('activo');
-        renderizarTabla();
+        try {
+            if (modoEdicion) {
+                await API.actualizarCliente(modoEdicion, payload);
+                alert('¡Cliente actualizado!');
+            } else {
+                await API.crearCliente(payload);
+                alert('¡Cliente registrado en MySQL!');
+            }
+            modal.classList.remove('activo');
+            form.reset();
+            modoEdicion = null;
+            await cargar();
+        } catch (err) { alert('Error: ' + err.message); }
     });
 
-    renderizarTabla();
+    await cargar();
 });

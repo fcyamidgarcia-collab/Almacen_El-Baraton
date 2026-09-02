@@ -1,108 +1,198 @@
-// PRODUCTOS JS (ESPAÑOL)
+// ========== PRODUCTOS ADMIN - CONECTADO A MYSQL ==========
 
-document.addEventListener('DOMContentLoaded', () => {
-    let datosProductos = [
-        { sku: 'IND-8821', nombre: 'Taladro Percutor Industrial 1200W', categoria: 'Herramientas Eléctricas', precio: 650000, stock: 42, proveedor: 'Bosch Industrial S.A.' },
-        { sku: 'IND-4309', nombre: 'Kit de Eslingas de Carga Pesada 5 Ton', categoria: 'Ferretería Pesada', precio: 210500, stock: 8, proveedor: 'Suministros del Norte' },
-        { sku: 'IND-1092', nombre: 'Casco de Seguridad Dieléctrico Clase E', categoria: 'EPP & Seguridad', precio: 60000, stock: 120, proveedor: '3M Colombia' },
-        { sku: 'MET-772', nombre: 'Soldadora Inverter 250A Uso Continuo', categoria: 'Maquinaria & Equipos', precio: 1597700, stock: 5, proveedor: 'Lincoln Electric' },
-        { sku: 'LOG-991', nombre: 'Transpaleta Hidráulica Manual 3 Ton', categoria: 'Maquinaria & Equipos', precio: 1750000, stock: 0, proveedor: 'Caterpillar Supply' }
-    ];
+document.addEventListener('DOMContentLoaded', async () => {
+    let datosProductos = [];
+    let filtroStock = 'all';
+    let filtroCategoria = 'all';
+    let busqueda = '';
+    let modoEdicion = null; // id_producto si editando
 
-    let filtroStockActual = 'all';
-    let filtroCategoriaActual = 'all';
-    let terminoBusquedaActual = '';
-    let ordenActual = 'name-asc';
+    const tbody = document.getElementById('cuerpoTablaProductos');
+    const busquedaInput = document.getElementById('busquedaProductoInput');
+    const selectCategoria = document.getElementById('selectFiltroCategoria');
+    const modal = document.getElementById('modalProducto');
+    const btnNuevo = document.getElementById('btnNuevoProducto');
+    const btnCerrarModal = document.getElementById('btnCerrarModalProducto');
+    const btnCancelar = document.getElementById('btnCancelarProducto');
+    const form = document.getElementById('formularioProducto');
 
-    const cuerpoTablaProductos = document.getElementById('cuerpoTablaProductos');
-    const busquedaProductoInput = document.getElementById('busquedaProductoInput');
-    const selectFiltroCategoria = document.getElementById('selectFiltroCategoria');
-    const selectOrdenamiento = document.getElementById('selectOrdenamiento');
-    const pestanasEstado = document.querySelectorAll('.boton-pestana');
+    function fmt(val) { return '$ ' + Number(val || 0).toLocaleString('es-CO'); }
 
-    const modalProducto = document.getElementById('modalProducto');
-    const btnNuevoProducto = document.getElementById('btnNuevoProducto');
-    const btnCerrarModalProducto = document.getElementById('btnCerrarModalProducto');
-    const btnCancelarProducto = document.getElementById('btnCancelarProducto');
-    const formularioProducto = document.getElementById('formularioProducto');
-
-    function formatearMoneda(val) {
-        return '$ ' + Number(val).toLocaleString('es-CO');
-    }
-
-    function obtenerInsigniaStock(stock) {
-        if (stock === 0) return '<span class="estado estado-agotado">● Agotado</span>';
-        if (stock < 10) return '<span class="estado estado-bajo">● Stock Bajo</span>';
+    function insigniaStock(stock) {
+        const n = Number(stock) || 0;
+        if (n === 0) return '<span class="estado estado-agotado">● Agotado</span>';
+        if (n < 10) return '<span class="estado estado-bajo">● Stock Bajo</span>';
         return '<span class="estado estado-normal">● En Stock</span>';
     }
 
-    function renderizarTabla() {
-        let filtrados = datosProductos.filter(p => {
-            const coincideBusqueda = !terminoBusquedaActual || p.nombre.toLowerCase().includes(terminoBusquedaActual) || p.sku.toLowerCase().includes(terminoBusquedaActual);
-            const coincideCat = filtroCategoriaActual === 'all' || p.categoria === filtroCategoriaActual;
-            let coincideStock = true;
-            if (filtroStockActual === 'normal') coincideStock = p.stock >= 10;
-            if (filtroStockActual === 'low') coincideStock = p.stock > 0 && p.stock < 10;
-            if (filtroStockActual === 'out') coincideStock = p.stock === 0;
-            return coincideBusqueda && coincideCat && coincideStock;
+    async function cargarCategorias() {
+        try {
+            const cats = await API.getCategorias();
+            const selectCat = document.getElementById('prodCategoria');
+            if (selectCat) {
+                selectCat.innerHTML = '<option value="">-- Seleccionar categoría --</option>';
+                cats.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id_categoria;
+                    opt.textContent = c.nombre_categoria;
+                    selectCat.appendChild(opt);
+                });
+            }
+            // También llenar el filtro de la tabla
+            if (selectCategoria) {
+                selectCategoria.innerHTML = '<option value="all">Todas las categorías</option>';
+                cats.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.nombre_categoria;
+                    opt.textContent = c.nombre_categoria;
+                    selectCategoria.appendChild(opt);
+                });
+            }
+        } catch (e) { console.warn('Error cargando categorías:', e.message); }
+    }
+
+    async function cargarProveedores() {
+        try {
+            const provs = await API.getProveedores();
+            const selectProv = document.getElementById('prodProveedor');
+            if (selectProv) {
+                selectProv.innerHTML = '<option value="">-- Seleccionar proveedor (opcional) --</option>';
+                provs.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p.id_proveedor;
+                    opt.textContent = p.nombre_proveedor;
+                    selectProv.appendChild(opt);
+                });
+            }
+        } catch (e) { console.warn('Error cargando proveedores:', e.message); }
+    }
+
+    async function cargarProductos() {
+        try {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>`;
+            datosProductos = await API.getProductos({ estado: 'activo' });
+            const badge = document.getElementById('insigniaProductosBarra');
+            if (badge) badge.textContent = datosProductos.length;
+            renderizar();
+        } catch (err) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error: ${err.message}</td></tr>`;
+        }
+    }
+
+    function renderizar() {
+        let lista = datosProductos.filter(p => {
+            const nombreOk = !busqueda || (p.nombre_producto || '').toLowerCase().includes(busqueda);
+            const catOk = filtroCategoria === 'all' || (p.nombre_categoria || '') === filtroCategoria;
+            const stock = Number(p.stock) || 0;
+            const stockOk = filtroStock === 'all' ||
+                (filtroStock === 'normal' && stock >= 10) ||
+                (filtroStock === 'low' && stock > 0 && stock < 10) ||
+                (filtroStock === 'out' && stock === 0);
+            return nombreOk && catOk && stockOk;
         });
 
-        cuerpoTablaProductos.innerHTML = '';
-        filtrados.forEach(p => {
+        tbody.innerHTML = '';
+        if (lista.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:25px;color:#64748b">No hay productos con los filtros seleccionados.</td></tr>`;
+            return;
+        }
+
+        lista.forEach(p => {
+            const stock = Number(p.stock) || 0;
             const tr = document.createElement('tr');
             tr.innerHTML = `
-                <td><span class="insignia-sku">${p.sku}</span></td>
-                <td><span class="celda-nombre-producto">${p.nombre}</span></td>
-                <td>${p.categoria}</td>
-                <td><span class="celda-precio">${formatearMoneda(p.precio)}</span></td>
-                <td><span class="celda-stock">${p.stock} un.</span></td>
-                <td>${obtenerInsigniaStock(p.stock)}</td>
-                <td style="text-align: center;">
-                    <button class="boton-accion" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="boton-accion" title="Eliminar"><i class="fas fa-trash-alt"></i></button>
+                <td><span class="insignia-sku">#${p.id_producto}</span></td>
+                <td><span class="celda-nombre-producto">${p.nombre_producto}</span></td>
+                <td>${p.nombre_categoria || 'Sin categoría'}</td>
+                <td><span class="celda-precio">${fmt(p.precio)}</span></td>
+                <td><span class="celda-stock">${stock} un.</span></td>
+                <td>${insigniaStock(stock)}</td>
+                <td style="text-align:center;display:flex;gap:6px;justify-content:center">
+                    <button class="boton-accion btn-editar-prod" data-id="${p.id_producto}" title="Editar"><i class="fas fa-edit"></i></button>
+                    <button class="boton-accion btn-eliminar-prod" data-id="${p.id_producto}" title="Eliminar" style="color:#ef4444"><i class="fas fa-trash-alt"></i></button>
                 </td>
             `;
-            cuerpoTablaProductos.appendChild(tr);
+            tbody.appendChild(tr);
+        });
+
+        // Editar
+        document.querySelectorAll('.btn-editar-prod').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const id = parseInt(btn.getAttribute('data-id'));
+                const prod = datosProductos.find(p => p.id_producto === id);
+                if (!prod) return;
+                modoEdicion = id;
+                document.getElementById('prodNombre').value = prod.nombre_producto || '';
+                document.getElementById('prodPrecio').value = prod.precio || '';
+                document.getElementById('prodStock').value = prod.stock || 0;
+                const selectCat = document.getElementById('prodCategoria');
+                if (selectCat) selectCat.value = prod.id_categoria || '';
+                const selectProv = document.getElementById('prodProveedor');
+                if (selectProv) selectProv.value = prod.id_proveedor || '';
+                const descEl = document.getElementById('prodDescripcion');
+                if (descEl) descEl.value = prod.descripcion || '';
+                modal.classList.add('activo');
+            });
+        });
+
+        // Eliminar
+        document.querySelectorAll('.btn-eliminar-prod').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-id');
+                if (!confirm('¿Desactivar este producto de la base de datos?')) return;
+                try {
+                    await API.eliminarProducto(id);
+                    await cargarProductos();
+                } catch (err) { alert('Error: ' + err.message); }
+            });
         });
     }
 
-    pestanasEstado.forEach(tab => {
+    // Filtros
+    if (busquedaInput) busquedaInput.addEventListener('input', e => { busqueda = e.target.value.toLowerCase(); renderizar(); });
+    if (selectCategoria) selectCategoria.addEventListener('change', e => { filtroCategoria = e.target.value; renderizar(); });
+    document.querySelectorAll('.boton-pestana').forEach(tab => {
         tab.addEventListener('click', function() {
-            pestanasEstado.forEach(t => t.classList.remove('activo'));
+            document.querySelectorAll('.boton-pestana').forEach(t => t.classList.remove('activo'));
             this.classList.add('activo');
-            filtroStockActual = this.getAttribute('data-stock');
-            renderizarTabla();
+            filtroStock = this.getAttribute('data-stock') || 'all';
+            renderizar();
         });
     });
 
-    busquedaProductoInput.addEventListener('input', function() {
-        terminoBusquedaActual = this.value.trim().toLowerCase();
-        renderizarTabla();
-    });
+    // Modal
+    btnNuevo?.addEventListener('click', () => { modoEdicion = null; form.reset(); modal.classList.add('activo'); });
+    btnCerrarModal?.addEventListener('click', () => modal.classList.remove('activo'));
+    btnCancelar?.addEventListener('click', () => modal.classList.remove('activo'));
 
-    selectFiltroCategoria.addEventListener('change', function() {
-        filtroCategoriaActual = this.value;
-        renderizarTabla();
-    });
-
-    btnNuevoProducto.addEventListener('click', () => { formularioProducto.reset(); modalProducto.classList.add('activo'); });
-    btnCerrarModalProducto.addEventListener('click', () => modalProducto.classList.remove('activo'));
-    btnCancelarProducto.addEventListener('click', () => modalProducto.classList.remove('activo'));
-
-    formularioProducto.addEventListener('submit', (e) => {
+    // Submit formulario
+    form?.addEventListener('submit', async e => {
         e.preventDefault();
-        const nuevo = {
-            sku: document.getElementById('prodSku').value.trim(),
-            nombre: document.getElementById('prodNombre').value.trim(),
-            categoria: document.getElementById('prodCategoria').value,
+        const datos = {
+            nombre_producto: document.getElementById('prodNombre').value.trim(),
             precio: parseFloat(document.getElementById('prodPrecio').value),
-            stock: parseInt(document.getElementById('prodStock').value),
-            proveedor: document.getElementById('prodProveedor').value.trim() || 'General'
+            stock_inicial: parseInt(document.getElementById('prodStock').value) || 0,
+            id_categoria: parseInt(document.getElementById('prodCategoria')?.value) || null,
+            id_proveedor: parseInt(document.getElementById('prodProveedor')?.value) || null,
+            descripcion: document.getElementById('prodDescripcion')?.value.trim() || '',
+            estado: 'activo'
         };
-        datosProductos.unshift(nuevo);
-        modalProducto.classList.remove('activo');
-        renderizarTabla();
+        try {
+            if (modoEdicion) {
+                await API.actualizarProducto(modoEdicion, datos);
+                alert('¡Producto actualizado exitosamente!');
+            } else {
+                await API.crearProducto(datos);
+                alert('¡Producto creado exitosamente en MySQL!');
+            }
+            modal.classList.remove('activo');
+            form.reset();
+            modoEdicion = null;
+            await cargarProductos();
+        } catch (err) { alert('Error: ' + err.message); }
     });
 
-    renderizarTabla();
+    await cargarCategorias();
+    await cargarProveedores();
+    await cargarProductos();
 });

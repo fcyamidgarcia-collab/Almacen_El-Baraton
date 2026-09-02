@@ -37,7 +37,7 @@
             <h2>Crear Cuenta</h2>
             <p class="subtitulo">Únase a Industrial Supply Co. para gestionar sus compras, seguir pedidos y<br>acceder a ofertas exclusivas.</p>
 
-            <form id="formulario-registro" onsubmit="event.preventDefault(); window.location.href='../perfil/perfil.html';">
+            <form id="formulario-registro">
                 <div class="fila-formulario">
                     <div class="grupo-entrada">
                         <label for="nombres">Nombres</label>
@@ -76,7 +76,7 @@
                 <div class="grupo-entrada">
                     <label for="telefono">Número de Teléfono</label>
                     <div class="envoltorio-entrada entrada-basica">
-                        <input type="tel" id="telefono" placeholder="+51 987 654 321" required>
+                        <input type="tel" id="telefono" placeholder="+57 300 123 4567" required>
                     </div>
                 </div>
 
@@ -94,7 +94,7 @@
                         </div>
                         <small class="pista-contrasena">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
-                            Mínimo 8 caracteres, incluir números y símbolos.
+                            Mínimo 6 caracteres
                         </small>
                     </div>
                 </div>
@@ -116,7 +116,7 @@
                     <label for="terminos">He leído y acepto los <a href="../terminos/terminos.html" target="_blank" class="enlace-terminos">Términos y Condiciones</a> y la <a href="../privacidad/index.html" target="_blank" class="enlace-terminos">Política de Privacidad</a> de Industrial Supply Co., y autorizo el procesamiento de mis datos corporativos.</label>
                 </div>
 
-                <button type="submit" class="btn-oscuro">
+                <button type="submit" class="btn-oscuro" id="btn-submit-registro">
                     Crear Cuenta
                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
                 </button>
@@ -178,7 +178,9 @@
         </div>
     </footer>
 
-<script src="registro.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/sesion.js"></script>
+    <script src="registro.js"></script>
     
 </body>
 </html>
