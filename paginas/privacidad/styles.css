@@ -299,12 +299,12 @@ nav a.activo {
 
 /* Footer */
 footer {
-    background: var(--footer-bg);
+    background: #0f172a;
     color: #cbd5e1;
     padding: 3.5rem 5% 1.5rem;
 }
 
-.parte-superior-pie {
+footer .pie-superior, footer .footer-top, footer .parte-superior-pie {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 2rem;
@@ -314,57 +314,67 @@ footer {
     margin-right: auto;
 }
 
-.col-pie h4 {
+footer .columna-pie, footer .footer-col, footer .col-pie {
+    display: flex;
+    flex-direction: column;
+}
+
+footer .columna-pie h4, footer .footer-col h4, footer .col-pie h4 {
     color: white;
     font-size: 0.8rem;
     margin-bottom: 1.5rem;
     letter-spacing: 0.05em;
+    font-weight: 700;
 }
 
-.col-pie ul {
+footer .columna-pie ul, footer .footer-col ul, footer .col-pie ul {
     list-style: none;
+    padding: 0;
+    margin: 0;
 }
 
-.col-pie li {
+footer .columna-pie li, footer .footer-col li, footer .col-pie li {
     margin-bottom: 0.8rem;
 }
 
-.col-pie a {
+footer .columna-pie a, footer .footer-col a, footer .col-pie a {
     font-size: 0.85rem;
     transition: color 0.2s;
     color: #94a3b8;
+    text-decoration: none;
 }
 
-.col-pie a:hover {
+footer .columna-pie a:hover, footer .footer-col a:hover, footer .col-pie a:hover {
     color: white;
 }
 
-.logo-pie {
+footer .logo-pie, footer .footer-logo {
     color: white;
     font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 1rem;
 }
 
-.col-nosotros p {
+footer .columna-nosotros p, footer .about-col p, footer .col-nosotros p {
     font-size: 0.85rem;
     margin-bottom: 1.5rem;
     max-width: 300px;
     color: #94a3b8;
+    line-height: 1.6;
 }
 
-.boletin p {
+footer .boletin p, footer .newsletter p {
     font-size: 0.85rem;
     margin-bottom: 0.6rem;
     color: white;
     font-weight: 500;
 }
 
-.boletin-form {
+footer .formulario-boletin, footer .newsletter-form, footer .boletin-form {
     display: flex;
 }
 
-.boletin-form input {
+footer .formulario-boletin input, footer .newsletter-form input, footer .boletin-form input {
     padding: 0.6rem 1rem;
     border: none;
     border-radius: 4px 0 0 4px;
@@ -376,8 +386,8 @@ footer {
     font-size: 0.85rem;
 }
 
-.boletin-form button {
-    background: var(--accent-yellow);
+footer .formulario-boletin button, footer .newsletter-form button, footer .boletin-form button {
+    background: #f59e0b;
     color: #0f172a;
     border: none;
     padding: 0.6rem 1rem;
@@ -385,34 +395,37 @@ footer {
     font-weight: 600;
     cursor: pointer;
     font-size: 0.85rem;
+    transition: all 0.2s ease;
 }
 
-.boletin-form button:hover {
-    background: var(--accent-yellow-hover);
+footer .formulario-boletin button:hover, footer .newsletter-form button:hover, footer .boletin-form button:hover {
+    background: #d97706;
 }
 
-.col-contacto .iconos-sociales {
+footer .columna-contacto .iconos-sociales, footer .contact-col .social-icons, footer .col-contacto .iconos-sociales {
     display: flex;
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
-.col-contacto .iconos-sociales a {
+footer .columna-contacto .iconos-sociales a, footer .contact-col .social-icons a, footer .col-contacto .iconos-sociales a {
     color: #94a3b8;
     font-size: 1.1rem;
+    text-decoration: none;
+    transition: color 0.2s;
 }
 
-.col-contacto .iconos-sociales a:hover {
+footer .columna-contacto .iconos-sociales a:hover, footer .contact-col .social-icons a:hover, footer .col-contacto .iconos-sociales a:hover {
     color: white;
 }
 
-.col-contacto p {
+footer .columna-contacto p, footer .contact-col p, footer .col-contacto p {
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
     color: #94a3b8;
 }
 
-.parte-inferior-pie {
+footer .pie-inferior, footer .footer-bottom, footer .parte-inferior-pie {
     text-align: center;
     border-top: 1px solid #1e293b;
     padding-top: 1.5rem;
@@ -423,6 +436,7 @@ footer {
     margin-right: auto;
 }
 
+/* RESPONSIVO */
 @media (max-width: 900px) {
     .diseno-contenido {
         flex-direction: column;
@@ -431,13 +445,13 @@ footer {
         width: 100%;
         position: static;
     }
-    .parte-superior-pie {
+    footer .pie-superior, footer .footer-top, footer .parte-superior-pie {
         grid-template-columns: 1fr 1fr;
     }
 }
 
 @media (max-width: 600px) {
-    .parte-superior-pie {
+    footer .pie-superior, footer .footer-top, footer .parte-superior-pie {
         grid-template-columns: 1fr;
     }
     .cuadricula-tarjetas {
@@ -447,7 +461,7 @@ footer {
         flex-direction: column;
         gap: 1rem;
     }
-    .barra-busqueda {
+    header .barra-busqueda, header .search-bar {
         width: 100%;
     }
 }
