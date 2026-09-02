@@ -1,7 +1,5 @@
-// =======================================================
+
 // SESION.JS - Módulo global de gestión de sesión
-// Se incluye en todas las páginas que tienen header
-// =======================================================
 
 (function () {
     'use strict';
