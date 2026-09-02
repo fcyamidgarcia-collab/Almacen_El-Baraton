@@ -58,6 +58,20 @@ const API = {
         catch { return null; }
     },
 
+    async actualizarPerfil(id_usuario, datos) {
+        return await this.request(`/auth/perfil/${id_usuario}`, {
+            method: 'PUT',
+            body: JSON.stringify(datos)
+        });
+    },
+
+    async cambiarContrasena(id_usuario, actualPassword, nuevaPassword) {
+        return await this.request('/auth/cambiar-contrasena', {
+            method: 'PUT',
+            body: JSON.stringify({ id_usuario, actualPassword, nuevaPassword })
+        });
+    },
+
     cerrarSesion() {
         localStorage.removeItem('baraton_token');
         localStorage.removeItem('baraton_user');

@@ -45,9 +45,9 @@
             <nav class="breadcrumbs">
                 <a href="../inicio/inicio.html">Tienda</a>
                 <span class="separator">></span>
-                <a href="../productos/productos.html">Herramientas Eléctricas</a>
+                <a href="../productos/productos.html" id="bread-categoria">Productos</a>
                 <span class="separator">></span>
-                <span class="current">Taladros y Destornilladores</span>
+                <span class="current" id="bread-producto">Cargando...</span>
             </nav>
 
             <!-- Product Details Section -->
@@ -82,30 +82,23 @@
                 <!-- Info del Producto -->
                 <div class="info-producto">
                     <div class="brand-calificacion">
-                        <span class="brand">DEXTER INDUSTRIAL</span>
+                        <span class="brand" id="prod-marca">Cargando...</span>
                         <div class="calificacion">
-                            <span class="star">★</span> 4.8 <span class="reviews">(124 Reseñas)</span>
+                            <span class="star">★</span> 5.0 <span class="reviews">Almacén El Baratón</span>
                         </div>
                     </div>
 
-                    <h1 class="titulo-producto">Taladro Percutor PRO-V 20V Max Brushless</h1>
+                    <h1 class="titulo-producto" id="prod-titulo">Cargando producto...</h1>
 
-                    <div class="meta-producto">
-                        Art. N° DXT-8842-B | Modelo Fab.: 20V-MAX-HD
-                    </div>
+                    <div class="meta-producto" id="prod-meta">Cargando...</div>
 
                     <div class="price-section">
-                        <div class="price">$249.99 <span class="unit">/ cada uno</span></div>
+                        <div class="price" id="prod-precio">Cargando...</div>
                         <div class="stock-info">
-                            <div class="stock-badge">
-                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-                                    stroke-width="2">
-                                    <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                                    <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                                </svg>
-                                <span>En Stock</span>
+                            <div class="stock-badge" id="prod-stock-badge">
+                                <i class="fas fa-spinner fa-spin"></i>
                             </div>
-                            <span class="stock-msg">Se envía hoy si se ordena en las próximas 4 hrs 12 mins</span>
+                            <span class="stock-msg" id="prod-stock-msg">Cargando disponibilidad...</span>
                         </div>
                     </div>
 
@@ -118,7 +111,7 @@
                                 <button class="qty-btn" id="btnPlus">+</button>
                             </div>
                         </div>
-                        <button class="btn-agregar-carrito">🛒 Añadir al Carrito</button>
+                        <button class="btn-agregar-carrito" id="btn-agregar-carrito"><i class="fas fa-shopping-cart"></i> Añadir al Carrito</button>
                     </div>
 
                     <button class="btn-cotizar">📄 Solicitar Cotización (Pedidos al por mayor)</button>
@@ -190,33 +183,16 @@
                 </div>
             </section>
 
-            <!-- Frequently Bought Together -->
+            <!-- Productos Relacionados (cargados dinámicamente) -->
             <section class="frequently-bought">
-                <h2>Comprados Frecuentemente Juntos</h2>
-                <div class="fbt-grid">
-                    <div class="fbt-card">
-                        <img src="https://via.placeholder.com/200x150" alt="Juego de Brocas">
-                        <h4 class="fbt-title">Juego de Brocas Titanio 42 Piezas</h4>
-                        <span class="fbt-brand">Dexter Industrial</span>
-                        <div class="fbt-price">$34.50</div>
-                        <button class="btn-fbt-add">Añadir al Carrito</button>
-                    </div>
-                    <div class="fbt-card">
-                        <img src="https://via.placeholder.com/200x150" alt="Batería Litio">
-                        <h4 class="fbt-title">Batería Litio 20V Max 5.0Ah</h4>
-                        <span class="fbt-brand">Dexter Industrial</span>
-                        <div class="fbt-price">$89.99</div>
-                        <button class="btn-fbt-add">Añadir al Carrito</button>
-                    </div>
-                    <div class="fbt-card">
-                        <img src="https://via.placeholder.com/200x150" alt="Caja de Herramientas">
-                        <h4 class="fbt-title">Caja de Herramientas Rígida</h4>
-                        <span class="fbt-brand">Dexter Industrial</span>
-                        <div class="fbt-price">$55.00</div>
-                        <button class="btn-fbt-add">Añadir al Carrito</button>
+                <h2>Productos Relacionados</h2>
+                <div class="fbt-grid" id="grid-relacionados">
+                    <div style="text-align:center;padding:20px;color:#64748b;grid-column:1/-1">
+                        <i class="fas fa-spinner fa-spin"></i> Cargando productos relacionados...
                     </div>
                 </div>
             </section>
+
         </main>
     </div>
 
@@ -270,10 +246,9 @@
         </div>
     </footer>
 
-<script src="../inicio/inicio.js"></script>
-    <script src="detalle_producto.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/sesion.js"></script>
+    <script src="detalle_producto.js"></script>
 </body>
 
 </html>

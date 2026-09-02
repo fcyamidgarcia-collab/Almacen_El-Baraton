@@ -1,123 +1,189 @@
 /**
- * Lógica para la página de Checkout - Conectado a MySQL
+ * Página de Pago / Checkout - Conectado a MySQL
+ * Crea pedido transaccional y vacía el carrito tras el pago
  */
 
 document.addEventListener('DOMContentLoaded', async () => {
-    
-    // --- Lógica del Header Scroll ---
-    const nav = document.getElementById('barraNav');
-    window.addEventListener('scroll', () => {
-        if (window.scrollY > 10) {
-            nav.classList.add('scrolled');
-        } else {
-            nav.classList.remove('scrolled');
-        }
-    });
 
-    // --- Cargar datos del Carrito y Usuario ---
-    let itemsParaPedido = [];
     const user = API.getUsuarioActual();
 
-    // Precargar datos del usuario si está logueado
-    if (user) {
-        const inputNombre = document.getElementById('nombre');
-        const inputEmail = document.getElementById('email');
-        const inputTelefono = document.getElementById('telefono');
-        const inputDireccion = document.getElementById('direccion');
-        const inputCiudad = document.getElementById('ciudad');
-
-        if (inputNombre && user.nombre) inputNombre.value = user.nombre;
-        if (inputEmail && user.email) inputEmail.value = user.email;
-        if (inputTelefono && user.telefono) inputTelefono.value = user.telefono;
-        if (inputDireccion && user.direccion) inputDireccion.value = user.direccion;
-        if (inputCiudad && user.ciudad) inputCiudad.value = user.ciudad;
+    // Si no hay sesión, redirigir al login
+    if (!user) {
+        alert('Debes iniciar sesión para proceder al pago.');
+        window.location.href = '../sesion/index.html';
+        return;
     }
+
+    function fmt(v) { return '$ ' + Number(v || 0).toLocaleString('es-CO'); }
+
+    // ---- Precargar datos del usuario en el formulario ----
+    const campos = {
+        nombre: document.getElementById('nombre'),
+        email: document.getElementById('email'),
+        documento: document.getElementById('documento'),
+        telefono: document.getElementById('telefono'),
+        direccion: document.getElementById('direccion'),
+        ciudad: document.getElementById('ciudad')
+    };
+
+    if (campos.nombre) campos.nombre.value = user.nombre || '';
+    if (campos.email) campos.email.value = user.email || user.correo || '';
+
+    // Intentar cargar datos adicionales del cliente
+    try {
+        const clienteData = await API.getClientePorUsuario(user.id_usuario);
+        if (clienteData) {
+            if (campos.documento && clienteData.documento_identidad) campos.documento.value = clienteData.documento_identidad;
+            if (campos.telefono && clienteData.telefono) campos.telefono.value = clienteData.telefono;
+            if (campos.direccion && clienteData.direccion) campos.direccion.value = clienteData.direccion;
+            if (campos.ciudad && clienteData.ciudad) campos.ciudad.value = clienteData.ciudad;
+        }
+    } catch (e) { console.warn('No se pudieron cargar datos del cliente:', e.message); }
+
+    // ---- Cargar resumen del carrito ----
+    let carritoData = null;
+    let itemsParaPedido = [];
 
     try {
-        const carrito = await API.getCarrito();
-        if (carrito.items && carrito.items.length > 0) {
-            itemsParaPedido = carrito.items;
-            
-            const subtotalElem = document.querySelector('.desglose-fila:nth-child(1) span:last-child');
-            const ivaElem = document.querySelector('.desglose-fila:nth-child(3) span:last-child');
-            const totalElem = document.querySelector('.total-valor');
-
-            if (subtotalElem) subtotalElem.textContent = '$ ' + Number(carrito.subtotal).toLocaleString('es-CO');
-            if (ivaElem) ivaElem.textContent = '$ ' + Number(carrito.iva).toLocaleString('es-CO');
-            if (totalElem) totalElem.textContent = '$ ' + Number(carrito.total).toLocaleString('es-CO');
+        // Primero intentar desde localStorage (guardado por carrito.js)
+        const cached = localStorage.getItem('carrito_checkout');
+        if (cached) {
+            carritoData = JSON.parse(cached);
+        } else {
+            carritoData = await API.getCarrito();
         }
+
+        if (!carritoData || !carritoData.items || carritoData.items.length === 0) {
+            alert('Tu carrito está vacío. Agrega productos antes de pagar.');
+            window.location.href = '../productos/productos.html';
+            return;
+        }
+
+        itemsParaPedido = carritoData.items;
+
+        // Mostrar resumen en la página de pago
+        const subtotalElem = document.getElementById('resumen-subtotal');
+        const ivaElem = document.getElementById('resumen-iva');
+        const totalElem = document.querySelector('.total-valor');
+        const itemsListEl = document.getElementById('resumen-items');
+
+        if (subtotalElem) subtotalElem.textContent = fmt(carritoData.subtotal);
+        if (ivaElem) ivaElem.textContent = fmt(carritoData.iva);
+        if (totalElem) totalElem.textContent = fmt(carritoData.total);
+
+        // Lista de productos en el resumen
+        if (itemsListEl) {
+            itemsListEl.innerHTML = carritoData.items.map(i => `
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:0.88rem">
+                    <span style="flex:1">${i.nombre} <span style="color:#94a3b8">x${i.cantidad}</span></span>
+                    <span style="font-weight:600">${fmt(i.subtotal)}</span>
+                </div>
+            `).join('');
+        }
+
     } catch (e) {
-        console.warn('No se pudo cargar el carrito para checkout:', e.message);
+        console.error('Error cargando carrito para checkout:', e.message);
     }
 
-    // --- Lógica de Métodos de Pago ---
+    // ---- Selección de método de pago ----
+    let metodoPago = 'Contraentrega';
     const radiosPago = document.querySelectorAll('input[name="metodo_pago"]');
     const panelTransferencia = document.getElementById('panel-transferencia');
     const panelBilletera = document.getElementById('panel-billetera');
-    let metodoPagoSeleccionado = 'Transferencia Bancaria';
-    
+
     radiosPago.forEach(radio => {
         radio.addEventListener('change', (e) => {
             document.querySelectorAll('.opcion-pago').forEach(lbl => lbl.classList.remove('activa'));
-            e.target.closest('.opcion-pago').classList.add('activa');
-            
+            e.target.closest('.opcion-pago')?.classList.add('activa');
             if (panelTransferencia) panelTransferencia.classList.add('oculto');
             if (panelBilletera) panelBilletera.classList.add('oculto');
 
             if (e.target.value === 'transferencia') {
-                metodoPagoSeleccionado = 'Transferencia Bancaria';
-                if (panelTransferencia) panelTransferencia.classList.remove('oculto');
+                metodoPago = 'Transferencia Bancaria';
+                panelTransferencia?.classList.remove('oculto');
             } else if (e.target.value === 'billetera') {
-                metodoPagoSeleccionado = 'Billetera Digital (Nequi / Daviplata)';
-                if (panelBilletera) panelBilletera.classList.remove('oculto');
+                metodoPago = 'Nequi / Daviplata';
+                panelBilletera?.classList.remove('oculto');
+            } else if (e.target.value === 'tarjeta') {
+                metodoPago = 'Tarjeta de Crédito / Débito';
             } else {
-                metodoPagoSeleccionado = 'Tarjeta de Crédito / Débito';
+                metodoPago = e.target.value || 'Contraentrega';
             }
         });
     });
 
-    // --- Procesar Checkout y Guardar en MySQL ---
+    // ---- Procesar Pedido ----
     const btnCheckout = document.getElementById('btn-procesar-checkout');
-    if (btnCheckout) {
-        btnCheckout.addEventListener('click', async (e) => {
-            e.preventDefault();
+    if (!btnCheckout) return;
 
-            const nombre = document.getElementById('nombre')?.value || user?.nombre || 'Cliente Web';
-            const email = document.getElementById('email')?.value || user?.email || 'cliente@ejemplo.com';
-            const telefono = document.getElementById('telefono')?.value || user?.telefono || '';
-            const direccion = document.getElementById('direccion')?.value || user?.direccion || 'Calle 100 # 15-20';
-            const ciudad = document.getElementById('ciudad')?.value || user?.ciudad || 'Bogotá D.C.';
+    btnCheckout.addEventListener('click', async (e) => {
+        e.preventDefault();
 
-            // Si no hay items en el carrito activo, usar producto por defecto
-            const items = (itemsParaPedido && itemsParaPedido.length > 0) 
-                ? itemsParaPedido.map(i => ({ id_producto: i.id_producto, sku: i.sku, cantidad: i.cantidad, precio: i.precio }))
-                : [{ sku: 'IND-8821', cantidad: 1, precio: 650000 }];
+        const nombre = campos.nombre?.value.trim();
+        const email = campos.email?.value.trim();
+        const telefono = campos.telefono?.value.trim() || '';
+        const direccion = campos.direccion?.value.trim();
+        const ciudad = campos.ciudad?.value.trim() || 'Bogotá D.C.';
+
+        // Validaciones básicas
+        if (!nombre || !email || !direccion) {
+            alert('Por favor completa los campos: Nombre, Correo y Dirección de entrega.');
+            return;
+        }
+
+        if (itemsParaPedido.length === 0) {
+            alert('No hay productos en el carrito.');
+            return;
+        }
+
+        btnCheckout.disabled = true;
+        btnCheckout.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando pedido...';
+
+        try {
+            // Obtener o crear el cliente asociado al usuario
+            let id_cliente = null;
+            try {
+                const cli = await API.getClientePorUsuario(user.id_usuario);
+                id_cliente = cli?.id_cliente || null;
+            } catch (_) {}
+
+            // Construir items del pedido
+            const items = itemsParaPedido.map(i => ({
+                id_producto: i.id_producto,
+                cantidad: i.cantidad,
+                precio_unitario: i.precio_unitario || i.precio
+            }));
+
+            const documento = campos.documento?.value.trim() || '';
 
             const datosPedido = {
-                id_usuario: user?.id_usuario || null,
-                id_cliente: user?.cliente?.id_cliente || null,
-                nombre_cliente: nombre,
-                email_cliente: email,
-                telefono_cliente: telefono,
-                direccion_envio: direccion,
-                ciudad_envio: ciudad,
-                metodo_pago: metodoPagoSeleccionado,
-                items
+                id_usuario: user.id_usuario,
+                id_cliente,
+                documento_identidad: documento || null,
+                items,
+                direccion_entrega: `${direccion}, ${ciudad}`,
+                metodo_pago: metodoPago,
+                observaciones: `Pedido web | Cliente: ${nombre} | Tel: ${telefono}`
             };
 
-            try {
-                btnCheckout.disabled = true;
-                btnCheckout.textContent = 'Procesando con la base de datos...';
+            const resultado = await API.crearPedido(datosPedido);
 
-                const resultado = await API.crearPedido(datosPedido);
-
-                alert(`¡Pago y Pedido registrado con éxito en MySQL!\nCódigo de Pedido: ${resultado.codigo_pedido}\nFactura: ${resultado.numero_factura}`);
-                window.location.href = `../confirmacion/confirmacion.html?pedido=${resultado.codigo_pedido}`;
-            } catch (err) {
-                alert('Error al procesar el pago: ' + err.message);
-                btnCheckout.disabled = false;
-                btnCheckout.textContent = 'Confirmar y Pagar';
+            // Vaciar carrito en BD
+            if (carritoData?.id_carrito) {
+                try { await API.vaciarCarrito(carritoData.id_carrito); } catch (_) {}
             }
-        });
-    }
+
+            // Limpiar cache local
+            localStorage.removeItem('carrito_checkout');
+
+            // Redirigir a confirmación
+            const numPedido = resultado.id_pedido || resultado.codigo_pedido || 'N/A';
+            window.location.href = `../confirmacion/confirmacion.html?pedido=${numPedido}&total=${carritoData?.total || 0}&metodo=${encodeURIComponent(metodoPago)}`;
+
+        } catch (err) {
+            alert('Error al procesar el pedido: ' + err.message);
+            btnCheckout.disabled = false;
+            btnCheckout.innerHTML = '<i class="fas fa-lock"></i> Confirmar y Pagar';
+        }
+    });
 });

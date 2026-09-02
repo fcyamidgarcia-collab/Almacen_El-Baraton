@@ -1,6 +1,10 @@
 // ========== PERFIL JS (CONECTADO A MYSQL) ==========
 
 document.addEventListener('DOMContentLoaded', async () => {
+    function fmt(val) {
+        return '$ ' + Number(val || 0).toLocaleString('es-CO');
+    }
+
     // --- Navbar scroll effect ---
     const barraNav = document.getElementById('barraNav');
     if (barraNav) {
@@ -21,36 +25,324 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- Cargar datos del usuario desde MySQL / Sesión ---
-    const usuario = API.getUsuarioActual();
-    if (usuario) {
-        // Nombre del encabezado del perfil
-        const nombrePerfil = document.querySelector('.tarjeta-perfil h2') || document.querySelector('.perfil-usuario h2');
-        if (nombrePerfil) nombrePerfil.textContent = usuario.nombre;
+    let usuario = API.getUsuarioActual();
+    if (!usuario) {
+        alert('Debes iniciar sesión para ver tu perfil.');
+        window.location.href = '../sesion/index.html';
+        return;
+    }
 
-        const emailPerfil = document.querySelector('.tarjeta-perfil p') || document.querySelector('.perfil-usuario p');
-        if (emailPerfil) emailPerfil.textContent = `${usuario.email} • Rol: ${usuario.rol_nombre || usuario.rol || 'Cliente'}`;
+    let clienteData = null;
 
-        // Cargar pedidos del usuario en la pestaña de historial
+    // Cargar información completa del cliente desde la base de datos
+    async function cargarInfoUsuario() {
+        try {
+            const perfilDB = await API.request(`/auth/perfil/${usuario.id_usuario}`);
+            if (perfilDB) {
+                usuario = { ...usuario, ...perfilDB };
+                localStorage.setItem('baraton_user', JSON.stringify(usuario));
+            }
+        } catch (_) {}
+
+        try {
+            clienteData = await API.getClientePorUsuario(usuario.id_usuario);
+        } catch (_) {}
+
+        // 1. Avatar inicial y nombre de encabezado
+        const inicial = (usuario.nombre || usuario.correo || 'U').charAt(0).toUpperCase();
+        const elAvatar = document.getElementById('perfil-avatar-inicial');
+        if (elAvatar) elAvatar.textContent = inicial;
+
+        const elNombreHeader = document.getElementById('perfil-nombre-header');
+        const elRolHeader = document.getElementById('perfil-rol-header');
+        const elIdHeader = document.getElementById('perfil-id-header');
+
+        const nombreCompleto = `${usuario.nombre || ''} ${usuario.apellido || ''}`.trim() || usuario.correo;
+        if (elNombreHeader) elNombreHeader.textContent = nombreCompleto;
+        if (elRolHeader) elRolHeader.textContent = `${usuario.email || usuario.correo} • Rol: ${usuario.rol_nombre || usuario.nombre_rol || usuario.rol || 'Cliente'}`;
+        if (elIdHeader) elIdHeader.textContent = `ID Usuario: #${usuario.id_usuario}${clienteData?.id_cliente ? ` | ID Cliente: #${clienteData.id_cliente}` : ''}`;
+
+        // 2. Tarjeta de contacto y facturación
+        const elDoc = document.getElementById('perfil-documento');
+        const elTel = document.getElementById('perfil-telefono');
+        const elDir = document.getElementById('perfil-direccion');
+        const elCiu = document.getElementById('perfil-ciudad');
+
+        if (elDoc) elDoc.textContent = clienteData?.documento_identidad || 'No registrado';
+        if (elTel) elTel.textContent = clienteData?.telefono || usuario.telefono || 'No registrado';
+        if (elDir) elDir.textContent = clienteData?.direccion || usuario.direccion || 'No registrada';
+        if (elCiu) elCiu.textContent = clienteData?.ciudad || 'Bogotá D.C.';
+
+        // 3. Pestaña de direcciones
+        const dirTextoTab = document.getElementById('direccion-texto-tab');
+        if (dirTextoTab) {
+            if (clienteData?.direccion) {
+                dirTextoTab.innerHTML = `
+                    <strong>${nombreCompleto}</strong><br>
+                    ${clienteData.direccion}<br>
+                    ${clienteData.ciudad || 'Bogotá D.C.'}<br>
+                    Tel: ${clienteData.telefono || 'No registrado'}
+                `;
+            } else {
+                dirTextoTab.innerHTML = '<em>No tienes una dirección de entrega configurada aún. Haz clic en "Actualizar Dirección" para registrar una.</em>';
+            }
+        }
+    }
+
+    // --- Lógica de Pedidos del Usuario ---
+    async function cargarPedidosUsuario() {
+        const contenedorResumen = document.getElementById('lista-pedidos-resumen');
+        const contenedorCompleto = document.getElementById('contenedor-pedidos-completo');
+
         try {
             const pedidos = await API.getPedidos({ id_usuario: usuario.id_usuario });
-            const tablaHistorial = document.querySelector('#historial tbody, #pedidos-usuario tbody');
-            if (tablaHistorial && pedidos.length > 0) {
-                tablaHistorial.innerHTML = '';
-                pedidos.forEach(p => {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `
-                        <td><strong>${p.id}</strong></td>
-                        <td>${p.fecha}</td>
-                        <td>$ ${Number(p.total).toLocaleString('es-CO')}</td>
-                        <td><span class="estado estado-enviado">● ${p.estado}</span></td>
-                        <td><a href="../pago/pago.html" style="color: #ea580c; font-weight: 600;">Ver Factura</a></td>
+
+            if (!pedidos || pedidos.length === 0) {
+                if (contenedorResumen) {
+                    contenedorResumen.innerHTML = `
+                        <div style="padding: 24px; text-align: center; color: var(--texto-secundario);">
+                            <i class="fas fa-box-open fa-2x" style="color: var(--gris); margin-bottom: 8px;"></i>
+                            <p>No tienes pedidos recientes.</p>
+                            <a href="../productos/productos.html" style="color: var(--naranja); font-weight: 600; font-size: 0.9rem;">Explorar Tienda →</a>
+                        </div>
                     `;
-                    tablaHistorial.appendChild(tr);
+                }
+                if (contenedorCompleto) {
+                    contenedorCompleto.innerHTML = `
+                        <div class="tarjeta-seccion mt-24" style="padding: 40px; text-align: center;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gris)" stroke-width="1.5" width="48" height="48" style="margin: 0 auto 16px;">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            </svg>
+                            <h3 style="margin-bottom: 8px;">Aún no has realizado pedidos</h3>
+                            <p style="color: var(--texto-secundario); max-width: 400px; margin: 0 auto;">Tus pedidos confirmados aparecerán aquí con su estado en tiempo real y detalles de entrega.</p>
+                            <a href="../productos/productos.html" class="btn-outline" style="display: inline-block; margin-top: 16px;">Ir a la Tienda</a>
+                        </div>
+                    `;
+                }
+                return;
+            }
+
+            function obtenerBadge(estado) {
+                const e = (estado || 'pendiente').toLowerCase();
+                if (e.includes('entreg') || e.includes('complet')) {
+                    return `<span class="tag tag-enviado" style="background:#ecfdf5;color:#059669"><i class="fas fa-check-circle"></i> Entregado</span>`;
+                }
+                if (e.includes('envi')) {
+                    return `<span class="tag tag-enviado"><i class="fas fa-truck"></i> Enviado</span>`;
+                }
+                if (e.includes('proces')) {
+                    return `<span class="tag tag-pendiente" style="background:#eff6ff;color:#2563eb"><i class="fas fa-cog fa-spin"></i> En Proceso</span>`;
+                }
+                return `<span class="tag tag-pendiente"><i class="fas fa-clock"></i> Pendiente</span>`;
+            }
+
+            // Resumen (primeros 3 pedidos)
+            if (contenedorResumen) {
+                contenedorResumen.innerHTML = '';
+                pedidos.slice(0, 3).forEach(p => {
+                    const fecha = new Date(p.fecha_pedido).toLocaleDateString('es-CO', { day: 'numeric', month: 'short', year: 'numeric' });
+                    const primerItem = p.items && p.items.length > 0 ? p.items[0].nombre_producto : 'Productos Varios';
+                    const itemsExtra = p.items && p.items.length > 1 ? ` y ${p.items.length - 1} más` : '';
+
+                    const div = document.createElement('div');
+                    div.className = 'pedido-item';
+                    div.style.cursor = 'pointer';
+                    div.onclick = () => window.location.href = `../confirmacion/confirmacion.html?pedido=${p.id_pedido}`;
+                    div.innerHTML = `
+                        <div class="pedido-icono">
+                            <i class="fas fa-box" style="font-size: 1.2rem;"></i>
+                        </div>
+                        <div class="pedido-info">
+                            <h4>Pedido #ORD-${p.id_pedido}</h4>
+                            <p>${primerItem}${itemsExtra} • <span style="font-size: 0.8rem; opacity: 0.8;">${fecha}</span></p>
+                        </div>
+                        <div class="pedido-estado">
+                            <span class="precio">${fmt(p.total)}</span>
+                            ${obtenerBadge(p.estado_pedido)}
+                        </div>
+                    `;
+                    contenedorResumen.appendChild(div);
                 });
             }
+
+            // Pestaña Mis Pedidos completa
+            if (contenedorCompleto) {
+                let html = '<div class="tarjeta-seccion mt-24" style="padding: 0; overflow: hidden;"><div class="lista-pedidos">';
+                pedidos.forEach(p => {
+                    const fecha = new Date(p.fecha_pedido).toLocaleDateString('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
+                    const itemsList = (p.items || []).map(i => `${i.cantidad}x ${i.nombre_producto}`).join(', ') || 'Sin detalle';
+
+                    html += `
+                        <div class="pedido-item" style="border-bottom: 1px solid var(--gris-borde); padding: 18px 24px; cursor: pointer;" onclick="window.location.href='../confirmacion/confirmacion.html?pedido=${p.id_pedido}'">
+                            <div class="pedido-icono">
+                                <i class="fas fa-receipt" style="font-size: 1.3rem;"></i>
+                            </div>
+                            <div class="pedido-info" style="flex: 1;">
+                                <div style="display: flex; align-items: center; gap: 10px;">
+                                    <h4 style="margin: 0;">Pedido #ORD-${p.id_pedido}</h4>
+                                    <span style="font-size: 0.8rem; color: var(--texto-secundario);">${fecha}</span>
+                                </div>
+                                <p style="margin-top: 4px; font-size: 0.85rem; color: var(--texto-secundario);">${itemsList}</p>
+                                <p style="font-size: 0.8rem; color: var(--texto-secundario);"><i class="fas fa-map-marker-alt"></i> ${p.direccion_entrega || 'Dirección no registrada'}</p>
+                            </div>
+                            <div class="pedido-estado" style="text-align: right;">
+                                <span class="precio" style="font-size: 1.1rem; display: block; margin-bottom: 6px;">${fmt(p.total)}</span>
+                                ${obtenerBadge(p.estado_pedido)}
+                            </div>
+                        </div>
+                    `;
+                });
+                html += '</div></div>';
+                contenedorCompleto.innerHTML = html;
+            }
+
         } catch (e) {
-            console.warn('No se pudo cargar historial de pedidos:', e.message);
+            console.error('Error cargando pedidos:', e);
+            if (contenedorResumen) {
+                contenedorResumen.innerHTML = `<div style="padding: 20px; text-align: center; color: #ef4444;"><i class="fas fa-exclamation-circle"></i> Error al conectar con la base de datos (${e.message}).</div>`;
+            }
         }
+    }
+
+    // --- MODAL: EDITAR PERFIL ---
+    const modalPerfil = document.getElementById('modal-editar-perfil');
+    const btnAbrirPerfil = document.getElementById('btn-abrir-editar-perfil');
+    const btnCerrarPerfil = document.getElementById('btn-cerrar-modal-perfil');
+    const btnCancelarPerfil = document.getElementById('btn-cancelar-perfil');
+    const formPerfil = document.getElementById('form-editar-perfil');
+
+    const btnAbrirDir1 = document.getElementById('btn-agregar-direccion');
+    const btnAbrirDir2 = document.getElementById('btn-editar-dir-tab');
+
+    function abrirModalPerfil() {
+        if (!modalPerfil) return;
+        document.getElementById('edit-nombre').value = usuario.nombre || '';
+        document.getElementById('edit-apellido').value = usuario.apellido || '';
+        document.getElementById('edit-documento').value = clienteData?.documento_identidad || '';
+        document.getElementById('edit-telefono').value = clienteData?.telefono || usuario.telefono || '';
+        document.getElementById('edit-direccion').value = clienteData?.direccion || usuario.direccion || '';
+        document.getElementById('edit-ciudad').value = clienteData?.ciudad || 'Bogotá D.C.';
+        modalPerfil.style.display = 'flex';
+    }
+
+    function cerrarModalPerfil() {
+        if (modalPerfil) modalPerfil.style.display = 'none';
+    }
+
+    if (btnAbrirPerfil) btnAbrirPerfil.addEventListener('click', abrirModalPerfil);
+    if (btnAbrirDir1) btnAbrirDir1.addEventListener('click', abrirModalPerfil);
+    if (btnAbrirDir2) btnAbrirDir2.addEventListener('click', abrirModalPerfil);
+    if (btnCerrarPerfil) btnCerrarPerfil.addEventListener('click', cerrarModalPerfil);
+    if (btnCancelarPerfil) btnCancelarPerfil.addEventListener('click', cerrarModalPerfil);
+
+    if (formPerfil) {
+        formPerfil.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnGuardar = document.getElementById('btn-guardar-perfil');
+            const originalHTML = btnGuardar.innerHTML;
+
+            const datos = {
+                nombre: document.getElementById('edit-nombre').value.trim(),
+                apellido: document.getElementById('edit-apellido').value.trim(),
+                documento_identidad: document.getElementById('edit-documento').value.trim(),
+                telefono: document.getElementById('edit-telefono').value.trim(),
+                direccion: document.getElementById('edit-direccion').value.trim(),
+                ciudad: document.getElementById('edit-ciudad').value.trim()
+            };
+
+            try {
+                btnGuardar.disabled = true;
+                btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando en BD...';
+
+                await API.actualizarPerfil(usuario.id_usuario, datos);
+                alert('¡Tus datos han sido actualizados exitosamente en la base de datos!');
+                cerrarModalPerfil();
+                await cargarInfoUsuario();
+            } catch (err) {
+                alert('Error al actualizar datos: ' + err.message);
+            } finally {
+                btnGuardar.disabled = false;
+                btnGuardar.innerHTML = originalHTML;
+            }
+        });
+    }
+
+    // --- MODAL: CAMBIAR CONTRASEÑA ---
+    const modalPassword = document.getElementById('modal-cambiar-contrasena');
+    const btnAbrirPassword = document.getElementById('btn-abrir-cambiar-contrasena');
+    const btnCerrarPassword = document.getElementById('btn-cerrar-modal-password');
+    const btnCancelarPassword = document.getElementById('btn-cancelar-password');
+    const formPassword = document.getElementById('form-cambiar-contrasena');
+
+    function abrirModalPassword() {
+        if (modalPassword) {
+            formPassword.reset();
+            modalPassword.style.display = 'flex';
+        }
+    }
+
+    function cerrarModalPassword() {
+        if (modalPassword) modalPassword.style.display = 'none';
+    }
+
+    if (btnAbrirPassword) btnAbrirPassword.addEventListener('click', abrirModalPassword);
+    if (btnCerrarPassword) btnCerrarPassword.addEventListener('click', cerrarModalPassword);
+    if (btnCancelarPassword) btnCancelarPassword.addEventListener('click', cerrarModalPassword);
+
+    if (formPassword) {
+        formPassword.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const actualPassword = document.getElementById('pass-actual').value;
+            const nuevaPassword = document.getElementById('pass-nueva').value;
+            const confirmarPassword = document.getElementById('pass-confirmar').value;
+
+            if (nuevaPassword !== confirmarPassword) {
+                alert('La nueva contraseña y su confirmación no coinciden.');
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btn-guardar-password');
+            const originalHTML = btnSubmit.innerHTML;
+
+            try {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando...';
+
+                await API.cambiarContrasena(usuario.id_usuario, actualPassword, nuevaPassword);
+                alert('¡Contraseña actualizada exitosamente en la base de datos!');
+                cerrarModalPassword();
+            } catch (err) {
+                alert('Error al cambiar contraseña: ' + err.message);
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalHTML;
+            }
+        });
+    }
+
+    // --- GUARDAR PREFERENCIAS (CONFIGURACIÓN) ---
+    const btnGuardarPref = document.getElementById('btn-guardar-preferencias');
+    if (btnGuardarPref) {
+        // Cargar preferencias previas si existen
+        const pref = JSON.parse(localStorage.getItem('perfil_preferencias') || '{}');
+        if (pref.promo !== undefined) document.getElementById('check-promo').checked = pref.promo;
+        if (pref.notif !== undefined) document.getElementById('check-pedidos-notif').checked = pref.notif;
+
+        btnGuardarPref.addEventListener('click', () => {
+            const promo = document.getElementById('check-promo').checked;
+            const notif = document.getElementById('check-pedidos-notif').checked;
+            localStorage.setItem('perfil_preferencias', JSON.stringify({ promo, notif }));
+
+            const originalHTML = btnGuardarPref.innerHTML;
+            btnGuardarPref.innerHTML = '<i class="fas fa-check"></i> ¡Preferencias Guardadas!';
+            btnGuardarPref.style.borderColor = '#10b981';
+            btnGuardarPref.style.color = '#10b981';
+            setTimeout(() => {
+                btnGuardarPref.innerHTML = originalHTML;
+                btnGuardarPref.style.borderColor = '';
+                btnGuardarPref.style.color = '';
+            }, 2500);
+        });
     }
 
     // --- Lógica de Pestañas (Sidebar) ---
@@ -61,7 +353,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         menuItems.forEach(item => {
             item.addEventListener('click', (e) => {
                 const targetId = item.getAttribute('data-target');
-                if(!targetId) return;
+                if (!targetId) return;
                 e.preventDefault();
 
                 menuItems.forEach(link => link.classList.remove('activo'));
@@ -69,17 +361,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 tabs.forEach(tab => tab.classList.remove('activa'));
                 const targetTab = document.getElementById(targetId);
-                if(targetTab) targetTab.classList.add('activa');
+                if (targetTab) targetTab.classList.add('activa');
             });
         });
     }
 
-    // Botón Cerrar Sesión
-    const btnSalir = document.querySelector('.menu-item.texto-peligro, .btn-cerrar-sesion');
-    if (btnSalir) {
-        btnSalir.addEventListener('click', (e) => {
+    // Enlace "Ver todos" de Pedidos Recientes
+    const enlaceVerTodos = document.querySelector('.enlace-ver-todos');
+    if (enlaceVerTodos) {
+        enlaceVerTodos.addEventListener('click', (e) => {
             e.preventDefault();
-            API.cerrarSesion();
+            const tabBtnPedidos = document.querySelector('.menu-item[data-target="pedidos"]');
+            if (tabBtnPedidos) tabBtnPedidos.click();
         });
     }
+
+    // Botones Cerrar Sesión
+    document.querySelectorAll('.btn-cerrar-sesion').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            if (confirm('¿Estás seguro de que deseas cerrar sesión?')) {
+                API.cerrarSesion();
+            }
+        });
+    });
+
+    // Carga inicial de datos
+    await cargarInfoUsuario();
+    await cargarPedidosUsuario();
 });

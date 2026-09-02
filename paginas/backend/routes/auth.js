@@ -112,7 +112,7 @@ router.post('/registro', async (req, res) => {
         const id_usuario = resultUser.insertId;
 
         // Registrar en tabla cliente
-        await pool.query(
+        const [resCli] = await pool.query(
             `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
              VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 'activo')`,
             [id_usuario, pNombre, pApellido, nit || null, telefono || null, direccion || null, ciudad || 'Bogotá']
@@ -133,7 +133,16 @@ router.post('/registro', async (req, res) => {
                 email,
                 correo: email,
                 rol_nombre: 'cliente',
-                rol: 'cliente'
+                rol: 'cliente',
+                cliente: {
+                    id_cliente: resCli.insertId,
+                    id_usuario,
+                    nombre: pNombre,
+                    apellido: pApellido,
+                    telefono: telefono || null,
+                    direccion: direccion || null,
+                    ciudad: ciudad || 'Bogotá'
+                }
             }
         });
     } catch (error) {
@@ -161,6 +170,81 @@ router.get('/perfil/:id_usuario', async (req, res) => {
         res.json(users[0]);
     } catch (error) {
         console.error('Error al obtener perfil:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// PUT /api/auth/perfil/:id_usuario - Actualizar datos personales y de cliente
+router.put('/perfil/:id_usuario', async (req, res) => {
+    try {
+        const { id_usuario } = req.params;
+        const { nombre, apellido, telefono, direccion, ciudad, documento_identidad } = req.body;
+
+        if (!nombre) {
+            return res.status(400).json({ error: 'El nombre es obligatorio' });
+        }
+
+        // Actualizar tabla usuario
+        await pool.query(
+            'UPDATE usuario SET nombre = ?, apellido = ? WHERE id_usuario = ?',
+            [nombre.trim(), apellido ? apellido.trim() : '', id_usuario]
+        );
+
+        // Actualizar o insertar tabla cliente
+        const [cliRows] = await pool.query('SELECT id_cliente FROM cliente WHERE id_usuario = ? LIMIT 1', [id_usuario]);
+        if (cliRows.length > 0) {
+            await pool.query(
+                `UPDATE cliente SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, ciudad = ?, documento_identidad = COALESCE(?, documento_identidad)
+                 WHERE id_usuario = ?`,
+                [nombre.trim(), apellido ? apellido.trim() : '', telefono || null, direccion || null, ciudad || 'Bogotá', documento_identidad || null, id_usuario]
+            );
+        } else {
+            await pool.query(
+                `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 'activo')`,
+                [id_usuario, nombre.trim(), apellido ? apellido.trim() : '', documento_identidad || `CC-${Date.now().toString().slice(-8)}`, telefono || null, direccion || null, ciudad || 'Bogotá']
+            );
+        }
+
+        res.json({ mensaje: 'Perfil actualizado exitosamente' });
+    } catch (error) {
+        console.error('Error al actualizar perfil:', error);
+        res.status(500).json({ error: error.message });
+    }
+});
+
+// PUT /api/auth/cambiar-contrasena
+router.put('/cambiar-contrasena', async (req, res) => {
+    try {
+        const { id_usuario, actualPassword, nuevaPassword } = req.body;
+
+        if (!id_usuario || !actualPassword || !nuevaPassword) {
+            return res.status(400).json({ error: 'Todos los campos son obligatorios' });
+        }
+
+        const [users] = await pool.query('SELECT contrasena FROM usuario WHERE id_usuario = ?', [id_usuario]);
+        if (users.length === 0) {
+            return res.status(404).json({ error: 'Usuario no encontrado' });
+        }
+
+        const hashGuardado = users[0].contrasena || '';
+        let valida = false;
+        if (hashGuardado.startsWith('$2a$') || hashGuardado.startsWith('$2b$')) {
+            valida = await bcrypt.compare(actualPassword, hashGuardado);
+        } else {
+            valida = (actualPassword === hashGuardado);
+        }
+
+        if (!valida) {
+            return res.status(400).json({ error: 'La contraseña actual no es correcta' });
+        }
+
+        const nuevoHash = await bcrypt.hash(nuevaPassword, 10);
+        await pool.query('UPDATE usuario SET contrasena = ? WHERE id_usuario = ?', [nuevoHash, id_usuario]);
+
+        res.json({ mensaje: 'Contraseña actualizada con éxito' });
+    } catch (error) {
+        console.error('Error al cambiar contraseña:', error);
         res.status(500).json({ error: error.message });
     }
 });

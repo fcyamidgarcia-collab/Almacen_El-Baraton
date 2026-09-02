@@ -1,9 +1,10 @@
 /**
  * confirmacion.js
  * Logica de la pagina de Pedido Confirmado - Industrial Supply Co.
+ * Conectado a MySQL: consulta el pedido real si viene ?pedido=X en la URL o en sessionStorage
  */
 
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', async function () {
 
     // MENU HAMBURGUESA (MOVIL)
     const btnMenu = document.getElementById('btnMenu');
@@ -22,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // CARGAR DATOS DEL PEDIDO DESDE sessionStorage
-    cargarDatosPedido();
+    // CARGAR DATOS DEL PEDIDO
+    await cargarDatosPedido();
 
     // BOLETIN DE SUSCRIPCION
     const formBoletin = document.getElementById('formBoletin');
@@ -50,35 +51,70 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
     }
-
 });
 
-// CARGAR DATOS DEL PEDIDO
-function cargarDatosPedido() {
+// CARGAR DATOS DEL PEDIDO DESDE LA API O STORAGE
+async function cargarDatosPedido() {
     try {
+        const params = new URLSearchParams(window.location.search);
+        const idPedidoUrl = params.get('pedido');
+
+        const elNumeroOrden = document.getElementById('numeroOrden');
+        const elFechaEntrega = document.getElementById('fechaEntrega');
+        const elDireccion = document.getElementById('direccionEnvio');
+
+        if (idPedidoUrl && typeof API !== 'undefined') {
+            try {
+                const pedido = await API.getPedido(idPedidoUrl);
+                if (pedido) {
+                    if (elNumeroOrden) elNumeroOrden.textContent = `#ORD-${pedido.id_pedido}`;
+                    
+                    // Fecha estimada (3 días hábiles después)
+                    const fecha = new Date(pedido.fecha_pedido || Date.now());
+                    fecha.setDate(fecha.getDate() + 3);
+                    if (elFechaEntrega) {
+                        elFechaEntrega.textContent = fecha.toLocaleDateString('es-CO', {
+                            day: 'numeric', month: 'long', year: 'numeric'
+                        });
+                    }
+
+                    if (elDireccion) {
+                        elDireccion.innerHTML = escapeHTML(pedido.direccion_entrega || 'Dirección registrada').replace(/\n/g, '<br>');
+                    }
+
+                    if (pedido.items && Array.isArray(pedido.items)) {
+                        renderizarArticulos(pedido.items.map(i => ({
+                            nombre: i.nombre_producto || `Producto #${i.id_producto}`,
+                            sku: `PROD-${i.id_producto}`,
+                            cantidad: i.cantidad,
+                            precio: i.precio_unitario || i.precio
+                        })));
+                    }
+                    actualizarBadgeCarrito(0);
+                    localStorage.removeItem('carrito_checkout');
+                    sessionStorage.removeItem('carrito');
+                    return;
+                }
+            } catch (errApi) {
+                console.warn('No se pudo obtener el pedido por API, recurriendo a almacenamiento local:', errApi);
+            }
+        }
+
+        // Si no está por URL o falló la API, buscar en sessionStorage
         const pedidoGuardado = sessionStorage.getItem('ultimoPedido');
         if (pedidoGuardado) {
             const pedido = JSON.parse(pedidoGuardado);
-            if (pedido.numeroOrden) {
-                const elNumeroOrden = document.getElementById('numeroOrden');
-                if (elNumeroOrden) elNumeroOrden.textContent = pedido.numeroOrden;
-            }
-            if (pedido.fechaEntrega) {
-                const elFechaEntrega = document.getElementById('fechaEntrega');
-                if (elFechaEntrega) elFechaEntrega.textContent = pedido.fechaEntrega;
-            }
-            if (pedido.direccion) {
-                const elDireccion = document.getElementById('direccionEnvio');
-                if (elDireccion) elDireccion.innerHTML = pedido.direccion.replace(/\n/g, '<br>');
-            }
+            if (pedido.numeroOrden && elNumeroOrden) elNumeroOrden.textContent = pedido.numeroOrden;
+            if (pedido.fechaEntrega && elFechaEntrega) elFechaEntrega.textContent = pedido.fechaEntrega;
+            if (pedido.direccion && elDireccion) elDireccion.innerHTML = pedido.direccion.replace(/\n/g, '<br>');
             if (pedido.articulos && Array.isArray(pedido.articulos)) {
                 renderizarArticulos(pedido.articulos);
             }
             actualizarBadgeCarrito(0);
             sessionStorage.removeItem('carrito');
-        } else {
-            console.info('Mostrando datos de ejemplo (no hay pedido en sesion).');
-            actualizarBadgeCarrito(0);
+            localStorage.removeItem('carrito_checkout');
+        } else if (idPedidoUrl && elNumeroOrden) {
+            elNumeroOrden.textContent = `#ORD-${idPedidoUrl}`;
         }
     } catch (error) {
         console.error('Error al cargar datos del pedido:', error);
@@ -94,7 +130,7 @@ function renderizarArticulos(articulos) {
         const item = document.createElement('div');
         item.classList.add('articulo-item');
         const icono = '<div class="articulo-icono"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg></div>';
-        const info = '<div class="articulo-info"><p class="articulo-nombre">' + articulo.cantidad + 'x ' + escapeHTML(articulo.nombre) + '</p><p class="articulo-sku">SKU: ' + escapeHTML(articulo.sku) + '</p></div>';
+        const info = '<div class="articulo-info"><p class="articulo-nombre">' + articulo.cantidad + 'x ' + escapeHTML(articulo.nombre) + '</p><p class="articulo-sku">SKU: ' + escapeHTML(articulo.sku || 'N/A') + '</p></div>';
         item.innerHTML = icono + info;
         contenedor.appendChild(item);
     });
@@ -144,6 +180,6 @@ function mostrarNotificacion(mensaje, tipo) {
 // SANITIZAR HTML
 function escapeHTML(str) {
     const div = document.createElement('div');
-    div.appendChild(document.createTextNode(str));
+    div.appendChild(document.createTextNode(str || ''));
     return div.innerHTML;
 }
