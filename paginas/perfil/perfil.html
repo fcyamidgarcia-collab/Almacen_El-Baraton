@@ -106,38 +106,34 @@
                         <p>Gestiona tu información y actividad reciente.</p>
                     </div>
 
-                <!-- Bloque 1: Perfil y Nivel -->
+                <!-- Bloque 1: Información de Perfil y Contacto (Sin Nivel de Cuenta) -->
                 <div class="grid-2-col">
                     <!-- Tarjeta Usuario -->
                     <div class="tarjeta-perfil">
                         <div class="perfil-info">
-                            <img src="../../Almacen/img/perfil_carlos.jpg" alt="Foto de perfil de Carlos" class="perfil-avatar">
+                            <div style="width: 64px; height: 64px; border-radius: 50%; background: #f97316; color: white; display: flex; align-items: center; justify-content: center; font-size: 1.6rem; font-weight: bold;" id="perfil-avatar-inicial">U</div>
                             <div class="perfil-detalles">
-                                <h3>Carlos Rodríguez</h3>
-                                <p class="perfil-rol">Jefe de Compras, Industrias Metalúrgicas S.A.</p>
-                                <p class="perfil-id">ID de Cliente: IP-8472910</p>
-                                <button class="btn-outline">Editar Perfil</button>
+                                <h3 id="perfil-nombre-header">Cargando usuario...</h3>
+                                <p class="perfil-rol" id="perfil-rol-header">Cargando datos...</p>
+                                <p class="perfil-id" id="perfil-id-header">ID Usuario: #...</p>
+                                <button class="btn-outline" id="btn-abrir-editar-perfil" style="cursor: pointer;"><i class="fas fa-edit"></i> Editar Perfil</button>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Tarjeta Nivel de Cuenta -->
-                    <div class="tarjeta-nivel">
-                        <div class="nivel-header">
-                            <span class="nivel-label">NIVEL DE CUENTA</span>
-                            <div class="nivel-badge">
-                                <span class="nivel-icon">✦</span>
-                                <h4>Ultra Pro</h4>
-                            </div>
+                    <!-- Tarjeta Datos de Contacto y Envío -->
+                    <div class="tarjeta-perfil" style="box-shadow: var(--sombra);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; border-bottom: 1px solid var(--gris-borde); padding-bottom: 8px;">
+                            <h4 style="font-size: 0.95rem; color: var(--texto-oscuro); display: flex; align-items: center; gap: 8px;">
+                                <i class="fas fa-address-card" style="color: var(--naranja);"></i> Datos de Contacto y Facturación
+                            </h4>
+                            <span class="badge-orden" id="perfil-badge-estado" style="font-size: 0.75rem; background: #ecfdf5; color: #059669; padding: 2px 8px; border-radius: 12px;">Activo</span>
                         </div>
-                        <div class="credito-info">
-                            <div class="credito-texto">
-                                <span>Crédito Disponible</span>
-                                <strong>$45,000.00</strong>
-                            </div>
-                            <div class="barra-progreso">
-                                <div class="progreso-fill" style="width: 75%;"></div>
-                            </div>
+                        <div style="font-size: 0.85rem; color: var(--texto-secundario); display: flex; flex-direction: column; gap: 6px;">
+                            <p><strong style="color: var(--texto-oscuro);">Documento:</strong> <span id="perfil-documento">No registrado</span></p>
+                            <p><strong style="color: var(--texto-oscuro);">Teléfono:</strong> <span id="perfil-telefono">No registrado</span></p>
+                            <p><strong style="color: var(--texto-oscuro);">Dirección:</strong> <span id="perfil-direccion">No registrada</span></p>
+                            <p><strong style="color: var(--texto-oscuro);">Ciudad:</strong> <span id="perfil-ciudad">Bogotá D.C.</span></p>
                         </div>
                     </div>
                 </div>
@@ -148,48 +144,9 @@
                         <h3>Pedidos Recientes</h3>
                         <a href="#" class="enlace-ver-todos">Ver todos</a>
                     </div>
-                    
-                    <div class="lista-pedidos">
-                        <!-- Pedido 1 -->
-                        <div class="pedido-item">
-                            <div class="pedido-icono">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                    <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                                    <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
-                                    <line x1="12" y1="22.08" x2="12" y2="12"></line>
-                                </svg>
-                            </div>
-                            <div class="pedido-info">
-                                <h4>Pedido #ORD-99382</h4>
-                                <p>Torno CNC Alta Precisión + Kit Herramientas</p>
-                            </div>
-                            <div class="pedido-estado">
-                                <span class="precio">$12,450.00</span>
-                                <span class="tag tag-enviado">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><rect x="1" y="3" width="15" height="13"></rect><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon><circle cx="5.5" cy="18.5" r="2.5"></circle><circle cx="18.5" cy="18.5" r="2.5"></circle></svg>
-                                    Enviado
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Pedido 2 -->
-                        <div class="pedido-item">
-                            <div class="pedido-icono">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20">
-                                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"></path>
-                                </svg>
-                            </div>
-                            <div class="pedido-info">
-                                <h4>Pedido #ORD-99405</h4>
-                                <p>Lote 500x Rodamientos Industriales ABEC-7</p>
-                            </div>
-                            <div class="pedido-estado">
-                                <span class="precio">$3,200.00</span>
-                                <span class="tag tag-pendiente">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
-                                    Pendiente
-                                </span>
-                            </div>
+                    <div class="lista-pedidos" id="lista-pedidos-resumen">
+                        <div style="text-align: center; padding: 20px; color: var(--texto-secundario);">
+                            <i class="fas fa-spinner fa-spin"></i> Cargando pedidos recientes...
                         </div>
                     </div>
                 </div>
@@ -201,24 +158,21 @@
                         <!-- Contraseña -->
                         <div class="tarjeta-seguridad">
                             <div class="seguridad-header">
-                                <span class="seguridad-icono">***</span>
-                                <h4>Contraseña</h4>
+                                <span class="seguridad-icono"><i class="fas fa-key"></i></span>
+                                <h4>Contraseña de Acceso</h4>
                             </div>
-                            <p>Última actualización hace 3 meses.</p>
-                            <button class="btn-outline w-full mt-16">Cambiar Contraseña</button>
+                            <p>Protege tu cuenta con una contraseña segura.</p>
+                            <button class="btn-outline w-full mt-16" id="btn-abrir-cambiar-contrasena" style="cursor: pointer;"><i class="fas fa-lock"></i> Cambiar Contraseña</button>
                         </div>
 
-                        <!-- 2FA -->
+                        <!-- Estado y Rol -->
                         <div class="tarjeta-seguridad bg-2fa">
                             <div class="seguridad-header">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="20" height="20" class="icono-2fa">
-                                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
-                                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
-                                </svg>
-                                <h4>Autenticación de 2 Factores (2FA)</h4>
+                                <i class="fas fa-shield-alt" style="font-size: 1.3rem; color: var(--naranja);"></i>
+                                <h4>Tipo de Cuenta</h4>
                             </div>
-                            <p>Agrega una capa extra de seguridad a tu cuenta corporativa.</p>
-                            <button class="btn-solid-brown w-full mt-16">Configurar 2FA</button>
+                            <p id="perfil-tipo-cuenta-desc">Cuenta autenticada en Almacén El Baratón con acceso protegido por token.</p>
+                            <button class="btn-solid-brown w-full mt-16 btn-cerrar-sesion" style="cursor: pointer;"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
                         </div>
                     </div>
                 </div>
@@ -229,15 +183,17 @@
                 <div id="pedidos" class="seccion-tab">
                     <div class="perfil-header">
                         <h1>Mis Pedidos</h1>
-                        <p>Historial completo de tus compras e invoices.</p>
+                        <p>Historial completo de tus compras e invoices en tiempo real.</p>
                     </div>
-                    <div class="tarjeta-seccion mt-24" style="padding: 30px; text-align: center;">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gris)" stroke-width="1.5" width="48" height="48" style="margin: 0 auto 16px;">
-                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
-                        </svg>
-                        <h3 style="margin-bottom: 8px;">No hay pedidos anteriores</h3>
-                        <p style="color: var(--texto-secundario);">Aquí se mostrará el historial completo de tus pedidos una vez que realices compras.</p>
-                        <a href="../productos/productos.html" class="btn-outline" style="display: inline-block; margin-top: 16px;">Ir a la Tienda</a>
+                    <div id="contenedor-pedidos-completo">
+                        <div class="tarjeta-seccion mt-24" style="padding: 30px; text-align: center;">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--gris)" stroke-width="1.5" width="48" height="48" style="margin: 0 auto 16px;">
+                                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                            </svg>
+                            <h3 style="margin-bottom: 8px;">No hay pedidos anteriores</h3>
+                            <p style="color: var(--texto-secundario);">Aquí se mostrará el historial completo de tus pedidos una vez que realices compras.</p>
+                            <a href="../productos/productos.html" class="btn-outline" style="display: inline-block; margin-top: 16px;">Ir a la Tienda</a>
+                        </div>
                     </div>
                 </div>
 
@@ -245,19 +201,21 @@
                 <div id="direcciones" class="seccion-tab">
                     <div class="perfil-header">
                         <h1>Direcciones de Envío</h1>
-                        <p>Gestiona tus direcciones de facturación y entrega.</p>
+                        <p>Gestiona tus direcciones de facturación y entrega conectadas a tu cuenta.</p>
                     </div>
                     <div class="tarjeta-seccion mt-24" style="padding: 24px;">
-                        <div class="grid-2-col">
-                            <div style="border: 1px dashed var(--gris-borde); border-radius: 8px; padding: 24px; text-align: center; cursor: pointer;">
-                                <span style="font-size: 2rem; color: var(--oro);">+</span>
-                                <p style="font-weight: 600; margin-top: 8px;">Agregar Nueva Dirección</p>
+                        <div class="grid-2-col" id="contenedor-direcciones">
+                            <div style="border: 1px dashed var(--gris-borde); border-radius: 8px; padding: 24px; text-align: center; cursor: pointer;" id="btn-agregar-direccion">
+                                <span style="font-size: 2rem; color: var(--naranja);">+</span>
+                                <p style="font-weight: 600; margin-top: 8px;">Actualizar Dirección</p>
                             </div>
-                            <div class="tarjeta-perfil" style="box-shadow: none;">
-                                <h4 style="margin-bottom: 8px;">Sede Principal (Predeterminada)</h4>
-                                <p style="font-size: 0.85rem; color: var(--texto-secundario); line-height: 1.5;">Av. Industrial 4500, Nave 3<br>Parque Logístico Sur<br>Ciudad, CP 1000<br>Tel: 555-0198</p>
+                            <div class="tarjeta-perfil" style="box-shadow: none;" id="tarjeta-direccion-principal">
+                                <h4 style="margin-bottom: 8px;"><i class="fas fa-home" style="color: var(--naranja);"></i> Dirección Registrada</h4>
+                                <p style="font-size: 0.85rem; color: var(--texto-secundario); line-height: 1.5;" id="direccion-texto-tab">
+                                    Cargando dirección...
+                                </p>
                                 <div style="margin-top: 12px; display: flex; gap: 8px;">
-                                    <button class="btn-outline" style="padding: 4px 10px; font-size: 0.75rem;">Editar</button>
+                                    <button class="btn-outline" id="btn-editar-dir-tab" style="padding: 4px 10px; font-size: 0.75rem; cursor: pointer;">Editar</button>
                                 </div>
                             </div>
                         </div>
@@ -267,20 +225,36 @@
                 <!-- Seccion 4: Pagos -->
                 <div id="pagos" class="seccion-tab">
                     <div class="perfil-header">
-                        <h1>Métodos de Pago</h1>
-                        <p>Tus tarjetas y métodos de pago guardados.</p>
+                        <h1>Métodos de Pago Aceptados</h1>
+                        <p>Información y métodos de pago disponibles para tus compras en Almacén El Baratón.</p>
                     </div>
                     <div class="tarjeta-seccion mt-24" style="padding: 24px;">
                         <div class="grid-2-col">
-                            <div style="border: 1px dashed var(--gris-borde); border-radius: 8px; padding: 24px; text-align: center; cursor: pointer;">
-                                <span style="font-size: 2rem; color: var(--oro);">+</span>
-                                <p style="font-weight: 600; margin-top: 8px;">Agregar Método de Pago</p>
-                            </div>
-                            <div class="tarjeta-perfil" style="box-shadow: none; display: flex; align-items: center; gap: 16px;">
-                                <div style="width: 50px; height: 32px; background: #1f2937; color: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold;">VISA</div>
+                            <div class="tarjeta-perfil" style="box-shadow: none; display: flex; align-items: center; gap: 16px; border: 1px solid var(--gris-borde);">
+                                <div style="width: 48px; height: 48px; background: #ecfdf5; color: #059669; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                                    <i class="fas fa-university"></i>
+                                </div>
                                 <div>
-                                    <h4 style="font-size: 0.95rem;">Termina en **** 4242</h4>
-                                    <p style="font-size: 0.8rem; color: var(--texto-secundario);">Expira 12/25</p>
+                                    <h4 style="font-size: 0.95rem;">Transferencia Bancaria</h4>
+                                    <p style="font-size: 0.8rem; color: var(--texto-secundario);">Banco Industrial Cte #987-65432-10</p>
+                                </div>
+                            </div>
+                            <div class="tarjeta-perfil" style="box-shadow: none; display: flex; align-items: center; gap: 16px; border: 1px solid var(--gris-borde);">
+                                <div style="width: 48px; height: 48px; background: #eff6ff; color: #2563eb; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                                    <i class="fas fa-mobile-alt"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 0.95rem;">Billeteras Digitales</h4>
+                                    <p style="font-size: 0.8rem; color: var(--texto-secundario);">Nequi / Daviplata (+1 800-555-0199)</p>
+                                </div>
+                            </div>
+                            <div class="tarjeta-perfil" style="box-shadow: none; display: flex; align-items: center; gap: 16px; border: 1px solid var(--gris-borde);">
+                                <div style="width: 48px; height: 48px; background: #fff7ed; color: #ea580c; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 1.3rem;">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div>
+                                    <h4 style="font-size: 0.95rem;">Pago Contra Entrega</h4>
+                                    <p style="font-size: 0.8rem; color: var(--texto-secundario);">Paga al recibir en tu dirección</p>
                                 </div>
                             </div>
                         </div>
@@ -290,26 +264,26 @@
                 <!-- Seccion 5: Configuración -->
                 <div id="configuracion" class="seccion-tab">
                     <div class="perfil-header">
-                        <h1>Configuración</h1>
-                        <p>Preferencias de tu cuenta y notificaciones.</p>
+                        <h1>Configuración de la Cuenta</h1>
+                        <p>Preferencias y notificaciones de tu cuenta.</p>
                     </div>
                     <div class="tarjeta-seccion mt-24" style="padding: 24px;">
                         <h4 style="margin-bottom: 16px; font-size: 1rem;">Notificaciones</h4>
                         <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--gris-borde); margin-bottom: 12px;">
                             <div>
                                 <p style="font-weight: 600; font-size: 0.9rem;">Correos Promocionales</p>
-                                <p style="font-size: 0.8rem; color: var(--texto-secundario);">Recibe ofertas y novedades.</p>
+                                <p style="font-size: 0.8rem; color: var(--texto-secundario);">Recibe novedades y descuentos especiales.</p>
                             </div>
-                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--oro);">
+                            <input type="checkbox" id="check-promo" checked style="width: 18px; height: 18px; accent-color: var(--naranja);">
                         </div>
                         <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--gris-borde); margin-bottom: 12px;">
                             <div>
                                 <p style="font-weight: 600; font-size: 0.9rem;">Actualizaciones de Pedidos</p>
-                                <p style="font-size: 0.8rem; color: var(--texto-secundario);">SMS cuando tu pedido esté en camino.</p>
+                                <p style="font-size: 0.8rem; color: var(--texto-secundario);">Notificaciones automáticas sobre el estado de tus compras.</p>
                             </div>
-                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--oro);">
+                            <input type="checkbox" id="check-pedidos-notif" checked style="width: 18px; height: 18px; accent-color: var(--naranja);">
                         </div>
-                        <button class="btn-outline mt-16">Guardar Preferencias</button>
+                        <button class="btn-outline mt-16" id="btn-guardar-preferencias" style="cursor: pointer;"><i class="fas fa-save"></i> Guardar Preferencias</button>
                     </div>
                 </div>
 
@@ -363,6 +337,80 @@
             <p>&copy; 2026 Industrial Supply Co. Todos los derechos reservados.</p>
         </div>
     </footer>
+
+    <!-- ========== MODAL: EDITAR PERFIL Y DIRECCIÓN ========== -->
+    <div id="modal-editar-perfil" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+        <div style="background:#fff; width:90%; max-width:520px; border-radius:12px; padding:28px; box-shadow:0 10px 25px rgba(0,0,0,0.2); position:relative; max-height:90vh; overflow-y:auto;">
+            <button id="btn-cerrar-modal-perfil" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:1.4rem; cursor:pointer; color:#64748b;">&times;</button>
+            <h3 style="margin-bottom:6px; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                <i class="fas fa-user-edit" style="color:#ea580c;"></i> Actualizar Información Personal
+            </h3>
+            <p style="font-size:0.85rem; color:#64748b; margin-bottom:20px;">Los cambios se sincronizarán directamente con tu cuenta en la base de datos.</p>
+            <form id="form-editar-perfil" style="display:flex; flex-direction:column; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Nombre:</label>
+                    <input type="text" id="edit-nombre" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Apellido:</label>
+                    <input type="text" id="edit-apellido" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Documento de Identidad / NIT:</label>
+                    <input type="text" id="edit-documento" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;" placeholder="Ej. 1020304050">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Teléfono / Celular:</label>
+                    <input type="text" id="edit-telefono" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;" placeholder="Ej. 300 123 4567">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Dirección de Entrega:</label>
+                    <input type="text" id="edit-direccion" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;" placeholder="Ej. Calle 100 # 15-20">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Ciudad:</label>
+                    <input type="text" id="edit-ciudad" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;" placeholder="Ej. Bogotá D.C.">
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                    <button type="button" id="btn-cancelar-perfil" class="btn-outline" style="padding:9px 16px; cursor:pointer;">Cancelar</button>
+                    <button type="submit" id="btn-guardar-perfil" style="padding:9px 20px; background:#ea580c; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">
+                        <i class="fas fa-save"></i> Guardar Cambios
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: CAMBIAR CONTRASEÑA ========== -->
+    <div id="modal-cambiar-contrasena" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999; align-items:center; justify-content:center; backdrop-filter:blur(4px);">
+        <div style="background:#fff; width:90%; max-width:440px; border-radius:12px; padding:28px; box-shadow:0 10px 25px rgba(0,0,0,0.2); position:relative;">
+            <button id="btn-cerrar-modal-password" style="position:absolute; top:16px; right:16px; background:none; border:none; font-size:1.4rem; cursor:pointer; color:#64748b;">&times;</button>
+            <h3 style="margin-bottom:6px; color:#0f172a; display:flex; align-items:center; gap:8px;">
+                <i class="fas fa-key" style="color:#ea580c;"></i> Cambiar Contraseña
+            </h3>
+            <p style="font-size:0.85rem; color:#64748b; margin-bottom:18px;">Ingresa tu contraseña actual y la nueva para actualizar tu clave de acceso.</p>
+            <form id="form-cambiar-contrasena" style="display:flex; flex-direction:column; gap:14px;">
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Contraseña Actual:</label>
+                    <input type="password" id="pass-actual" required style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Nueva Contraseña:</label>
+                    <input type="password" id="pass-nueva" required minlength="6" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;" placeholder="Mínimo 6 caracteres">
+                </div>
+                <div>
+                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Confirmar Nueva Contraseña:</label>
+                    <input type="password" id="pass-confirmar" required minlength="6" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;">
+                </div>
+                <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:10px;">
+                    <button type="button" id="btn-cancelar-password" class="btn-outline" style="padding:9px 16px; cursor:pointer;">Cancelar</button>
+                    <button type="submit" id="btn-guardar-password" style="padding:9px 20px; background:#ea580c; color:#fff; border:none; border-radius:6px; font-weight:600; cursor:pointer;">
+                        <i class="fas fa-check"></i> Actualizar Clave
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
 
     <script src="../js/api.js"></script>
     <script src="../js/sesion.js"></script>

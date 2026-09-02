@@ -177,20 +177,20 @@
     // ---- Determinar ruta de perfil/panel según página actual ----
     function obtenerRutas() {
         const path = window.location.pathname.replace(/\\/g, '/');
-        const profundidad = (path.match(/\//g) || []).length;
 
-        // Si estamos en la raíz o en /paginas directamente
         const base = path.includes('/admin/') || path.includes('/perfil/') ||
             path.includes('/sesion/') || path.includes('/inicio/') ||
             path.includes('/productos/') || path.includes('/carrito/') ||
             path.includes('/pago/') || path.includes('/registro/') ||
             path.includes('/nosotros/') || path.includes('/contacto/') ||
-            path.includes('/detalle_producto/') || path.includes('/confirmacion/')
+            path.includes('/vendedor/') || path.includes('/detalle_producto/') ||
+            path.includes('/confirmacion/')
             ? '../' : './';
 
         return {
             perfil: base + 'perfil/perfil.html',
             admin: base + 'admin/dashboard.html',
+            vendedor: base + 'vendedor/dashboard.html',
             inicio: base + 'inicio/inicio.html',
             sesion: base + 'sesion/index.html',
             carrito: base + 'carrito/carrito.html'
@@ -200,8 +200,10 @@
     // ---- Construir menú de usuario logueado ----
     function construirMenuUsuario(enlaceIcono, usuario) {
         const rutas = obtenerRutas();
-        const rol = (usuario.rol_nombre || usuario.rol || '').toLowerCase();
-        const esAdmin = rol.includes('admin') || rol.includes('empleado') || usuario.id_rol === 1 || usuario.id_rol === 2;
+        const rol = (usuario.rol_nombre || usuario.nombre_rol || usuario.rol || '').toLowerCase();
+        const esAdmin = rol.includes('admin') || usuario.id_rol === 1;
+        const esEmpleado = rol.includes('empleado') || rol.includes('vendedor') || usuario.id_rol === 2;
+        const tienePanel = esAdmin || esEmpleado;
         const iniciales = (usuario.nombre || 'U').substring(0, 1).toUpperCase();
         const nombreCorto = (usuario.nombre || 'Usuario').split(' ')[0];
 
@@ -221,9 +223,14 @@
         dropdown.className = 'sesion-dropdown';
         dropdown.id = 'sesion-dropdown';
 
-        const panelEnlace = esAdmin
-            ? `<a href="${rutas.admin}" class="sd-item"><i class="fas fa-th-large"></i>Panel Admin</a>`
-            : `<a href="${rutas.perfil}" class="sd-item"><i class="fas fa-user-circle"></i>Mi Perfil</a>`;
+        let panelEnlace = '';
+        if (esAdmin) {
+            panelEnlace = `<a href="${rutas.admin}" class="sd-item"><i class="fas fa-th-large"></i>Panel Admin</a>`;
+        } else if (esEmpleado) {
+            panelEnlace = `<a href="${rutas.vendedor}" class="sd-item"><i class="fas fa-store"></i>Panel Vendedor</a>`;
+        } else {
+            panelEnlace = `<a href="${rutas.perfil}" class="sd-item"><i class="fas fa-user-circle"></i>Mi Perfil</a>`;
+        }
 
         dropdown.innerHTML = `
             <div class="sesion-dropdown-header">

@@ -21,6 +21,12 @@ router.get('/dashboard', async (req, res) => {
         // Pedidos pendientes
         const [pedidosPendientes] = await pool.query("SELECT COUNT(*) AS total FROM pedido WHERE estado_pedido = 'pendiente'");
 
+        // Total pedidos
+        const [totalPedidos] = await pool.query("SELECT COUNT(*) AS total FROM pedido");
+
+        // Total proveedores
+        const [totalProveedores] = await pool.query("SELECT COUNT(*) AS total FROM proveedor");
+
         // Productos con stock bajo
         const [stockBajo] = await pool.query(`
             SELECT p.nombre_producto, i.cantidad_disponible, i.cantidad_minima
@@ -70,6 +76,8 @@ router.get('/dashboard', async (req, res) => {
             total_clientes: totalClientes[0].total,
             total_productos: totalProductos[0].total,
             pedidos_pendientes: pedidosPendientes[0].total,
+            total_pedidos: totalPedidos[0].total,
+            total_proveedores: totalProveedores[0].total,
             stock_bajo: stockBajo,
             ultimas_ventas: ultimasVentas,
             top_productos: topProductos,
