@@ -191,13 +191,21 @@ router.post('/', async (req, res) => {
 // PUT /api/pedidos/:id - Actualizar estado del pedido
 router.put('/:id', async (req, res) => {
     try {
-        let { estado_pedido, observaciones } = req.body;
+        let { estado_pedido, observaciones, direccion_entrega, total } = req.body;
         if (estado_pedido === 'en proceso') estado_pedido = 'en_proceso';
 
-        await pool.query(
-            'UPDATE pedido SET estado_pedido=?, observaciones=? WHERE id_pedido=?',
-            [estado_pedido, observaciones || null, req.params.id]
-        );
+        const params = [];
+        let updates = [];
+
+        if (estado_pedido !== undefined) { updates.push('estado_pedido = ?'); params.push(estado_pedido); }
+        if (observaciones !== undefined) { updates.push('observaciones = ?'); params.push(observaciones); }
+        if (direccion_entrega !== undefined) { updates.push('direccion_entrega = ?'); params.push(direccion_entrega); }
+        if (total !== undefined) { updates.push('total = ?'); params.push(total); }
+
+        if (updates.length > 0) {
+            params.push(req.params.id);
+            await pool.query(`UPDATE pedido SET ${updates.join(', ')} WHERE id_pedido = ?`, params);
+        }
 
         // Sincronizar estado de venta si cambia a completada
         if (estado_pedido === 'entregado') {
@@ -208,9 +216,47 @@ router.put('/:id', async (req, res) => {
             );
         }
 
-        res.json({ mensaje: 'Estado del pedido actualizado' });
+        res.json({ mensaje: 'Pedido actualizado exitosamente' });
     } catch (error) {
         res.status(500).json({ error: error.message });
+    }
+});
+
+// DELETE /api/pedidos/:id - Eliminar pedido
+router.delete('/:id', async (req, res) => {
+    const conn = await pool.getConnection();
+    try {
+        await conn.beginTransaction();
+
+        // 1. Obtener datos del pedido (para saber id_venta)
+        const [pedRows] = await conn.query('SELECT id_venta FROM pedido WHERE id_pedido = ?', [req.params.id]);
+        if (pedRows.length === 0) {
+            await conn.rollback();
+            return res.status(404).json({ error: 'Pedido no encontrado' });
+        }
+        const id_venta = pedRows[0].id_venta;
+
+        // 2. Eliminar detalles del pedido
+        await conn.query('DELETE FROM detalle_pedido WHERE id_pedido = ?', [req.params.id]);
+
+        // 3. Eliminar el pedido
+        await conn.query('DELETE FROM pedido WHERE id_pedido = ?', [req.params.id]);
+
+        // 4. Si tiene venta asociada, limpiar pagos y detalles de venta
+        if (id_venta) {
+            await conn.query('DELETE FROM pago WHERE id_venta = ?', [id_venta]);
+            await conn.query('DELETE FROM detalle_venta WHERE id_venta = ?', [id_venta]);
+            await conn.query('DELETE FROM venta WHERE id_venta = ?', [id_venta]);
+        }
+
+        await conn.commit();
+        res.json({ mensaje: 'Pedido eliminado exitosamente' });
+    } catch (error) {
+        await conn.rollback();
+        console.error('Error al eliminar pedido:', error);
+        res.status(500).json({ error: error.message });
+    } finally {
+        conn.release();
     }
 });
 

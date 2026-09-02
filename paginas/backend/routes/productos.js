@@ -94,12 +94,26 @@ router.post('/', async (req, res) => {
 // PUT /api/productos/:id
 router.put('/:id', async (req, res) => {
     try {
-        const { nombre_producto, descripcion, precio, imagen, estado, id_categoria, id_proveedor } = req.body;
+        const { nombre_producto, descripcion, precio, imagen, estado, id_categoria, id_proveedor, stock } = req.body;
         await pool.query(
             `UPDATE producto SET id_categoria=?, id_proveedor=?, nombre_producto=?, descripcion=?, precio=?, imagen=?, estado=?
              WHERE id_producto=?`,
             [id_categoria, id_proveedor || null, nombre_producto, descripcion || null, precio, imagen || null, estado || 'activo', req.params.id]
         );
+
+        if (stock !== undefined) {
+            const [invCheck] = await pool.query('SELECT id_inventario FROM inventario WHERE id_producto = ?', [req.params.id]);
+            if (invCheck.length > 0) {
+                await pool.query('UPDATE inventario SET cantidad_disponible = ?, fecha_actualizacion = NOW() WHERE id_producto = ?', [stock, req.params.id]);
+            } else {
+                await pool.query(
+                    `INSERT INTO inventario (id_producto, cantidad_disponible, cantidad_minima, cantidad_maxima, ubicacion, fecha_actualizacion, id_usuario)
+                     VALUES (?, ?, 5, 1000, 'bodega a', NOW(), 1)`,
+                    [req.params.id, stock]
+                );
+            }
+        }
+
         res.json({ mensaje: 'Producto actualizado exitosamente' });
     } catch (error) {
         res.status(500).json({ error: error.message });

@@ -49,17 +49,17 @@
                     <a href="pedidos.html" class="item-menu">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                         Pedidos
-                        <span class="insignia insignia-oscura">12</span>
+                        <span class="insignia insignia-oscura" id="insigniaPedidosBarra">--</span>
                     </a>
                     <a href="productos.html" class="item-menu">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         Productos
-                        <span class="insignia insignia-oscura">145</span>
+                        <span class="insignia insignia-oscura" id="insigniaProductosBarra">--</span>
                     </a>
                     <a href="clientes.html" class="item-menu">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         Clientes
-                        <span class="insignia insignia-oscura">48</span>
+                        <span class="insignia insignia-oscura" id="insigniaClientesBarra">--</span>
                     </a>
                 </div>
 
@@ -116,8 +116,8 @@
                         </div>
                         <div class="info-kpi">
                             <span class="etiqueta-kpi">Ventas totales</span>
-                            <span class="valor-kpi">$ 84.520.000</span>
-                            <span class="tendencia-kpi texto-verde">↑ 12% este mes</span>
+                            <span class="valor-kpi" id="kpiTotalVentas">--</span>
+                            <span class="tendencia-kpi texto-verde" id="kpiTendenciaVentas">Base de datos</span>
                         </div>
                     </div>
                     
@@ -127,8 +127,8 @@
                         </div>
                         <div class="info-kpi">
                             <span class="etiqueta-kpi">Pedidos</span>
-                            <span class="valor-kpi">12</span>
-                            <span class="tendencia-kpi texto-naranja">7 pendientes</span>
+                            <span class="valor-kpi" id="kpiConteoPedidos">--</span>
+                            <span class="tendencia-kpi texto-naranja" id="kpiTextoPendientes">-- pendientes</span>
                         </div>
                     </div>
 
@@ -137,9 +137,9 @@
                             <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         </div>
                         <div class="info-kpi">
-                            <span class="etiqueta-kpi">Clientes Corporativos</span>
-                            <span class="valor-kpi">48</span>
-                            <span class="tendencia-kpi texto-verde">↑ 3 cuentas nuevas</span>
+                            <span class="etiqueta-kpi">Clientes Registrados</span>
+                            <span class="valor-kpi" id="kpiClientes">--</span>
+                            <span class="tendencia-kpi texto-verde">En base de datos</span>
                         </div>
                     </div>
 
@@ -149,7 +149,7 @@
                         </div>
                         <div class="info-kpi">
                             <span class="etiqueta-kpi">Productos Activos</span>
-                            <span class="valor-kpi">1,450</span>
+                            <span class="valor-kpi" id="kpiProductos">--</span>
                             <span class="tendencia-kpi texto-gris">En catálogo</span>
                         </div>
                     </div>
@@ -160,7 +160,7 @@
                     <div class="encabezado-tarjeta">
                         <div>
                             <h2>Pedidos recientes por completar</h2>
-                            <span class="subtitulo-tarjeta">7 pedidos pendientes</span>
+                            <span class="subtitulo-tarjeta" id="subtituloPedidosPendientes">Cargando pedidos...</span>
                         </div>
                     </div>
                     <div class="tabla-responsiva">
@@ -175,46 +175,9 @@
                                     <th>ACCIONES</th>
                                 </tr>
                             </thead>
-                            <tbody>
+                            <tbody id="cuerpoTablaUltimosPedidos">
                                 <tr>
-                                    <td>#ORD-336923</td>
-                                    <td>Constructora Andina S.A.</td>
-                                    <td>$ 12.657.900</td>
-                                    <td><span class="estado estado-pendiente">● pendiente</span></td>
-                                    <td>31 de agosto de 2026 a las 04:27 p. m.</td>
-                                    <td><button class="boton-accion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-20491</td>
-                                    <td>Industrias Metalmecánicas</td>
-                                    <td>$ 4.195.400</td>
-                                    <td><span class="estado estado-pendiente">● pendiente</span></td>
-                                    <td>2026-08-30 15:40</td>
-                                    <td><button class="boton-accion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-20490</td>
-                                    <td>Logística del Norte Ltda.</td>
-                                    <td>$ 8.139.700</td>
-                                    <td><span class="estado estado-procesando">● procesando</span></td>
-                                    <td>2026-08-30 11:15</td>
-                                    <td><button class="boton-accion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-20489</td>
-                                    <td>Acero Corp.</td>
-                                    <td>$ 1.959.800</td>
-                                    <td><span class="estado estado-enviado">● enviado</span></td>
-                                    <td>2026-08-29 18:22</td>
-                                    <td><button class="boton-accion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-20487</td>
-                                    <td>Mantenimiento Integral</td>
-                                    <td>$ 3.509.700</td>
-                                    <td><span class="estado estado-pendiente">● pendiente</span></td>
-                                    <td>2026-08-28 20:10</td>
-                                    <td><button class="boton-accion"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                                    <td colspan="6" style="text-align:center; padding:20px; color:#64748b;"><i class="fas fa-spinner fa-spin"></i> Cargando pedidos desde la base de datos...</td>
                                 </tr>
                             </tbody>
                         </table>

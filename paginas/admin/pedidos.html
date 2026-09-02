@@ -377,7 +377,7 @@
                     </div>
                     <div class="tarjeta-info">
                         <span class="etiqueta-info"><i class="fas fa-credit-card"></i> Pago & Fecha</span>
-                        <h4 id="modalMetodoPago">Crédito Corporativo (30 días)</h4>
+                        <h4 id="modalMetodoPago">Transferencia Bancaria</h4>
                         <p id="modalFechaPedido">31 de agosto de 2026, 04:27 p. m.</p>
                     </div>
                 </div>
@@ -434,11 +434,16 @@
                 </div>
             </div>
 
-            <div class="pie-modal">
-                <button class="boton boton-secundario" id="btnImprimirPedido">
-                    <i class="fas fa-print"></i> Imprimir Guía / Factura
+            <div class="pie-modal" style="display:flex; justify-content:space-between;">
+                <button class="boton boton-peligro" id="btnEliminarPedidoModal" style="background:#fee2e2; color:#dc2626; border:1px solid #fca5a5;">
+                    <i class="fas fa-trash-alt"></i> Eliminar Pedido
                 </button>
-                <button class="boton boton-oscuro" id="btnCerrarModalDetallePie">Cerrar</button>
+                <div style="display:flex; gap:8px;">
+                    <button class="boton boton-secundario" id="btnImprimirPedido">
+                        <i class="fas fa-print"></i> Imprimir Factura
+                    </button>
+                    <button class="boton boton-oscuro" id="btnCerrarModalDetallePie">Cerrar</button>
+                </div>
             </div>
         </div>
     </div>
@@ -447,14 +452,14 @@
     <div class="superposicion-modal" id="modalNuevoPedido">
         <div class="contenedor-modal modal-mediano">
             <div class="encabezado-modal">
-                <h3>Registrar Nuevo Pedido Industrial</h3>
+                <h3>Registrar Nuevo Pedido</h3>
                 <button class="boton-cerrar-modal" id="btnCerrarModalNuevoPedido">&times;</button>
             </div>
             <form id="formularioNuevoPedido">
                 <div class="cuerpo-modal">
                     <div class="rejilla-formulario">
                         <div class="grupo-formulario ancho-completo">
-                            <label>Empresa Cliente *</label>
+                            <label>Empresa / Cliente *</label>
                             <input type="text" id="nuevoNombreCliente" required placeholder="Ej: Minería & Obras Andinas S.A.S." class="entrada-filtro">
                         </div>
                         <div class="grupo-formulario">
@@ -484,10 +489,9 @@
                         <div class="grupo-formulario">
                             <label>Método de Pago</label>
                             <select id="nuevoMetodoPago" class="seleccion-filtro">
-                                <option value="Crédito Corporativo (30 días)">Crédito Corporativo (30 días)</option>
                                 <option value="Transferencia Bancaria">Transferencia Bancaria</option>
-                                <option value="Tarjeta de Crédito Empresarial">Tarjeta de Crédito Empresarial</option>
-                                <option value="Cheque Contraentrega">Cheque Contraentrega</option>
+                                <option value="Billetera Digital (Nequi/Daviplata)">Billetera Digital (Nequi/Daviplata)</option>
+                                <option value="Pago Contra Entrega">Pago Contra Entrega</option>
                             </select>
                         </div>
                         <div class="grupo-formulario">

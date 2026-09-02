@@ -44,9 +44,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${fecha}</td>
                 <td><span class="${esActivo ? 'texto-verde' : 'texto-rojo'}">● ${u.estado}</span></td>
                 <td style="text-align:center;display:flex;gap:6px;justify-content:center">
-                    <button class="boton-accion btn-editar-usr" data-id="${u.id_usuario}" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="boton-accion btn-toggle-usr" data-id="${u.id_usuario}" title="${esActivo ? 'Desactivar' : 'Activar'}" style="color:${esActivo ? '#ef4444' : '#22c55e'}">
+                    <button class="boton-accion btn-editar-usr" data-id="${u.id_usuario}" title="Editar Usuario"><i class="fas fa-edit"></i></button>
+                    <button class="boton-accion btn-toggle-usr" data-id="${u.id_usuario}" title="${esActivo ? 'Desactivar' : 'Activar'}" style="color:${esActivo ? '#f59e0b' : '#22c55e'}">
                         <i class="fas ${esActivo ? 'fa-user-slash' : 'fa-user-check'}"></i>
+                    </button>
+                    <button class="boton-accion btn-eliminar-usr" data-id="${u.id_usuario}" title="Eliminar Usuario" style="color:#ef4444">
+                        <i class="fas fa-trash-alt"></i>
                     </button>
                 </td>
             `;
@@ -78,9 +81,25 @@ document.addEventListener('DOMContentLoaded', async () => {
             btn.addEventListener('click', async () => {
                 const id = btn.getAttribute('data-id');
                 try {
-                    const res = await API.toggleEstadoUsuario(id);
+                    await API.toggleEstadoUsuario(id);
                     await cargar();
                 } catch (err) { alert('Error: ' + err.message); }
+            });
+        });
+
+        // Eliminar Usuario
+        document.querySelectorAll('.btn-eliminar-usr').forEach(btn => {
+            btn.addEventListener('click', async () => {
+                const id = btn.getAttribute('data-id');
+                const usr = datos.find(u => String(u.id_usuario) === String(id));
+                const nombre = usr ? `${usr.nombre} (${usr.correo})` : `#${id}`;
+                if (!confirm(`¿Estás seguro de eliminar al usuario "${nombre}" de la base de datos MySQL?`)) return;
+
+                try {
+                    await API.eliminarUsuario(id);
+                    alert(`¡Usuario "${nombre}" eliminado exitosamente!`);
+                    await cargar();
+                } catch (err) { alert('Error al eliminar usuario: ' + err.message); }
             });
         });
     }

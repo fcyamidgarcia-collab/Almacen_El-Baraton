@@ -5,11 +5,12 @@ const pool = require('../db');
 // GET /api/reportes/dashboard - KPIs principales
 router.get('/dashboard', async (req, res) => {
     try {
-        // Total ventas del mes actual
+        // Total ventas históricas y ventas del mes actual
+        const [ventasTotal] = await pool.query(`SELECT COALESCE(SUM(total), 0) AS total_ventas, COUNT(*) AS num_ventas FROM pedido`);
         const [ventasMes] = await pool.query(`
             SELECT COALESCE(SUM(total), 0) AS total_ventas, COUNT(*) AS num_ventas
-            FROM venta
-            WHERE MONTH(fecha_venta) = MONTH(NOW()) AND YEAR(fecha_venta) = YEAR(NOW())
+            FROM pedido
+            WHERE MONTH(fecha_pedido) = MONTH(NOW()) AND YEAR(fecha_pedido) = YEAR(NOW())
         `);
 
         // Total clientes activos
@@ -72,6 +73,7 @@ router.get('/dashboard', async (req, res) => {
         `);
 
         res.json({
+            ventas_total: ventasTotal[0],
             ventas_mes: ventasMes[0],
             total_clientes: totalClientes[0].total,
             total_productos: totalProductos[0].total,

@@ -242,11 +242,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <td><span class="celda-fecha">${pedido.fecha}</span></td>
                     <td style="text-align: center;">
                         <div class="acciones-tabla">
-                            <button class="boton-accion btn-ver-pedido" data-id="${pedido.id_raw}" title="Ver detalle">
+                            <button class="boton-accion btn-ver-pedido" data-id="${pedido.id_raw}" title="Ver detalle / Editar">
                                 <i class="fas fa-eye"></i>
                             </button>
                             <button class="boton-accion btn-imprimir-fila" data-id="${pedido.id_raw}" title="Ver Factura">
                                 <i class="fas fa-file-invoice"></i>
+                            </button>
+                            <button class="boton-accion btn-eliminar-pedido-fila" data-id="${pedido.id_raw}" title="Eliminar Pedido" style="color:#ef4444">
+                                <i class="fas fa-trash-alt"></i>
                             </button>
                         </div>
                     </td>
@@ -260,6 +263,15 @@ document.addEventListener('DOMContentLoaded', async () => {
             elem.addEventListener('click', () => {
                 const idRaw = elem.getAttribute('data-id');
                 abrirModalDetalle(idRaw);
+            });
+        });
+
+        // Conectar botones de eliminar directo en fila
+        document.querySelectorAll('.btn-eliminar-pedido-fila').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+                e.stopPropagation();
+                const idRaw = btn.getAttribute('data-id');
+                await confirmarYEliminarPedido(idRaw);
             });
         });
 
@@ -452,6 +464,30 @@ document.addEventListener('DOMContentLoaded', async () => {
             } finally {
                 btnActualizarEstadoModal.disabled = false;
                 btnActualizarEstadoModal.innerHTML = originalHTML;
+            }
+        });
+    }
+
+    async function confirmarYEliminarPedido(idRaw) {
+        const p = datosPedidos.find(o => String(o.id_raw) === String(idRaw));
+        const ref = p ? p.id : `#${idRaw}`;
+        if (!confirm(`¿Estás seguro de eliminar el pedido ${ref} de la base de datos MySQL? Esta acción no se puede deshacer.`)) return;
+
+        try {
+            await API.eliminarPedido(idRaw);
+            alert(`¡Pedido ${ref} eliminado exitosamente de la base de datos!`);
+            if (modalDetallePedido) modalDetallePedido.classList.remove('activo');
+            await cargarPedidosDesdeBD();
+        } catch (err) {
+            alert('Error al eliminar pedido: ' + err.message);
+        }
+    }
+
+    const btnEliminarModal = document.getElementById('btnEliminarPedidoModal');
+    if (btnEliminarModal) {
+        btnEliminarModal.addEventListener('click', async () => {
+            if (pedidoSeleccionadoActual) {
+                await confirmarYEliminarPedido(pedidoSeleccionadoActual.id_raw);
             }
         });
     }

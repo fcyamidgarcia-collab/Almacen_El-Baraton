@@ -147,6 +147,15 @@ const API = {
             body: JSON.stringify({ estado_pedido, observaciones })
         });
     },
+    async actualizarPedido(id, datos) {
+        return await this.request(`/pedidos/${id}`, {
+            method: 'PUT',
+            body: JSON.stringify(datos)
+        });
+    },
+    async eliminarPedido(id) {
+        return await this.request(`/pedidos/${id}`, { method: 'DELETE' });
+    },
 
     // ---- 7. USUARIOS ----
     async getUsuarios() { return await this.request('/usuarios'); },

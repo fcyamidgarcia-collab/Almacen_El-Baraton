@@ -1,4 +1,4 @@
-// ========== CLIENTES ADMIN - CONECTADO A MYSQL ==========
+// ========== CLIENTES ADMIN - CONECTADO A MYSQL (COMPLETO EDITAR / ELIMINAR) ==========
 
 document.addEventListener('DOMContentLoaded', async () => {
     let datos = [];
@@ -6,110 +6,178 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const tbody = document.getElementById('cuerpoTablaClientes');
     const modal = document.getElementById('modalCliente');
+    const modalTitulo = document.getElementById('modalClienteTitulo');
     const btnNuevo = document.getElementById('btnNuevoCliente');
     const btnCerrar = document.getElementById('btnCerrarModalCliente');
     const btnCancelar = document.getElementById('btnCancelarCliente');
     const form = document.getElementById('formularioCliente');
 
-    function fmt(val) { return '$ ' + Number(val || 0).toLocaleString('es-CO'); }
+    const kpiTotales = document.getElementById('kpiClientesTotales');
+    const kpiActivos = document.getElementById('kpiClientesActivos');
+    const kpiInactivos = document.getElementById('kpiClientesInactivos');
 
     async function cargar() {
         try {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando clientes...</td></tr>`;
-            datos = await API.getClientes();
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando clientes desde MySQL...</td></tr>`;
+            const [clientes, pedidos, prods] = await Promise.all([
+                API.getClientes(),
+                API.getPedidos().catch(() => []),
+                API.getProductos({ estado: 'activo' }).catch(() => [])
+            ]);
+
+            datos = clientes || [];
+
+            // Actualizar KPIs
+            const total = datos.length;
+            const activos = datos.filter(c => (c.estado || 'activo') === 'activo').length;
+            const inactivos = total - activos;
+
+            if (kpiTotales) kpiTotales.textContent = total;
+            if (kpiActivos) kpiActivos.textContent = activos;
+            if (kpiInactivos) kpiInactivos.textContent = inactivos;
+
+            // Insignias del Sidebar
+            const bCli = document.getElementById('insigniaClientesBarra');
+            const bPed = document.getElementById('insigniaPedidosBarra');
+            const bProd = document.getElementById('insigniaProductosBarra');
+            if (bCli) bCli.textContent = total;
+            if (bPed) bPed.textContent = pedidos.length;
+            if (bProd) bProd.textContent = prods.length;
+
             renderizar();
         } catch (err) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error: ${err.message}</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error al conectar con MySQL: ${err.message}</td></tr>`;
         }
     }
 
     function renderizar() {
         tbody.innerHTML = '';
         if (datos.length === 0) {
-            tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:25px;color:#64748b">No hay clientes registrados.</td></tr>`;
+            tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:25px;color:#64748b">No hay clientes registrados en la base de datos.</td></tr>`;
             return;
         }
+
         datos.forEach(c => {
             const tr = document.createElement('tr');
-            const estado = c.estado === 'activo'
+            const esActivo = (c.estado || 'activo') === 'activo';
+            const badgeEstado = esActivo
                 ? '<span class="estado estado-enviado">● Activo</span>'
-                : '<span class="estado estado-pendiente">● Inactivo</span>';
+                : '<span class="estado estado-cancelado">● Inactivo</span>';
+
             tr.innerHTML = `
                 <td>
-                    <span class="nombre-cliente-tabla">${c.nombre} ${c.apellido || ''}</span>
-                    <span class="nit-cliente-tabla">Doc: ${c.documento_identidad || 'N/A'}</span>
+                    <strong class="nombre-cliente-tabla">${c.nombre} ${c.apellido || ''}</strong>
                 </td>
-                <td><strong>${c.nombre} ${c.apellido || ''}</strong><br><small style="color:#64748b">${c.correo || 'Sin correo'}</small></td>
-                <td>${c.ciudad || 'N/A'}</td>
-                <td>${c.telefono || 'Sin teléfono'}</td>
+                <td><code>${c.documento_identidad || 'Sin documento'}</code></td>
+                <td>
+                    <strong>${c.telefono || 'Sin teléfono'}</strong><br>
+                    <small style="color:#64748b">${c.correo || 'Sin correo registrado'}</small>
+                </td>
+                <td>${c.ciudad || 'Bogotá D.C.'}</td>
+                <td><small style="color:#475569">${c.direccion || 'Sin dirección'}</small></td>
                 <td><span class="insignia" style="background:#f1f5f9;color:#334155">${c.total_pedidos || 0} pedidos</span></td>
-                <td>${estado}</td>
+                <td>${badgeEstado}</td>
                 <td style="text-align:center;display:flex;gap:6px;justify-content:center">
-                    <button class="boton-accion btn-editar-cli" data-id="${c.id_cliente}" title="Editar"><i class="fas fa-edit"></i></button>
-                    <button class="boton-accion btn-desactivar-cli" data-id="${c.id_cliente}" title="Desactivar" style="color:#ef4444"><i class="fas fa-user-slash"></i></button>
+                    <button class="boton-accion btn-editar-cli" data-id="${c.id_cliente}" title="Editar Cliente"><i class="fas fa-edit"></i></button>
+                    <button class="boton-accion btn-eliminar-cli" data-id="${c.id_cliente}" title="Eliminar Cliente" style="color:#ef4444"><i class="fas fa-trash-alt"></i></button>
                 </td>
             `;
             tbody.appendChild(tr);
         });
 
+        // Botones de editar
         document.querySelectorAll('.btn-editar-cli').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = parseInt(btn.getAttribute('data-id'));
                 const cli = datos.find(c => c.id_cliente === id);
                 if (!cli) return;
+
                 modoEdicion = id;
+                if (modalTitulo) modalTitulo.textContent = `Editar Cliente #${id}`;
+
                 document.getElementById('cliNombre').value = cli.nombre || '';
+                document.getElementById('cliApellido').value = cli.apellido || '';
                 document.getElementById('cliNit').value = cli.documento_identidad || '';
-                const cliContacto = document.getElementById('cliContacto');
-                if (cliContacto) cliContacto.value = cli.telefono || '';
-                const cliEmail = document.getElementById('cliEmail');
-                if (cliEmail) cliEmail.value = cli.correo || '';
-                const cliCiudad = document.getElementById('cliCiudad');
-                if (cliCiudad) cliCiudad.value = cli.ciudad || '';
+                document.getElementById('cliContacto').value = cli.telefono || '';
+                document.getElementById('cliDireccion').value = cli.direccion || '';
+                document.getElementById('cliCiudad').value = cli.ciudad || '';
+
                 modal.classList.add('activo');
             });
         });
 
-        document.querySelectorAll('.btn-desactivar-cli').forEach(btn => {
+        // Botones de eliminar
+        document.querySelectorAll('.btn-eliminar-cli').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const id = btn.getAttribute('data-id');
-                if (!confirm('¿Desactivar este cliente?')) return;
+                const cli = datos.find(c => String(c.id_cliente) === String(id));
+                const nombre = cli ? `${cli.nombre} ${cli.apellido || ''}`.trim() : `#${id}`;
+
+                if (!confirm(`¿Estás seguro de eliminar al cliente "${nombre}" de la base de datos MySQL? Esta acción no se puede deshacer.`)) return;
+
                 try {
                     await API.eliminarCliente(id);
+                    alert(`¡Cliente "${nombre}" eliminado exitosamente!`);
                     await cargar();
-                } catch (err) { alert('Error: ' + err.message); }
+                } catch (err) {
+                    alert('Error al eliminar cliente: ' + err.message);
+                }
             });
         });
     }
 
-    btnNuevo?.addEventListener('click', () => { modoEdicion = null; form.reset(); modal.classList.add('activo'); });
-    btnCerrar?.addEventListener('click', () => modal.classList.remove('activo'));
-    btnCancelar?.addEventListener('click', () => modal.classList.remove('activo'));
-
-    form?.addEventListener('submit', async e => {
-        e.preventDefault();
-        const payload = {
-            nombre: document.getElementById('cliNombre').value.trim(),
-            apellido: document.getElementById('cliApellido')?.value.trim() || '',
-            documento_identidad: document.getElementById('cliNit').value.trim(),
-            telefono: document.getElementById('cliContacto')?.value.trim() || '',
-            ciudad: document.getElementById('cliCiudad')?.value.trim() || '',
-            estado: 'activo'
-        };
-        try {
-            if (modoEdicion) {
-                await API.actualizarCliente(modoEdicion, payload);
-                alert('¡Cliente actualizado!');
-            } else {
-                await API.crearCliente(payload);
-                alert('¡Cliente registrado en MySQL!');
-            }
-            modal.classList.remove('activo');
-            form.reset();
+    if (btnNuevo) {
+        btnNuevo.addEventListener('click', () => {
             modoEdicion = null;
-            await cargar();
-        } catch (err) { alert('Error: ' + err.message); }
-    });
+            if (modalTitulo) modalTitulo.textContent = 'Registrar Nuevo Cliente';
+            form.reset();
+            modal.classList.add('activo');
+        });
+    }
+
+    if (btnCerrar) btnCerrar.addEventListener('click', () => modal.classList.remove('activo'));
+    if (btnCancelar) btnCancelar.addEventListener('click', () => modal.classList.remove('activo'));
+
+    if (form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btnSubmit = document.getElementById('btnGuardarCliente');
+            const originalHTML = btnSubmit.innerHTML;
+
+            const payload = {
+                nombre: document.getElementById('cliNombre').value.trim(),
+                apellido: document.getElementById('cliApellido').value.trim(),
+                documento_identidad: document.getElementById('cliNit').value.trim(),
+                telefono: document.getElementById('cliContacto').value.trim(),
+                direccion: document.getElementById('cliDireccion').value.trim(),
+                ciudad: document.getElementById('cliCiudad').value.trim(),
+                estado: 'activo'
+            };
+
+            try {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+
+                if (modoEdicion) {
+                    await API.actualizarCliente(modoEdicion, payload);
+                    alert('¡Cliente actualizado exitosamente en MySQL!');
+                } else {
+                    await API.crearCliente(payload);
+                    alert('¡Cliente registrado exitosamente en MySQL!');
+                }
+
+                modal.classList.remove('activo');
+                form.reset();
+                modoEdicion = null;
+                await cargar();
+            } catch (err) {
+                alert('Error al procesar cliente: ' + err.message);
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = originalHTML;
+            }
+        });
+    }
 
     await cargar();
 });

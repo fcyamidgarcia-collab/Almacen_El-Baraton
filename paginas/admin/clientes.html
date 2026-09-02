@@ -51,17 +51,17 @@
                     <a href="pedidos.html" class="item-menu">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                         Pedidos
-                        <span class="insignia insignia-oscura">12</span>
+                        <span class="insignia insignia-oscura" id="insigniaPedidosBarra">--</span>
                     </a>
                     <a href="productos.html" class="item-menu">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         Productos
-                        <span class="insignia insignia-oscura">145</span>
+                        <span class="insignia insignia-oscura" id="insigniaProductosBarra">--</span>
                     </a>
                     <a href="clientes.html" class="item-menu activo">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         Clientes
-                        <span class="insignia insignia-oscura">48</span>
+                        <span class="insignia insignia-oscura" id="insigniaClientesBarra">--</span>
                     </a>
                 </div>
 
@@ -114,24 +114,24 @@
                         <div class="icono-kpi fondo-azul-claro"><i class="fas fa-building texto-azul"></i></div>
                         <div class="info-kpi">
                             <span class="etiqueta-kpi">Clientes Totales</span>
-                            <span class="valor-kpi">48</span>
+                            <span class="valor-kpi" id="kpiClientesTotales">--</span>
                             <span class="tendencia-kpi texto-azul">Empresas registradas</span>
                         </div>
                     </div>
                     <div class="tarjeta-kpi">
                         <div class="icono-kpi fondo-verde-claro"><i class="fas fa-check-circle texto-verde"></i></div>
                         <div class="info-kpi">
-                            <span class="etiqueta-kpi">Activos con Crédito</span>
-                            <span class="valor-kpi">42</span>
-                            <span class="tendencia-kpi texto-verde">Aprobados</span>
+                            <span class="etiqueta-kpi">Clientes Activos</span>
+                            <span class="valor-kpi" id="kpiClientesActivos">--</span>
+                            <span class="tendencia-kpi texto-verde">Habilitados</span>
                         </div>
                     </div>
                     <div class="tarjeta-kpi">
                         <div class="icono-kpi fondo-naranja-claro"><i class="fas fa-clock texto-naranja"></i></div>
                         <div class="info-kpi">
-                            <span class="etiqueta-kpi">En Revisión</span>
-                            <span class="valor-kpi">6</span>
-                            <span class="tendencia-kpi texto-naranja">Pendiente cupo</span>
+                            <span class="etiqueta-kpi">Inactivos</span>
+                            <span class="valor-kpi" id="kpiClientesInactivos">--</span>
+                            <span class="tendencia-kpi texto-naranja">Sin actividad</span>
                         </div>
                     </div>
                 </div>
@@ -139,8 +139,8 @@
                 <div class="tarjeta-datos">
                     <div class="encabezado-tarjeta contenedor-encabezado-pedidos">
                         <div>
-                            <h2>Directorio de Clientes Corporativos</h2>
-                            <span class="subtitulo-tarjeta">Gestión de cuentas empresa, créditos e historial</span>
+                            <h2>Directorio de Clientes Registrados</h2>
+                            <span class="subtitulo-tarjeta">Gestión y administración de cuentas de clientes</span>
                         </div>
                         <button class="boton boton-principal" id="btnNuevoCliente">
                             <i class="fas fa-plus"></i> Nuevo Cliente
@@ -150,10 +150,11 @@
                         <table class="tabla-datos">
                             <thead>
                                 <tr>
-                                    <th>EMPRESA / NIT</th>
-                                    <th>CONTACTO PRINCIPAL</th>
+                                    <th>EMPRESA / NOMBRE</th>
+                                    <th>DOCUMENTO / NIT</th>
+                                    <th>CONTACTO / EMAIL</th>
                                     <th>CIUDAD</th>
-                                    <th>CUPO CRÉDITO</th>
+                                    <th>DIRECCIÓN</th>
                                     <th>PEDIDOS</th>
                                     <th>ESTADO</th>
                                     <th style="text-align: center;">ACCIONES</th>
@@ -167,27 +168,27 @@
         </main>
     </div>
 
-    <!-- MODAL NUEVO CLIENTE -->
+    <!-- MODAL CLIENTE (CREAR / EDITAR) -->
     <div class="superposicion-modal" id="modalCliente">
         <div class="contenedor-modal modal-mediano">
             <div class="encabezado-modal">
-                <h3>Registrar Cliente Corporativo</h3>
+                <h3 id="modalClienteTitulo">Registrar Cliente</h3>
                 <button class="boton-cerrar-modal" id="btnCerrarModalCliente">&times;</button>
             </div>
             <form id="formularioCliente">
                 <div class="cuerpo-modal">
                     <div class="rejilla-formulario">
-                        <div class="grupo-formulario"><label>Razón Social *</label><input type="text" id="cliNombre" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>NIT / RUC *</label><input type="text" id="cliNit" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Contacto Principal *</label><input type="text" id="cliContacto" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Correo Electrónico *</label><input type="email" id="cliEmail" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Ciudad *</label><input type="text" id="cliCiudad" required class="entrada-filtro"></div>
-                        <div class="grupo-formulario"><label>Cupo Crédito ($ COP)</label><input type="number" id="cliCredito" value="15000000" class="entrada-filtro"></div>
+                        <div class="grupo-formulario"><label>Nombre / Razón Social *</label><input type="text" id="cliNombre" required class="entrada-filtro" placeholder="Ej: Aceros Industriales"></div>
+                        <div class="grupo-formulario"><label>Apellido (opcional)</label><input type="text" id="cliApellido" class="entrada-filtro" placeholder="Ej: S.A.S."></div>
+                        <div class="grupo-formulario"><label>Documento de Identidad / NIT *</label><input type="text" id="cliNit" required class="entrada-filtro" placeholder="Ej: 900.123.456-7"></div>
+                        <div class="grupo-formulario"><label>Teléfono / Celular *</label><input type="text" id="cliContacto" required class="entrada-filtro" placeholder="Ej: 300 123 4567"></div>
+                        <div class="grupo-formulario"><label>Dirección de Entrega *</label><input type="text" id="cliDireccion" required class="entrada-filtro" placeholder="Ej: Cra 10 # 20-30"></div>
+                        <div class="grupo-formulario"><label>Ciudad *</label><input type="text" id="cliCiudad" required class="entrada-filtro" placeholder="Ej: Bogotá D.C."></div>
                     </div>
                 </div>
                 <div class="pie-modal">
                     <button type="button" class="boton boton-secundario" id="btnCancelarCliente">Cancelar</button>
-                    <button type="submit" class="boton boton-principal">Guardar Cliente</button>
+                    <button type="submit" class="boton boton-principal" id="btnGuardarCliente">Guardar Cliente</button>
                 </div>
             </form>
         </div>
