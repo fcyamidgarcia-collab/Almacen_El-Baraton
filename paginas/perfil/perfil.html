@@ -61,7 +61,7 @@
                 <h2>Mi Cuenta</h2>
                 <ul class="sidebar-menu">
                     <li>
-                        <a href="#" class="menu-item activo">
+                        <a href="#" class="menu-item activo" data-target="resumen">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                                 <rect x="3" y="3" width="7" height="7"></rect>
                                 <rect x="14" y="3" width="7" height="7"></rect>
@@ -72,7 +72,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="menu-item">
+                        <a href="#" class="menu-item" data-target="pedidos">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                                 <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                                 <polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline>
@@ -82,7 +82,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="menu-item">
+                        <a href="#" class="menu-item" data-target="direcciones">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                                 <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                                 <circle cx="12" cy="10" r="3"></circle>
@@ -91,7 +91,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="menu-item">
+                        <a href="#" class="menu-item" data-target="pagos">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                                 <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                                 <line x1="1" y1="10" x2="23" y2="10"></line>
@@ -100,7 +100,7 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" class="menu-item">
+                        <a href="#" class="menu-item" data-target="configuracion">
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="18" height="18">
                                 <circle cx="12" cy="12" r="3"></circle>
                                 <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
@@ -113,10 +113,11 @@
 
             <!-- Main Content -->
             <main class="perfil-contenido">
-                <div class="perfil-header">
-                    <h1>Resumen de Cuenta</h1>
-                    <p>Gestiona tu información y actividad reciente.</p>
-                </div>
+                <div id="resumen" class="seccion-tab activa">
+                    <div class="perfil-header">
+                        <h1>Resumen de Cuenta</h1>
+                        <p>Gestiona tu información y actividad reciente.</p>
+                    </div>
 
                 <!-- Bloque 1: Perfil y Nivel -->
                 <div class="grid-2-col">
@@ -232,6 +233,96 @@
                             <p>Agrega una capa extra de seguridad a tu cuenta corporativa.</p>
                             <button class="btn-solid-brown w-full mt-16">Configurar 2FA</button>
                         </div>
+                    </div>
+                </div>
+
+                </div> <!-- Fin de seccion-resumen -->
+
+                <!-- Seccion 2: Mis Pedidos -->
+                <div id="pedidos" class="seccion-tab">
+                    <div class="perfil-header">
+                        <h1>Mis Pedidos</h1>
+                        <p>Historial completo de tus compras e invoices.</p>
+                    </div>
+                    <div class="tarjeta-seccion mt-24" style="padding: 30px; text-align: center;">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="var(--gris)" stroke-width="1.5" width="48" height="48" style="margin: 0 auto 16px;">
+                            <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        </svg>
+                        <h3 style="margin-bottom: 8px;">No hay pedidos anteriores</h3>
+                        <p style="color: var(--texto-secundario);">Aquí se mostrará el historial completo de tus pedidos una vez que realices compras.</p>
+                        <a href="../productos/productos.html" class="btn-outline" style="display: inline-block; margin-top: 16px;">Ir a la Tienda</a>
+                    </div>
+                </div>
+
+                <!-- Seccion 3: Direcciones -->
+                <div id="direcciones" class="seccion-tab">
+                    <div class="perfil-header">
+                        <h1>Direcciones de Envío</h1>
+                        <p>Gestiona tus direcciones de facturación y entrega.</p>
+                    </div>
+                    <div class="tarjeta-seccion mt-24" style="padding: 24px;">
+                        <div class="grid-2-col">
+                            <div style="border: 1px dashed var(--gris-borde); border-radius: 8px; padding: 24px; text-align: center; cursor: pointer;">
+                                <span style="font-size: 2rem; color: var(--oro);">+</span>
+                                <p style="font-weight: 600; margin-top: 8px;">Agregar Nueva Dirección</p>
+                            </div>
+                            <div class="tarjeta-perfil" style="box-shadow: none;">
+                                <h4 style="margin-bottom: 8px;">Sede Principal (Predeterminada)</h4>
+                                <p style="font-size: 0.85rem; color: var(--texto-secundario); line-height: 1.5;">Av. Industrial 4500, Nave 3<br>Parque Logístico Sur<br>Ciudad, CP 1000<br>Tel: 555-0198</p>
+                                <div style="margin-top: 12px; display: flex; gap: 8px;">
+                                    <button class="btn-outline" style="padding: 4px 10px; font-size: 0.75rem;">Editar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seccion 4: Pagos -->
+                <div id="pagos" class="seccion-tab">
+                    <div class="perfil-header">
+                        <h1>Métodos de Pago</h1>
+                        <p>Tus tarjetas y métodos de pago guardados.</p>
+                    </div>
+                    <div class="tarjeta-seccion mt-24" style="padding: 24px;">
+                        <div class="grid-2-col">
+                            <div style="border: 1px dashed var(--gris-borde); border-radius: 8px; padding: 24px; text-align: center; cursor: pointer;">
+                                <span style="font-size: 2rem; color: var(--oro);">+</span>
+                                <p style="font-weight: 600; margin-top: 8px;">Agregar Método de Pago</p>
+                            </div>
+                            <div class="tarjeta-perfil" style="box-shadow: none; display: flex; align-items: center; gap: 16px;">
+                                <div style="width: 50px; height: 32px; background: #1f2937; color: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; font-weight: bold;">VISA</div>
+                                <div>
+                                    <h4 style="font-size: 0.95rem;">Termina en **** 4242</h4>
+                                    <p style="font-size: 0.8rem; color: var(--texto-secundario);">Expira 12/25</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seccion 5: Configuración -->
+                <div id="configuracion" class="seccion-tab">
+                    <div class="perfil-header">
+                        <h1>Configuración</h1>
+                        <p>Preferencias de tu cuenta y notificaciones.</p>
+                    </div>
+                    <div class="tarjeta-seccion mt-24" style="padding: 24px;">
+                        <h4 style="margin-bottom: 16px; font-size: 1rem;">Notificaciones</h4>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--gris-borde); margin-bottom: 12px;">
+                            <div>
+                                <p style="font-weight: 600; font-size: 0.9rem;">Correos Promocionales</p>
+                                <p style="font-size: 0.8rem; color: var(--texto-secundario);">Recibe ofertas y novedades.</p>
+                            </div>
+                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--oro);">
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid var(--gris-borde); margin-bottom: 12px;">
+                            <div>
+                                <p style="font-weight: 600; font-size: 0.9rem;">Actualizaciones de Pedidos</p>
+                                <p style="font-size: 0.8rem; color: var(--texto-secundario);">SMS cuando tu pedido esté en camino.</p>
+                            </div>
+                            <input type="checkbox" checked style="width: 18px; height: 18px; accent-color: var(--oro);">
+                        </div>
+                        <button class="btn-outline mt-16">Guardar Preferencias</button>
                     </div>
                 </div>
 
