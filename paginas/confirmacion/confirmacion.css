@@ -36,7 +36,6 @@ body {
     color: var(--texto-oscuro);
     background: var(--fondo-claro);
     line-height: 1.6;
-    padding-top: 64px;
 }
 
 a {

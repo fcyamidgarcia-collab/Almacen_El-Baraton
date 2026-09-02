@@ -187,7 +187,7 @@ img {
    LAYOUT PERFIL
    ========================================== */
 .perfil-layout {
-    padding-top: 100px;
+    padding-top: 40px;
     padding-bottom: 64px;
     min-height: calc(100vh - 80px);
 }
@@ -575,140 +575,7 @@ img {
 
 .mt-16 { margin-top: 16px; }
 
-/* ==========================================
-   FOOTER
-   ========================================== */
-.pie-pagina {
-    background: var(--nav-fondo);
-    padding: 56px 0 0;
-    color: var(--gris);
-    margin-top: auto;
-}
 
-.pie-grid {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr 1fr 1fr;
-    gap: 40px;
-    padding-bottom: 40px;
-    border-bottom: 1px solid var(--borde);
-}
-
-.pie-logo {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: var(--blanco);
-    margin-bottom: 12px;
-}
-
-.pie-principal p {
-    font-size: 0.83rem;
-    line-height: 1.6;
-    margin-bottom: 16px;
-}
-
-.pie-boletin-titulo {
-    font-size: 0.85rem;
-    font-weight: 600;
-    color: var(--blanco);
-    margin-bottom: 10px !important;
-}
-
-.formulario-boletin {
-    display: flex;
-    gap: 8px;
-}
-
-.formulario-boletin input {
-    flex: 1;
-    padding: 10px 14px;
-    border-radius: 8px;
-    border: 1px solid #374151;
-    background: #1f2937;
-    color: var(--blanco);
-    font-size: 0.83rem;
-    font-family: var(--fuente);
-    outline: none;
-    transition: var(--transicion);
-}
-
-.formulario-boletin input:focus {
-    border-color: var(--naranja);
-}
-
-.formulario-boletin input::placeholder { color: var(--gris); }
-
-.btn-suscribir {
-    padding: 10px 18px;
-    background: var(--naranja);
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 0.83rem;
-    font-weight: 600;
-    font-family: var(--fuente);
-    cursor: pointer;
-    transition: var(--transicion);
-    white-space: nowrap;
-}
-
-.btn-suscribir:hover { background: var(--naranja-hover); }
-
-.pie-columna h4 {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--blanco);
-    letter-spacing: 1.5px;
-    margin-bottom: 16px;
-}
-
-.pie-columna ul li { margin-bottom: 10px; }
-
-.pie-columna ul a {
-    font-size: 0.83rem;
-    color: var(--gris);
-    transition: var(--transicion);
-}
-
-.pie-columna ul a:hover { color: var(--naranja); }
-
-/* --- Redes sociales --- */
-.redes-sociales {
-    display: flex;
-    gap: 12px;
-    margin-bottom: 16px;
-}
-
-.redes-sociales a {
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    background: #1f2937;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--gris);
-    transition: var(--transicion);
-}
-
-.redes-sociales a:hover {
-    background: var(--naranja);
-    color: white;
-}
-
-.pie-contacto {
-    font-size: 0.8rem;
-    margin-bottom: 4px;
-}
-
-.pie-inferior {
-    padding: 20px 0;
-    text-align: center;
-}
-
-.pie-inferior p {
-    font-size: 0.8rem;
-    color: #6b7280;
-}
 
 /* ==========================================
    RESPONSIVE

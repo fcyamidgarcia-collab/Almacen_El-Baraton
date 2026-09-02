@@ -38,7 +38,6 @@ body {
     color: var(--texto-oscuro);
     background: var(--fondo-claro); /* Fondo claro para que resalte la tarjeta blanca */
     line-height: 1.6;
-    padding-top: 64px; /* Espacio para el nav fijo */
 }
 
 a {
@@ -474,115 +473,7 @@ img {
     height: 14px;
 }
 
-/* ==========================================
-   FOOTER (Copia de inicio.css)
-   ========================================== */
-.pie-pagina {
-    background: #0f172a;
-    color: var(--gris);
-    padding: 60px 0 0;
-    margin-top: 40px;
-}
 
-.pie-grid {
-    display: grid;
-    grid-template-columns: 2fr 1fr 1fr 1fr;
-    gap: 40px;
-    margin-bottom: 40px;
-}
-
-.pie-logo {
-    color: var(--blanco);
-    font-size: 1.25rem;
-    font-weight: 800;
-    margin-bottom: 16px;
-}
-
-.pie-principal p {
-    font-size: 0.9rem;
-    margin-bottom: 20px;
-    max-width: 300px;
-}
-
-.pie-boletin-titulo {
-    color: var(--blanco);
-    font-weight: 600;
-    margin-bottom: 10px;
-}
-
-.formulario-boletin {
-    display: flex;
-    gap: 0;
-}
-
-.formulario-boletin input {
-    flex: 1;
-    padding: 10px 12px;
-    border: 1px solid #334155;
-    background: #1e293b;
-    color: var(--blanco);
-    border-radius: 4px 0 0 4px;
-    outline: none;
-    font-family: var(--fuente);
-}
-
-.btn-suscribir {
-    background: var(--naranja);
-    color: var(--blanco);
-    border: none;
-    padding: 0 16px;
-    font-weight: 600;
-    border-radius: 0 4px 4px 0;
-    cursor: pointer;
-    transition: var(--transicion);
-}
-.btn-suscribir:hover { background: var(--naranja-hover); }
-
-.pie-columna h4 {
-    color: var(--blanco);
-    font-size: 0.85rem;
-    font-weight: 700;
-    margin-bottom: 20px;
-    letter-spacing: 0.05em;
-}
-
-.pie-columna ul {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.pie-columna a {
-    font-size: 0.9rem;
-    transition: var(--transicion);
-}
-.pie-columna a:hover { color: var(--blanco); }
-
-.redes-sociales {
-    display: flex;
-    gap: 16px;
-    margin-bottom: 20px;
-}
-
-.redes-sociales a {
-    color: var(--gris);
-    transition: var(--transicion);
-}
-.redes-sociales a:hover { color: var(--blanco); }
-
-.pie-contacto {
-    font-size: 0.9rem;
-    margin-bottom: 8px;
-}
-
-.pie-inferior {
-    border-top: 1px solid #1e293b;
-    padding: 20px 24px;
-    text-align: center;
-    font-size: 0.85rem;
-    background: #1e293b;
-    width: 100%;
-}
 
 /* ==========================================
    MEDIA QUERIES (Básico)

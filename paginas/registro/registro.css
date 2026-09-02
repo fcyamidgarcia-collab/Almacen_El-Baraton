@@ -421,6 +421,18 @@ body {
 
 .caja-terminos input {
     margin-top: 3px;
+    accent-color: var(--primary-color, #e67e22);
+}
+
+.caja-terminos a, .enlace-terminos {
+    color: var(--primary-color, #e67e22);
+    font-weight: 700;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+}
+
+.caja-terminos a:hover, .enlace-terminos:hover {
+    color: var(--primary-hover, #d35400);
 }
 
 .btn-oscuro {
