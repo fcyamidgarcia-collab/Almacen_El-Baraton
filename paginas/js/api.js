@@ -1,7 +1,5 @@
-// =======================================================
-// CLIENTE API - ALMACEN EL BARATON
+// API - ALMACEN EL BARATON
 // Conecta el Frontend con el Servidor Node.js y MySQL
-// =======================================================
 
 const API_BASE_URL = window.location.origin.includes(':3000')
     ? '/api'

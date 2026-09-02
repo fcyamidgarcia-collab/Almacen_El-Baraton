@@ -49,9 +49,7 @@ app.use((err, req, res, next) => {
 
 // Iniciar Servidor
 app.listen(PORT, () => {
-    console.log(`=======================================================`);
-    console.log(`🚀 Servidor API de Almacén El Baratón listo y corriendo`);
-    console.log(`📡 URL Base API: http://localhost:${PORT}/api`);
-    console.log(`🌐 Acceso Web:   http://localhost:${PORT}/inicio/inicio.html`);
-    console.log(`=======================================================`);
+    console.log(` Servidor API El Baratón listo`);
+    console.log(` URL Base API: http://localhost:${PORT}/api`);
+    console.log(` Acceso Web:   http://localhost:${PORT}/inicio/inicio.html`);
 });
