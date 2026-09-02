@@ -50,8 +50,8 @@
         </div>
     </nav>
 
-    <div class="page-wrapper">
-        <main class="container">
+    <div class="contenedor-pagina">
+        <main class="contenedor-principal">
             <!-- Breadcrumbs -->
             <nav class="breadcrumbs">
                 <a href="../inicio/inicio.html">Tienda</a>
@@ -64,26 +64,26 @@
             <!-- Product Details Section -->
             <section class="product-main">
                 <!-- Galería -->
-                <div class="product-gallery">
-                    <div class="main-image">
+                <div class="galeria-producto">
+                    <div class="imagen-principal">
                         <span class="watermark">TITAN - INDUSTRIAL SUPPLY CO.</span>
                         <img id="mainImage" src="https://via.placeholder.com/600x400?text=Taladro+Principal"
                             alt="Taladro Percutor PRO-V 20V Max Brushless">
                     </div>
-                    <div class="thumbnail-list">
-                        <div class="thumbnail active"
+                    <div class="miniaturanail-list">
+                        <div class="miniaturanail activo"
                             onclick="changeImage(this, 'https://via.placeholder.com/600x400?text=Taladro+Principal')">
                             <img src="https://via.placeholder.com/150" alt="Vista frontal">
                         </div>
-                        <div class="thumbnail"
+                        <div class="miniaturanail"
                             onclick="changeImage(this, 'https://via.placeholder.com/600x400?text=Vista+Lateral')">
                             <img src="https://via.placeholder.com/150" alt="Vista lateral">
                         </div>
-                        <div class="thumbnail"
+                        <div class="miniaturanail"
                             onclick="changeImage(this, 'https://via.placeholder.com/600x400?text=Bateria+y+Cargador')">
                             <img src="https://via.placeholder.com/150" alt="Batería y cargador">
                         </div>
-                        <div class="thumbnail video-thumbnail">
+                        <div class="miniaturanail video-miniaturanail">
                             <img src="https://via.placeholder.com/150?text=Video" alt="Video demostrativo">
                             <span class="play-icon">▶</span>
                         </div>
@@ -91,17 +91,17 @@
                 </div>
 
                 <!-- Info del Producto -->
-                <div class="product-info">
-                    <div class="brand-rating">
+                <div class="info-producto">
+                    <div class="brand-calificacion">
                         <span class="brand">DEXTER INDUSTRIAL</span>
-                        <div class="rating">
+                        <div class="calificacion">
                             <span class="star">★</span> 4.8 <span class="reviews">(124 Reseñas)</span>
                         </div>
                     </div>
 
-                    <h1 class="product-title">Taladro Percutor PRO-V 20V Max Brushless</h1>
+                    <h1 class="titulo-producto">Taladro Percutor PRO-V 20V Max Brushless</h1>
 
-                    <div class="product-meta">
+                    <div class="meta-producto">
                         Art. N° DXT-8842-B | Modelo Fab.: 20V-MAX-HD
                     </div>
 
@@ -121,7 +121,7 @@
                     </div>
 
                     <div class="action-section">
-                        <div class="quantity-selector">
+                        <div class="selector-cantidad">
                             <span class="qty-label">Cantidad</span>
                             <div class="qty-controls">
                                 <button class="qty-btn" id="btnMinus">-</button>
@@ -129,10 +129,10 @@
                                 <button class="qty-btn" id="btnPlus">+</button>
                             </div>
                         </div>
-                        <button class="btn-add-cart">🛒 Añadir al Carrito</button>
+                        <button class="btn-agregar-carrito">🛒 Añadir al Carrito</button>
                     </div>
 
-                    <button class="btn-quote">📄 Solicitar Cotización (Pedidos al por mayor)</button>
+                    <button class="btn-cotizar">📄 Solicitar Cotización (Pedidos al por mayor)</button>
 
                     <div class="secondary-actions">
                         <button class="btn-secondary">♡ Guardar para Después</button>
@@ -156,15 +156,15 @@
                         </div>
                     </div>
 
-                    <div class="quick-specs">
-                        <div class="specs-header">Especificaciones Rápidas</div>
+                    <div class="especificaciones-rapidas">
+                        <div class="cabecera-especificaciones">Especificaciones Rápidas</div>
                         <ul>
-                            <li><span class="spec-label">Tamaño de Portabrocas</span> <span class="spec-val">1/2
+                            <li><span class="etiqueta-especificacion">Tamaño de Portabrocas</span> <span class="spec-val">1/2
                                     pulg</span></li>
-                            <li><span class="spec-label">RPM Máx</span> <span class="spec-val">2,000 RPM</span></li>
-                            <li><span class="spec-label">Tipo de Motor</span> <span class="spec-val">Sin Escobillas
+                            <li><span class="etiqueta-especificacion">RPM Máx</span> <span class="spec-val">2,000 RPM</span></li>
+                            <li><span class="etiqueta-especificacion">Tipo de Motor</span> <span class="spec-val">Sin Escobillas
                                     (Brushless)</span></li>
-                            <li><span class="spec-label">Torque</span> <span class="spec-val">820 pulg-lbs</span></li>
+                            <li><span class="etiqueta-especificacion">Torque</span> <span class="spec-val">820 pulg-lbs</span></li>
                         </ul>
                     </div>
                 </div>
@@ -173,12 +173,12 @@
             <!-- Tabs Section -->
             <section class="product-details-extended">
                 <div class="tabs">
-                    <button class="tab-btn active" data-target="desc">Descripción</button>
-                    <button class="tab-btn" data-target="specs">Especificaciones Completas</button>
-                    <button class="tab-btn" data-target="docs">Descargas / PDFs</button>
-                    <button class="tab-btn" data-target="reviews">Reseñas (124)</button>
+                    <button class="btn-pestana activo" data-target="desc">Descripción</button>
+                    <button class="btn-pestana" data-target="specs">Especificaciones Completas</button>
+                    <button class="btn-pestana" data-target="docs">Descargas / PDFs</button>
+                    <button class="btn-pestana" data-target="reviews">Reseñas (124)</button>
                 </div>
-                <div class="tab-content active" id="desc">
+                <div class="contenido-pestana activo" id="desc">
                     <p>El Taladro Percutor PRO-V 20V Max Brushless de DeXter Industrial está diseñado para soportar los
                         trabajos más exigentes en el lugar de construcción. Con un motor sin escobillas de alta
                         eficiencia, ofrece hasta un 30% más de tiempo de funcionamiento en comparación con modelos con
@@ -190,13 +190,13 @@
                         Además, cuenta con una luz LED de trabajo integrada para iluminar áreas con poca luz, mejorando
                         la precisión y seguridad.</p>
                 </div>
-                <div class="tab-content" id="specs">
+                <div class="contenido-pestana" id="specs">
                     <p>Contenido de especificaciones completas...</p>
                 </div>
-                <div class="tab-content" id="docs">
+                <div class="contenido-pestana" id="docs">
                     <p>Enlaces a descargas de manuales y PDFs...</p>
                 </div>
-                <div class="tab-content" id="reviews">
+                <div class="contenido-pestana" id="reviews">
                     <p>Sección de reseñas de usuarios...</p>
                 </div>
             </section>

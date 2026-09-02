@@ -2,9 +2,9 @@ document.addEventListener('DOMContentLoaded', () => {
     // Lógica para cambiar la imagen principal al hacer clic en miniaturas
     window.changeImage = function (element, newSrc) {
         // Remover activo de todos
-        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.miniaturanail').forEach(t => t.classList.remove('activo'));
         // Agregar activo al seleccionado
-        element.classList.add('active');
+        element.classList.add('activo');
         // Cambiar imagen principal
         document.getElementById('mainImage').src = newSrc;
     };
@@ -35,24 +35,24 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Tabs
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
+    const tabBtns = document.querySelectorAll('.btn-pestana');
+    const tabContents = document.querySelectorAll('.contenido-pestana');
 
     tabBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             // Remover activo
-            tabBtns.forEach(b => b.classList.remove('active'));
-            tabContents.forEach(c => c.classList.remove('active'));
+            tabBtns.forEach(b => b.classList.remove('activo'));
+            tabContents.forEach(c => c.classList.remove('activo'));
 
             // Agregar activo
-            btn.classList.add('active');
+            btn.classList.add('activo');
             const targetId = btn.getAttribute('data-target');
-            document.getElementById(targetId).classList.add('active');
+            document.getElementById(targetId).classList.add('activo');
         });
     });
 
     // Botones de agregar al carrito (Feedback visual)
-    const cartBtns = document.querySelectorAll('.btn-add-cart, .btn-fbt-add');
+    const cartBtns = document.querySelectorAll('.btn-agregar-carrito, .btn-fbt-add');
     cartBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             alert('Producto añadido al carrito.');

@@ -1,10 +1,10 @@
 // ========== DASHBOARD ADMIN JS ==========
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Manejo del menú activo en la sidebar
-    const menuItems = document.querySelectorAll('.menu-item');
+    // 1. Manejo del menú activo en la barra-lateral
+    const elementosMenu = document.querySelectorAll('.elemento-menu');
     
-    menuItems.forEach(item => {
+    elementosMenu.forEach(item => {
         item.addEventListener('click', function(e) {
             // Prevenir acción por defecto si es un enlace simulado (href="#")
             if (this.getAttribute('href') === '#') {
@@ -12,36 +12,36 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             // Ignorar los botones del footer (volver a tienda, cerrar sesión)
-            if (this.closest('.sidebar-footer')) return;
+            if (this.closest('.pie-lateral')) return;
 
-            // Remover clase active de todos
-            menuItems.forEach(mi => {
-                if(!mi.closest('.sidebar-footer')) {
-                    mi.classList.remove('active');
+            // Remover clase activo de todos
+            elementosMenu.forEach(mi => {
+                if(!mi.closest('.pie-lateral')) {
+                    mi.classList.remove('activo');
                 }
             });
 
-            // Añadir active al clickeado
-            this.classList.add('active');
+            // Añadir activo al clickeado
+            this.classList.add('activo');
         });
     });
 
     // 2. Simulación de Modo Oscuro (Placeholder)
-    const darkModeBtn = document.querySelector('.header-actions .icon-btn');
-    if (darkModeBtn) {
-        darkModeBtn.addEventListener('click', () => {
-            document.body.classList.toggle('dark-mode-simulated');
+    const btnModoOscuro = document.querySelector('.acciones-cabecera .btn-icono');
+    if (btnModoOscuro) {
+        btnModoOscuro.addEventListener('click', () => {
+            document.body.classList.toggle('modo-oscuro-simulado');
             // Aquí iría la lógica real de cambio de variables CSS para el modo oscuro
             console.log('Toggle Dark Mode');
         });
     }
 
     // 3. Toggles de vista en "Relación de productos"
-    const viewToggles = document.querySelectorAll('.view-toggles .toggle-btn');
-    viewToggles.forEach(btn => {
+    const alternadoresVista = document.querySelectorAll('.alternadores-vista .btn-alternar');
+    alternadoresVista.forEach(btn => {
         btn.addEventListener('click', function() {
-            viewToggles.forEach(b => b.classList.remove('active'));
-            this.classList.add('active');
+            alternadoresVista.forEach(b => b.classList.remove('activo'));
+            this.classList.add('activo');
         });
     });
 });

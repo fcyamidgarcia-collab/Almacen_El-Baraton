@@ -200,7 +200,7 @@ img {
 }
 
 /* --- Sidebar --- */
-.perfil-sidebar {
+.barra-lateral-perfil {
     background: var(--blanco);
     border: 1px solid var(--gris-borde);
     border-radius: var(--radio);
@@ -208,7 +208,7 @@ img {
     box-shadow: var(--sombra);
 }
 
-.perfil-sidebar h2 {
+.barra-lateral-perfil h2 {
     font-size: 1.1rem;
     font-weight: 700;
     padding: 20px;
@@ -216,7 +216,7 @@ img {
     color: var(--texto-oscuro);
 }
 
-.sidebar-menu {
+.menu-lateral {
     display: flex;
     flex-direction: column;
 }
@@ -249,18 +249,18 @@ img {
 }
 
 /* --- Contenido Principal --- */
-.perfil-header {
+.cabecera-perfil {
     margin-bottom: 24px;
 }
 
-.perfil-header h1 {
+.cabecera-perfil h1 {
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--nav-fondo);
     margin-bottom: 4px;
 }
 
-.perfil-header p {
+.cabecera-perfil p {
     font-size: 0.95rem;
     color: var(--texto-secundario);
 }
@@ -345,7 +345,7 @@ img {
     justify-content: center;
 }
 
-.nivel-header {
+.cabecera-nivel {
     margin-bottom: 16px;
 }
 
@@ -413,7 +413,7 @@ img {
     background: transparent;
 }
 
-.seccion-header {
+.cabecera-seccion {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -422,7 +422,7 @@ img {
     border-bottom: 1px solid var(--gris-borde);
 }
 
-.seccion-header h3 {
+.cabecera-seccion h3 {
     font-size: 1rem;
     font-weight: 700;
     color: var(--nav-fondo);
@@ -527,7 +527,7 @@ img {
     flex-direction: column;
 }
 
-.seguridad-header {
+.cabecera-seguridad {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -717,7 +717,7 @@ img {
     .perfil-contenedor {
         grid-template-columns: 1fr;
     }
-    .perfil-sidebar {
+    .barra-lateral-perfil {
         display: none; /* En una app real, habría un menú toggleable para móviles */
     }
 }

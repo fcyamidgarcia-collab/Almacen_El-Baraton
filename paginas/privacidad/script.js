@@ -1,8 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // Smooth scrolling for sidebar links
-    const sidebarLinks = document.querySelectorAll('.sidebar a');
+    // Smooth scrolling for barra-lateral links
+    const barra-lateralLinks = document.querySelectorAll('.barra-lateral a');
     
-    sidebarLinks.forEach(link => {
+    barra-lateralLinks.forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             
@@ -18,23 +18,23 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Highlight active section on scroll
+    // Highlight activo section on scroll
     window.addEventListener('scroll', () => {
         let current = '';
-        const sections = document.querySelectorAll('.main-content section');
+        const sections = document.querySelectorAll('.contenido-principal section');
         
         sections.forEach(section => {
             const sectionTop = section.offsetTop;
-            // Adjust offset to trigger active state properly
+            // Adjust offset to trigger activo state properly
             if (pageYOffset >= sectionTop - 150) {
                 current = '#' + section.getAttribute('id');
             }
         });
         
-        sidebarLinks.forEach(link => {
-            link.classList.remove('active');
+        barra-lateralLinks.forEach(link => {
+            link.classList.remove('activo');
             if (link.getAttribute('href') === current) {
-                link.classList.add('active');
+                link.classList.add('activo');
             }
         });
     });
