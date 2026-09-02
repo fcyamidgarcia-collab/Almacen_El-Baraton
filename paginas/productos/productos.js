@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Interacciones básicas para los filtros y botones
 
     // Filtros collapse/expand toggle
-    const filterTitles = document.querySelectorAll('.filter-title');
+    const filterTitles = document.querySelectorAll('.titulo-filtro');
     filterTitles.forEach(title => {
         title.addEventListener('click', () => {
             const icon = title.querySelector('.icon');
@@ -21,14 +21,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Botón Limpiar
-    const btnClear = document.querySelector('.btn-clear');
+    const btnClear = document.querySelector('.btn-limpiar');
     if (btnClear) {
         btnClear.addEventListener('click', () => {
             const checkboxes = document.querySelectorAll('input[type="checkbox"]');
             checkboxes.forEach(cb => cb.checked = false);
 
             // Reset price inputs
-            const priceInputs = document.querySelectorAll('.price-inputs input');
+            const priceInputs = document.querySelectorAll('.entradas-precio input');
             if (priceInputs.length === 2) {
                 priceInputs[0].value = 0;
                 priceInputs[1].value = 1000;
@@ -37,23 +37,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Botones de paginación
-    const pageBtns = document.querySelectorAll('.page-btn');
+    const pageBtns = document.querySelectorAll('.btn-pagina');
     pageBtns.forEach(btn => {
         btn.addEventListener('click', function () {
-            // Remover active de todos que son solo numeros
+            // Remover activo de todos que son solo numeros
             if (!isNaN(this.textContent)) {
                 pageBtns.forEach(b => {
                     if (!isNaN(b.textContent)) {
-                        b.classList.remove('active');
+                        b.classList.remove('activo');
                     }
                 });
-                this.classList.add('active');
+                this.classList.add('activo');
             }
         });
     });
 
     // Botones agregar al carrito
-    const cartBtns = document.querySelectorAll('.btn-add-cart');
+    const cartBtns = document.querySelectorAll('.btn-agregar-carrito');
     cartBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             alert('Producto agregado al carrito exitosamente');

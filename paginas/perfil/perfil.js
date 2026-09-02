@@ -60,4 +60,31 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1500);
         });
     }
+
+    // --- Lógica de Pestañas (Sidebar) ---
+    const menuItems = document.querySelectorAll('.menu-item');
+    const tabs = document.querySelectorAll('.seccion-tab');
+
+    if (menuItems.length > 0 && tabs.length > 0) {
+        menuItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = item.getAttribute('data-target');
+                if(!targetId) return;
+
+                // Remover 'activo' de todos los items
+                menuItems.forEach(link => link.classList.remove('activo'));
+                // Añadir 'activo' al clickeado
+                item.classList.add('activo');
+
+                // Ocultar todos los tabs
+                tabs.forEach(tab => tab.classList.remove('activa'));
+                // Mostrar el target
+                const targetTab = document.getElementById(targetId);
+                if(targetTab) {
+                    targetTab.classList.add('activa');
+                }
+            });
+        });
+    }
 });

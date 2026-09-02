@@ -18,12 +18,12 @@ body {
     color: var(--text-main);
 }
 
-.page-wrapper {
+.contenedor-pagina {
     margin-top: 64px;
     padding: 2rem 0;
 }
 
-.container {
+.contenedor-principal {
     max-width: 1200px;
     margin: 0 auto;
     padding: 0 24px;
@@ -66,13 +66,13 @@ body {
 }
 
 /* Gallery */
-.product-gallery {
+.galeria-producto {
     display: flex;
     flex-direction: column;
     gap: 1rem;
 }
 
-.main-image {
+.imagen-principal {
     position: relative;
     border: 1px solid var(--border-color);
     padding: 2rem;
@@ -94,18 +94,18 @@ body {
     letter-spacing: 1px;
 }
 
-.main-image img {
+.imagen-principal img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-.thumbnail-list {
+.miniaturanail-list {
     display: flex;
     gap: 1rem;
 }
 
-.thumbnail {
+.miniaturanail {
     flex: 1;
     border: 1px solid var(--border-color);
     border-radius: 4px;
@@ -119,22 +119,22 @@ body {
     position: relative;
 }
 
-.thumbnail.active {
+.miniaturanail.activo {
     border-color: var(--text-main);
     border-width: 2px;
 }
 
-.thumbnail img {
+.miniaturanail img {
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
 }
 
-.video-thumbnail {
+.video-miniaturanail {
     background: #000;
 }
 
-.video-thumbnail img {
+.video-miniaturanail img {
     opacity: 0.6;
 }
 
@@ -145,12 +145,12 @@ body {
 }
 
 /* Product Info */
-.product-info {
+.info-producto {
     display: flex;
     flex-direction: column;
 }
 
-.brand-rating {
+.brand-calificacion {
     display: flex;
     align-items: center;
     gap: 1rem;
@@ -165,7 +165,7 @@ body {
     text-transform: uppercase;
 }
 
-.rating {
+.calificacion {
     background: var(--bg-light);
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -185,7 +185,7 @@ body {
     font-weight: 400;
 }
 
-.product-title {
+.titulo-producto {
     font-size: 2.2rem;
     font-weight: 800;
     line-height: 1.2;
@@ -193,7 +193,7 @@ body {
     color: var(--text-main);
 }
 
-.product-meta {
+.meta-producto {
     font-size: 0.8rem;
     color: var(--text-muted);
     margin-bottom: 2rem;
@@ -247,7 +247,7 @@ body {
     align-items: flex-end;
 }
 
-.quantity-selector {
+.selector-cantidad {
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -292,7 +292,7 @@ body {
     margin: 0;
 }
 
-.btn-add-cart {
+.btn-agregar-carrito {
     flex: 1;
     background: var(--primary-yellow);
     color: #fff;
@@ -309,11 +309,11 @@ body {
     gap: 0.5rem;
 }
 
-.btn-add-cart:hover {
+.btn-agregar-carrito:hover {
     background: var(--primary-yellow-hover);
 }
 
-.btn-quote {
+.btn-cotizar {
     width: 100%;
     background: var(--dark-blue);
     color: #fff;
@@ -325,7 +325,7 @@ body {
     margin-bottom: 1rem;
 }
 
-.btn-quote:hover {
+.btn-cotizar:hover {
     background: #1e293b;
 }
 
@@ -384,14 +384,14 @@ body {
     color: var(--text-muted);
 }
 
-.quick-specs {
+.especificaciones-rapidas {
     background: #fff;
     border: 1px solid var(--border-color);
     border-radius: 4px;
     overflow: hidden;
 }
 
-.specs-header {
+.cabecera-especificaciones {
     background: #eef2ff;
     padding: 0.75rem 1rem;
     font-size: 0.85rem;
@@ -399,11 +399,11 @@ body {
     color: var(--text-main);
 }
 
-.quick-specs ul {
+.especificaciones-rapidas ul {
     list-style: none;
 }
 
-.quick-specs li {
+.especificaciones-rapidas li {
     display: flex;
     justify-content: space-between;
     padding: 0.75rem 1rem;
@@ -411,7 +411,7 @@ body {
     border-top: 1px solid var(--border-color);
 }
 
-.spec-label {
+.etiqueta-especificacion {
     color: var(--text-muted);
 }
 
@@ -432,7 +432,7 @@ body {
     gap: 2rem;
 }
 
-.tab-btn {
+.btn-pestana {
     background: none;
     border: none;
     padding: 1rem 0;
@@ -444,27 +444,27 @@ body {
     transition: all 0.2s;
 }
 
-.tab-btn.active {
+.btn-pestana.activo {
     color: var(--text-main);
     border-bottom-color: var(--text-main);
 }
 
-.tab-btn:hover:not(.active) {
+.btn-pestana:hover:not(.activo) {
     color: var(--text-main);
 }
 
-.tab-content {
+.contenido-pestana {
     display: none;
     font-size: 0.9rem;
     line-height: 1.7;
     color: var(--text-muted);
 }
 
-.tab-content.active {
+.contenido-pestana.activo {
     display: block;
 }
 
-.tab-content p {
+.contenido-pestana p {
     margin-bottom: 1rem;
 }
 

@@ -200,7 +200,7 @@ img {
 }
 
 /* --- Sidebar --- */
-.perfil-sidebar {
+.barra-lateral-perfil {
     background: var(--blanco);
     border: 1px solid var(--gris-borde);
     border-radius: var(--radio);
@@ -208,7 +208,7 @@ img {
     box-shadow: var(--sombra);
 }
 
-.perfil-sidebar h2 {
+.barra-lateral-perfil h2 {
     font-size: 1.1rem;
     font-weight: 700;
     padding: 20px;
@@ -216,7 +216,7 @@ img {
     color: var(--texto-oscuro);
 }
 
-.sidebar-menu {
+.menu-lateral {
     display: flex;
     flex-direction: column;
 }
@@ -249,18 +249,18 @@ img {
 }
 
 /* --- Contenido Principal --- */
-.perfil-header {
+.cabecera-perfil {
     margin-bottom: 24px;
 }
 
-.perfil-header h1 {
+.cabecera-perfil h1 {
     font-size: 1.8rem;
     font-weight: 700;
     color: var(--nav-fondo);
     margin-bottom: 4px;
 }
 
-.perfil-header p {
+.cabecera-perfil p {
     font-size: 0.95rem;
     color: var(--texto-secundario);
 }
@@ -345,7 +345,7 @@ img {
     justify-content: center;
 }
 
-.nivel-header {
+.cabecera-nivel {
     margin-bottom: 16px;
 }
 
@@ -413,7 +413,7 @@ img {
     background: transparent;
 }
 
-.seccion-header {
+.cabecera-seccion {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -422,7 +422,7 @@ img {
     border-bottom: 1px solid var(--gris-borde);
 }
 
-.seccion-header h3 {
+.cabecera-seccion h3 {
     font-size: 1rem;
     font-weight: 700;
     color: var(--nav-fondo);
@@ -527,7 +527,7 @@ img {
     flex-direction: column;
 }
 
-.seguridad-header {
+.cabecera-seguridad {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -717,7 +717,7 @@ img {
     .perfil-contenedor {
         grid-template-columns: 1fr;
     }
-    .perfil-sidebar {
+    .barra-lateral-perfil {
         display: none; /* En una app real, habría un menú toggleable para móviles */
     }
 }
@@ -765,7 +765,7 @@ header .logo {
     font-size: 1.25rem;
 }
 
-header .search-bar {
+header .search-bar, header .barra-busqueda {
     display: flex;
     align-items: center;
     background: #f8fafc;
@@ -775,13 +775,13 @@ header .search-bar {
     width: 350px;
 }
 
-header .search-bar i {
+header .search-bar i, header .barra-busqueda i {
     color: #5a5a6a;
     margin-right: 0.5rem;
     font-size: 0.9rem;
 }
 
-header .search-bar input {
+header .search-bar input, header .barra-busqueda input {
     border: none;
     background: none;
     outline: none;
@@ -802,18 +802,18 @@ header nav a {
     text-decoration: none;
 }
 
-header nav a.active, header nav a:hover {
+header nav a.active, header nav a.activo, header nav a:hover {
     color: #1a1a2e;
     border-bottom: 2px solid #1a1a2e;
     padding-bottom: 2px;
 }
 
-header .header-icons {
+header .header-icons, header .iconos-cabecera, header .iconos-encabezado {
     display: flex;
     gap: 1.2rem;
 }
 
-header .header-icons a {
+header .header-icons a, header .iconos-cabecera a, header .iconos-encabezado a {
     color: #5a5a6a;
     font-size: 1.1rem;
     text-decoration: none;
@@ -826,7 +826,7 @@ footer {
     padding: 3.5rem 5% 1.5rem;
 }
 
-footer .footer-top {
+footer .footer-top, footer .pie-superior {
     display: grid;
     grid-template-columns: 2fr 1fr 1fr 1fr;
     gap: 2rem;
@@ -836,60 +836,60 @@ footer .footer-top {
     margin-right: auto;
 }
 
-footer .footer-col h4 {
+footer .footer-col h4, footer .columna-pie h4 {
     color: white;
     font-size: 0.8rem;
     margin-bottom: 1.5rem;
     letter-spacing: 0.05em;
 }
 
-footer .footer-col ul {
+footer .footer-col ul, footer .columna-pie ul {
     list-style: none;
     padding: 0;
     margin: 0;
 }
 
-footer .footer-col li {
+footer .footer-col li, footer .columna-pie li {
     margin-bottom: 0.8rem;
 }
 
-footer .footer-col a {
+footer .footer-col a, footer .columna-pie a {
     font-size: 0.85rem;
     transition: color 0.2s;
     color: #94a3b8;
     text-decoration: none;
 }
 
-footer .footer-col a:hover {
+footer .footer-col a:hover, footer .columna-pie a:hover {
     color: white;
 }
 
-footer .footer-logo {
+footer .footer-logo, footer .logo-pie {
     color: white;
     font-size: 1.3rem;
     font-weight: 700;
     margin-bottom: 1rem;
 }
 
-footer .about-col p {
+footer .about-col p, footer .columna-nosotros p {
     font-size: 0.85rem;
     margin-bottom: 1.5rem;
     max-width: 300px;
     color: #94a3b8;
 }
 
-footer .newsletter p {
+footer .newsletter p, footer .boletin p {
     font-size: 0.85rem;
     margin-bottom: 0.6rem;
     color: white;
     font-weight: 500;
 }
 
-footer .newsletter-form {
+footer .newsletter-form, footer .formulario-boletin {
     display: flex;
 }
 
-footer .newsletter-form input {
+footer .newsletter-form input, footer .formulario-boletin input {
     padding: 0.6rem 1rem;
     border: none;
     border-radius: 4px 0 0 4px;
@@ -901,7 +901,7 @@ footer .newsletter-form input {
     font-size: 0.85rem;
 }
 
-footer .newsletter-form button {
+footer .newsletter-form button, footer .formulario-boletin button {
     background: #f59e0b;
     color: #0f172a;
     border: none;
@@ -912,33 +912,33 @@ footer .newsletter-form button {
     font-size: 0.85rem;
 }
 
-footer .newsletter-form button:hover {
+footer .newsletter-form button:hover, footer .formulario-boletin button:hover {
     background: #d97706;
 }
 
-footer .contact-col .social-icons {
+footer .contact-col .social-icons, footer .columna-contacto .iconos-sociales {
     display: flex;
     gap: 1rem;
     margin-bottom: 1.5rem;
 }
 
-footer .contact-col .social-icons a {
+footer .contact-col .social-icons a, footer .columna-contacto .iconos-sociales a {
     color: #94a3b8;
     font-size: 1.1rem;
     text-decoration: none;
 }
 
-footer .contact-col .social-icons a:hover {
+footer .contact-col .social-icons a:hover, footer .columna-contacto .iconos-sociales a:hover {
     color: white;
 }
 
-footer .contact-col p {
+footer .contact-col p, footer .columna-contacto p {
     font-size: 0.85rem;
     margin-bottom: 0.5rem;
     color: #94a3b8;
 }
 
-footer .footer-bottom {
+footer .footer-bottom, footer .pie-inferior {
     text-align: center;
     border-top: 1px solid #1e293b;
     padding-top: 1.5rem;
@@ -950,21 +950,37 @@ footer .footer-bottom {
 }
 
 @media (max-width: 900px) {
-    footer .footer-top {
+    footer .footer-top, footer .pie-superior {
         grid-template-columns: 1fr 1fr;
     }
 }
 
 @media (max-width: 600px) {
-    footer .footer-top {
+    footer .footer-top, footer .pie-superior {
         grid-template-columns: 1fr;
     }
     header {
         flex-direction: column;
         gap: 1rem;
     }
-    header .search-bar {
+    header .search-bar, header .barra-busqueda {
         width: 100%;
     }
 }
-/* --- End Global Header & Footer Styles Injected --- */
+
+/* ==========================================
+   TABS DE PERFIL
+   ========================================== */
+.seccion-tab {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+.seccion-tab.activa {
+    display: block;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
