@@ -36,7 +36,7 @@ if (formContacto) {
             // Animación del botón
             const btn = formContacto.querySelector('.btn-enviar');
             const textoOriginal = btn.textContent;
-            btn.textContent = '✓ Enviado';
+            btn.innerHTML = '<i class="fi fi-rr-check"></i> Enviado';
             btn.style.background = '#10b981';
             btn.disabled = true;
 
@@ -59,7 +59,7 @@ if (formBoletin) {
         const btn = formBoletin.querySelector('.btn-suscribir');
         const textoOriginal = btn.textContent;
 
-        btn.textContent = '✓ Suscrito';
+        btn.innerHTML = '<i class="fi fi-rr-check"></i> Suscrito';
         btn.style.background = '#10b981';
 
         setTimeout(() => {
