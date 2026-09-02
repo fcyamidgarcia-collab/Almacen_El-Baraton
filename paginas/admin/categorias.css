@@ -1,0 +1,9 @@
+@import url('dashboard.css');
+
+/* CATEGORÍAS CSS (ESPAÑOL) */
+.rejilla-categorias { padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
+.tarjeta-categoria { background: #fff; border: 1px solid var(--borde); border-radius: 12px; padding: 20px; display: flex; flex-direction: column; gap: 12px; transition: transform 0.2s; }
+.tarjeta-categoria:hover { transform: translateY(-3px); box-shadow: 0 6px 16px rgba(0,0,0,0.05); }
+.contenedor-icono-categoria { width: 44px; height: 44px; border-radius: 10px; background: #ffedd5; color: var(--naranja); display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+.titulo-categoria { font-size: 1.05rem; font-weight: 700; color: #1e293b; }
+.conteo-categoria { font-size: 0.8rem; color: #64748b; }

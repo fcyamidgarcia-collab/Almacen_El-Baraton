@@ -855,3 +855,222 @@ img {
     .marca { font-size: 1rem; }
     .formulario-boletin { flex-direction: column; }
 }
+
+/* --- Global Header & Footer Styles Injected --- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 5%;
+    border-bottom: 1px solid #e2e8f0;
+    background: white;
+}
+
+header .logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+}
+
+header .search-bar {
+    display: flex;
+    align-items: center;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    width: 350px;
+}
+
+header .search-bar i {
+    color: #5a5a6a;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+header .search-bar input {
+    border: none;
+    background: none;
+    outline: none;
+    width: 100%;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+header nav {
+    display: flex;
+    gap: 1.5rem;
+}
+
+header nav a {
+    color: #5a5a6a;
+    font-weight: 500;
+    font-size: 0.9rem;
+    text-decoration: none;
+}
+
+header nav a.active, header nav a:hover {
+    color: #1a1a2e;
+    border-bottom: 2px solid #1a1a2e;
+    padding-bottom: 2px;
+}
+
+header .header-icons {
+    display: flex;
+    gap: 1.2rem;
+}
+
+header .header-icons a {
+    color: #5a5a6a;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+/* Footer */
+footer {
+    background: #0f172a;
+    color: #cbd5e1;
+    padding: 3.5rem 5% 1.5rem;
+}
+
+footer .footer-top {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 3rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+footer .footer-col h4 {
+    color: white;
+    font-size: 0.8rem;
+    margin-bottom: 1.5rem;
+    letter-spacing: 0.05em;
+}
+
+footer .footer-col ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+footer .footer-col li {
+    margin-bottom: 0.8rem;
+}
+
+footer .footer-col a {
+    font-size: 0.85rem;
+    transition: color 0.2s;
+    color: #94a3b8;
+    text-decoration: none;
+}
+
+footer .footer-col a:hover {
+    color: white;
+}
+
+footer .footer-logo {
+    color: white;
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+footer .about-col p {
+    font-size: 0.85rem;
+    margin-bottom: 1.5rem;
+    max-width: 300px;
+    color: #94a3b8;
+}
+
+footer .newsletter p {
+    font-size: 0.85rem;
+    margin-bottom: 0.6rem;
+    color: white;
+    font-weight: 500;
+}
+
+footer .newsletter-form {
+    display: flex;
+}
+
+footer .newsletter-form input {
+    padding: 0.6rem 1rem;
+    border: none;
+    border-radius: 4px 0 0 4px;
+    outline: none;
+    background: #1e293b;
+    color: white;
+    width: 100%;
+    max-width: 250px;
+    font-size: 0.85rem;
+}
+
+footer .newsletter-form button {
+    background: #f59e0b;
+    color: #0f172a;
+    border: none;
+    padding: 0.6rem 1rem;
+    border-radius: 0 4px 4px 0;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.85rem;
+}
+
+footer .newsletter-form button:hover {
+    background: #d97706;
+}
+
+footer .contact-col .social-icons {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+footer .contact-col .social-icons a {
+    color: #94a3b8;
+    font-size: 1.1rem;
+    text-decoration: none;
+}
+
+footer .contact-col .social-icons a:hover {
+    color: white;
+}
+
+footer .contact-col p {
+    font-size: 0.85rem;
+    margin-bottom: 0.5rem;
+    color: #94a3b8;
+}
+
+footer .footer-bottom {
+    text-align: center;
+    border-top: 1px solid #1e293b;
+    padding-top: 1.5rem;
+    font-size: 0.8rem;
+    color: #64748b;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (max-width: 900px) {
+    footer .footer-top {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (max-width: 600px) {
+    footer .footer-top {
+        grid-template-columns: 1fr;
+    }
+    header {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    header .search-bar {
+        width: 100%;
+    }
+}
+/* --- End Global Header & Footer Styles Injected --- */

@@ -1,0 +1,5 @@
+@import url('dashboard.css');
+
+/* CLIENTES CSS (ESPAÑOL) */
+.nombre-cliente-tabla { font-weight: 700; color: #1e293b; display: block; }
+.nit-cliente-tabla { font-size: 0.78rem; color: #64748b; }

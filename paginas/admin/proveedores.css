@@ -1,0 +1,5 @@
+@import url('dashboard.css');
+
+/* PROVEEDORES CSS (ESPAÑOL) */
+.nombre-proveedor { font-weight: 700; color: #1e293b; display: block; }
+.calificacion-estrella { color: #f59e0b; font-weight: 700; }

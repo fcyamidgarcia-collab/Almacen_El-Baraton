@@ -1,0 +1,30 @@
+@import url('dashboard.css');
+
+/* ==========================================
+   PRODUCTOS CSS (ESPAÑOL)
+   ========================================== */
+:root {
+    --oscuro: #111827;
+    --naranja: #e67e22;
+    --naranja-hover: #d35400;
+    --blanco: #ffffff;
+    --fondo-body: #f8fafc;
+    --borde: #e2e8f0;
+    --texto-oscuro: #0f172a;
+    --texto-secundario: #64748b;
+    --estado-normal: #10b981;
+    --estado-normal-fondo: #d1fae5;
+    --estado-bajo: #f59e0b;
+    --estado-bajo-fondo: #fef3c7;
+    --estado-agotado: #ef4444;
+    --estado-agotado-fondo: #fee2e2;
+}
+
+.insignia-sku { font-family: monospace; background: #f1f5f9; padding: 4px 8px; border-radius: 4px; font-weight: 600; color: #334155; }
+.celda-nombre-producto { font-weight: 600; color: #1e293b; }
+.celda-precio { font-weight: 700; color: var(--texto-oscuro); }
+.celda-stock { font-weight: 700; }
+
+.estado-normal { background: var(--estado-normal-fondo); color: var(--estado-normal); }
+.estado-bajo { background: var(--estado-bajo-fondo); color: var(--estado-bajo); }
+.estado-agotado { background: var(--estado-agotado-fondo); color: var(--estado-agotado); }

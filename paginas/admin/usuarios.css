@@ -1,0 +1,5 @@
+@import url('dashboard.css');
+
+/* USUARIOS CSS (ESPAÑOL) */
+.nombre-usuario-tabla { font-weight: 700; color: #1e293b; display: block; }
+.insignia-rol { padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 600; background: #e0f2fe; color: #0369a1; }
