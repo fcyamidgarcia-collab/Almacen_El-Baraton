@@ -68,9 +68,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (menuItems.length > 0 && tabs.length > 0) {
         menuItems.forEach(item => {
             item.addEventListener('click', (e) => {
-                e.preventDefault();
                 const targetId = item.getAttribute('data-target');
                 if(!targetId) return;
+                e.preventDefault();
 
                 // Remover 'activo' de todos los items
                 menuItems.forEach(link => link.classList.remove('activo'));
