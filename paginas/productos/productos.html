@@ -39,7 +39,7 @@
                         <circle cx="20" cy="21" r="1" />
                         <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
                     </svg>
-                    <span class="badge-carrito">3</span>
+                    <span class="insignia-carrito">3</span>
                 </button>
                 <button class="icono-btn" id="btnUsuario" aria-label="Cuenta de usuario">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -55,99 +55,99 @@
         </div>
     </nav>
 
-    <div class="page-wrapper">
-        <main class="container">
+    <div class="contenedor-pagina">
+        <main class="contenedor-principal">
             <!-- Sidebar Filtros -->
-            <aside class="sidebar">
-                <div class="sidebar-header">
+            <aside class="barra-lateral">
+                <div class="cabecera-lateral">
                     <h2>Filtros</h2>
-                    <button class="btn-clear">Limpiar</button>
+                    <button class="btn-limpiar">Limpiar</button>
                 </div>
 
-                <div class="filter-group">
-                    <div class="filter-title">
+                <div class="grupo-filtro">
+                    <div class="titulo-filtro">
                         <h3>Categoría</h3>
                         <span class="icon">^</span>
                     </div>
-                    <div class="filter-options">
-                        <label class="checkbox-label">
+                    <div class="opciones-filtro">
+                        <label class="etiqueta-checkbox">
                             <input type="checkbox" checked>
-                            <span class="checkmark"></span>
+                            <span class="marca-verificacion"></span>
                             Herramientas Eléctricas
                         </label>
-                        <label class="checkbox-label">
+                        <label class="etiqueta-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="marca-verificacion"></span>
                             Sujetadores
                         </label>
-                        <label class="checkbox-label">
+                        <label class="etiqueta-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="marca-verificacion"></span>
                             Equipo de Seguridad
                         </label>
-                        <label class="checkbox-label">
+                        <label class="etiqueta-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="marca-verificacion"></span>
                             Iluminación
                         </label>
                     </div>
                 </div>
 
-                <div class="filter-group">
-                    <div class="filter-title">
+                <div class="grupo-filtro">
+                    <div class="titulo-filtro">
                         <h3>Marca</h3>
                         <span class="icon">^</span>
                     </div>
-                    <div class="filter-options">
-                        <label class="checkbox-label">
+                    <div class="opciones-filtro">
+                        <label class="etiqueta-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="marca-verificacion"></span>
                             DeWalt
                         </label>
-                        <label class="checkbox-label">
+                        <label class="etiqueta-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="marca-verificacion"></span>
                             FastenCo
                         </label>
-                        <label class="checkbox-label">
+                        <label class="etiqueta-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="marca-verificacion"></span>
                             SafeGuard
                         </label>
-                        <label class="checkbox-label">
+                        <label class="etiqueta-checkbox">
                             <input type="checkbox">
-                            <span class="checkmark"></span>
+                            <span class="marca-verificacion"></span>
                             Ridgid
                         </label>
                     </div>
                 </div>
 
-                <div class="filter-group">
-                    <div class="filter-title">
+                <div class="grupo-filtro">
+                    <div class="titulo-filtro">
                         <h3>Rango de Precio</h3>
                         <span class="icon">^</span>
                     </div>
-                    <div class="price-range">
-                        <div class="slider-track"></div>
-                        <div class="slider-range" style="left: 0%; width: 100%;"></div>
-                        <div class="slider-thumb" style="left: 0%;"></div>
-                        <div class="slider-thumb" style="left: 100%;"></div>
+                    <div class="rango-precio">
+                        <div class="pista-deslizador"></div>
+                        <div class="rango-deslizador" style="left: 0%; width: 100%;"></div>
+                        <div class="manija-deslizador" style="left: 0%;"></div>
+                        <div class="manija-deslizador" style="left: 100%;"></div>
                     </div>
-                    <div class="price-inputs">
-                        <div class="input-prefix">
+                    <div class="entradas-precio">
+                        <div class="prefijo-entrada">
                             <span>$</span>
                             <input type="number" value="0">
                         </div>
-                        <span class="separator">-</span>
-                        <div class="input-prefix">
+                        <span class="separador">-</span>
+                        <div class="prefijo-entrada">
                             <span>$</span>
                             <input type="number" value="1000">
                         </div>
                     </div>
                 </div>
 
-                <div class="filter-group border-bottom-0">
-                    <div class="filter-title">
+                <div class="grupo-filtro border-bottom-0">
+                    <div class="titulo-filtro">
                         <h3>Disponibilidad</h3>
                         <span class="icon">v</span>
                     </div>
@@ -155,18 +155,18 @@
             </aside>
 
             <!-- Contenido Principal -->
-            <section class="main-content">
+            <section class="contenido-principal">
                 <!-- Barra Superior -->
-                <div class="top-bar">
-                    <p class="results-count">Mostrando <strong>1-24</strong> de 1,205 productos</p>
-                    <div class="top-controls">
-                        <div class="control-group">
+                <div class="barra-superior">
+                    <p class="conteo-resultados">Mostrando <strong>1-24</strong> de 1,205 productos</p>
+                    <div class="controles-superiores">
+                        <div class="grupo-control">
                             <label>Mostrar:</label>
                             <select>
                                 <option>24</option>
                             </select>
                         </div>
-                        <div class="control-group">
+                        <div class="grupo-control">
                             <label>Ordenar por:</label>
                             <select>
                                 <option>Destacados</option>
@@ -176,170 +176,170 @@
                 </div>
 
                 <!-- Grid de Productos -->
-                <div class="products-grid">
+                <div class="cuadricula-productos">
                     <!-- Producto 1 -->
-                    <div class="product-card">
-                        <div class="product-image-container">
-                            <div class="badges">
-                                <span class="badge badge-red">OFERTA</span>
-                                <span class="badge badge-dark">En Existencia</span>
+                    <div class="tarjeta-producto">
+                        <div class="imagen-producto-contenedor-principal">
+                            <div class="insignias">
+                                <span class="insignia insignia-roja">OFERTA</span>
+                                <span class="insignia insignia-oscura">En Existencia</span>
                             </div>
-                            <img src="https://via.placeholder.com/150" alt="Taladro DeWalt" class="product-image">
+                            <img src="https://via.placeholder.com/150" alt="Taladro DeWalt" class="imagen-producto">
                         </div>
-                        <div class="product-info">
-                            <span class="brand">DEWALT</span>
-                            <h3 class="product-title">Kit de Taladro / Atornillador...</h3>
-                            <div class="rating">
-                                <span class="stars">★★★★☆</span>
-                                <span class="reviews">(124)</span>
+                        <div class="info-producto">
+                            <span class="marca">DEWALT</span>
+                            <h3 class="titulo-producto">Kit de Taladro / Atornillador...</h3>
+                            <div class="calificacion">
+                                <span class="estrellas">★★★★☆</span>
+                                <span class="resenas">(124)</span>
                             </div>
-                            <div class="price-container">
-                                <span class="current-price">$99.00</span>
-                                <span class="old-price">$129.00</span>
+                            <div class="price-contenedor-principal">
+                                <span class="precio-actual">$99.00</span>
+                                <span class="precio-antiguo">$129.00</span>
                             </div>
-                            <button class="btn-add-cart">🛒 Agregar al Carrito</button>
+                            <button class="btn-agregar-carrito">🛒 Agregar al Carrito</button>
                         </div>
                     </div>
 
                     <!-- Producto 2 -->
-                    <div class="product-card">
-                        <div class="product-image-container">
-                            <div class="badges">
-                                <span class="badge badge-gray">MÁS VENDIDO</span>
-                                <span class="badge badge-orange">Pocas Existencias</span>
+                    <div class="tarjeta-producto">
+                        <div class="imagen-producto-contenedor-principal">
+                            <div class="insignias">
+                                <span class="insignia insignia-gris">MÁS VENDIDO</span>
+                                <span class="insignia insignia-naranja">Pocas Existencias</span>
                             </div>
-                            <img src="https://via.placeholder.com/150" alt="Pernos" class="product-image">
+                            <img src="https://via.placeholder.com/150" alt="Pernos" class="imagen-producto">
                         </div>
-                        <div class="product-info">
-                            <span class="brand">FASTENCO</span>
-                            <h3 class="product-title">Surtido de Pernos Hexagonales Grado...</h3>
-                            <div class="rating">
-                                <span class="stars">★★★★★</span>
-                                <span class="reviews">(89)</span>
+                        <div class="info-producto">
+                            <span class="marca">FASTENCO</span>
+                            <h3 class="titulo-producto">Surtido de Pernos Hexagonales Grado...</h3>
+                            <div class="calificacion">
+                                <span class="estrellas">★★★★★</span>
+                                <span class="resenas">(89)</span>
                             </div>
-                            <div class="price-container">
-                                <span class="current-price">$45.50</span>
+                            <div class="price-contenedor-principal">
+                                <span class="precio-actual">$45.50</span>
                             </div>
-                            <button class="btn-add-cart">🛒 Agregar al Carrito</button>
+                            <button class="btn-agregar-carrito">🛒 Agregar al Carrito</button>
                         </div>
                     </div>
 
                     <!-- Producto 3 -->
-                    <div class="product-card">
-                        <div class="product-image-container">
-                            <div class="badges">
-                                <span class="badge badge-gray">NUEVO</span>
+                    <div class="tarjeta-producto">
+                        <div class="imagen-producto-contenedor-principal">
+                            <div class="insignias">
+                                <span class="insignia insignia-gris">NUEVO</span>
                             </div>
-                            <img src="https://via.placeholder.com/150" alt="Casco" class="product-image">
+                            <img src="https://via.placeholder.com/150" alt="Casco" class="imagen-producto">
                         </div>
-                        <div class="product-info">
-                            <span class="brand">SAFEGUARD</span>
-                            <h3 class="product-title">Casco de Seguridad de Ala Completa Tip...</h3>
-                            <div class="rating">
-                                <span class="stars">★★★★☆</span>
-                                <span class="reviews">(12)</span>
+                        <div class="info-producto">
+                            <span class="marca">SAFEGUARD</span>
+                            <h3 class="titulo-producto">Casco de Seguridad de Ala Completa Tip...</h3>
+                            <div class="calificacion">
+                                <span class="estrellas">★★★★☆</span>
+                                <span class="resenas">(12)</span>
                             </div>
-                            <div class="price-container">
-                                <span class="current-price">$24.99</span>
+                            <div class="price-contenedor-principal">
+                                <span class="precio-actual">$24.99</span>
                             </div>
-                            <button class="btn-add-cart">🛒 Agregar al Carrito</button>
+                            <button class="btn-agregar-carrito">🛒 Agregar al Carrito</button>
                         </div>
                     </div>
 
                     <!-- Producto 4 -->
-                    <div class="product-card">
-                        <div class="product-image-container">
-                            <img src="https://via.placeholder.com/150" alt="Llave" class="product-image">
+                    <div class="tarjeta-producto">
+                        <div class="imagen-producto-contenedor-principal">
+                            <img src="https://via.placeholder.com/150" alt="Llave" class="imagen-producto">
                         </div>
-                        <div class="product-info">
-                            <span class="brand">RIDGID</span>
-                            <h3 class="product-title">Llave para Tubos Recta para Trabajo...</h3>
-                            <div class="rating">
-                                <span class="stars">★★★★☆</span>
-                                <span class="reviews">(56)</span>
+                        <div class="info-producto">
+                            <span class="marca">RIDGID</span>
+                            <h3 class="titulo-producto">Llave para Tubos Recta para Trabajo...</h3>
+                            <div class="calificacion">
+                                <span class="estrellas">★★★★☆</span>
+                                <span class="resenas">(56)</span>
                             </div>
-                            <div class="price-container">
-                                <span class="current-price">$68.00</span>
+                            <div class="price-contenedor-principal">
+                                <span class="precio-actual">$68.00</span>
                             </div>
-                            <button class="btn-add-cart">🛒 Agregar al Carrito</button>
+                            <button class="btn-agregar-carrito">🛒 Agregar al Carrito</button>
                         </div>
                     </div>
                 </div>
 
                 <!-- Paginación -->
-                <div class="pagination">
-                    <button class="page-btn">
+                <div class="paginacion">
+                    <button class="btn-pagina">
                         < Anterior</button>
-                            <button class="page-btn active">1</button>
-                            <button class="page-btn">2</button>
-                            <button class="page-btn">3</button>
-                            <span class="page-dots">...</span>
-                            <button class="page-btn">51</button>
-                            <button class="page-btn">Siguiente ></button>
+                            <button class="btn-pagina activo">1</button>
+                            <button class="btn-pagina">2</button>
+                            <button class="btn-pagina">3</button>
+                            <span class="puntos-pagina">...</span>
+                            <button class="btn-pagina">51</button>
+                            <button class="btn-pagina">Siguiente ></button>
                 </div>
             </section>
         </main>
 
         <!-- Visto Recientemente -->
-        <section class="recently-viewed-container">
-            <div class="recently-viewed-header">
+        <section class="recently-viewed-contenedor-principal">
+            <div class="cabecera-vistos-recientemente">
                 <h2>Visto Recientemente</h2>
-                <a href="#" class="view-all">Ver Todos →</a>
+                <a href="#" class="ver-todos">Ver Todos →</a>
             </div>
 
-            <div class="recent-grid">
+            <div class="cuadricula-recientes">
                 <!-- Recent 1 -->
-                <div class="recent-card">
-                    <div class="recent-image-container">
+                <div class="tarjeta-reciente">
+                    <div class="recent-image-contenedor-principal">
                         <img src="https://via.placeholder.com/100" alt="Taladro">
                     </div>
-                    <div class="recent-info">
-                        <p class="recent-title">Kit de Taladro 20V</p>
-                        <p class="recent-price">$129.00</p>
+                    <div class="info-reciente">
+                        <p class="titulo-reciente">Kit de Taladro 20V</p>
+                        <p class="precio-reciente">$129.00</p>
                     </div>
                 </div>
 
                 <!-- Recent 2 -->
-                <div class="recent-card">
-                    <div class="recent-image-container">
+                <div class="tarjeta-reciente">
+                    <div class="recent-image-contenedor-principal">
                         <img src="https://via.placeholder.com/100" alt="Casco">
                     </div>
-                    <div class="recent-info">
-                        <p class="recent-title">Casco de Seguridad</p>
-                        <p class="recent-price">$24.99</p>
+                    <div class="info-reciente">
+                        <p class="titulo-reciente">Casco de Seguridad</p>
+                        <p class="precio-reciente">$24.99</p>
                     </div>
                 </div>
 
                 <!-- Recent 3 -->
-                <div class="recent-card">
-                    <div class="recent-image-container placeholder-bg">
-                        <span class="tools-icon">⚒</span>
+                <div class="tarjeta-reciente">
+                    <div class="recent-image-contenedor-principal fondo-marcador">
+                        <span class="icono-herramientas">⚒</span>
                     </div>
-                    <div class="recent-info">
-                        <p class="recent-title">Set de Herramientas Manuales 150pzs</p>
-                        <p class="recent-price">$85.00</p>
+                    <div class="info-reciente">
+                        <p class="titulo-reciente">Set de Herramientas Manuales 150pzs</p>
+                        <p class="precio-reciente">$85.00</p>
                     </div>
                 </div>
 
                 <!-- Recent 4 -->
-                <div class="recent-card">
-                    <div class="recent-image-container placeholder-bg">
-                        <span class="tools-icon">🔧</span>
+                <div class="tarjeta-reciente">
+                    <div class="recent-image-contenedor-principal fondo-marcador">
+                        <span class="icono-herramientas">🔧</span>
                     </div>
-                    <div class="recent-info">
-                        <p class="recent-title">Llave Ajustable de 10"</p>
-                        <p class="recent-price">$18.50</p>
+                    <div class="info-reciente">
+                        <p class="titulo-reciente">Llave Ajustable de 10"</p>
+                        <p class="precio-reciente">$18.50</p>
                     </div>
                 </div>
 
                 <!-- Recent 5 -->
-                <div class="recent-card">
-                    <div class="recent-image-container placeholder-bg">
-                        <span class="tools-icon">⚒</span>
+                <div class="tarjeta-reciente">
+                    <div class="recent-image-contenedor-principal fondo-marcador">
+                        <span class="icono-herramientas">⚒</span>
                     </div>
-                    <div class="recent-info">
-                        <p class="recent-title">Martillo de Garra 16oz</p>
-                        <p class="recent-price">$22.00</p>
+                    <div class="info-reciente">
+                        <p class="titulo-reciente">Martillo de Garra 16oz</p>
+                        <p class="precio-reciente">$22.00</p>
                     </div>
                 </div>
             </div>
