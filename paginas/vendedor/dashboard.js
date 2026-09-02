@@ -23,6 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Añadir activo al clickeado
             this.classList.add('activo');
+
+            // Lógica para cambiar de vista
+            const target = this.getAttribute('data-target');
+            if (target) {
+                // Ocultar todas las vistas
+                document.querySelectorAll('.vista-panel').forEach(vista => {
+                    vista.style.display = 'none';
+                });
+                
+                // Mostrar la vista seleccionada
+                const vistaMostrar = document.getElementById('vista-' + target);
+                if (vistaMostrar) {
+                    vistaMostrar.style.display = 'block';
+                }
+            }
         });
     });
 

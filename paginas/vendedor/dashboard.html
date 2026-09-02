@@ -6,7 +6,9 @@
     <title>Panel de Vendedor | Industrial Supply Co.</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="../modo-oscuro.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="../modo-oscuro.js"></script>
 </head>
 <body>
     <!-- Encabezado Global -->
@@ -23,6 +25,7 @@
             <a href="../contacto/contacto.html">Contacto</a>
         </nav>
         <div class="iconos-encabezado">
+            <a href="javascript:void(0)" id="btn-modo-oscuro" class="btn-modo-oscuro" title="Cambiar tema" aria-label="Cambiar modo oscuro" role="button"><i class="fas fa-moon"></i></a>
             <a href="../carrito/carrito.html" title="Carrito"><i class="fas fa-shopping-cart"></i></a>
             <a href="../sesion/index.html" title="Mi Cuenta"><i class="fas fa-user"></i></a>
         </div>
@@ -37,34 +40,28 @@
             </div>
 
             <div class="menu-lateral">
-                <!-- Secciones exclusivas para vendedor (simplificadas) -->
+                <!-- Secciones exclusivas para vendedor -->
                 <div class="seccion-menu">
                     <span class="titulo-menu">MI ESPACIO</span>
-                    <a href="#" class="elemento-menu activo">
+                    <a href="#" class="elemento-menu activo" data-target="ventas">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"></rect><rect x="14" y="3" width="7" height="7"></rect><rect x="14" y="14" width="7" height="7"></rect><rect x="3" y="14" width="7" height="7"></rect></svg>
                         Resumen de Ventas
                     </a>
-                    <a href="#" class="elemento-menu">
+                    <a href="#" class="elemento-menu" data-target="pedidos">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
-                        Mis Pedidos
-                        <span class="insignia insignia-oscura">5</span>
-                    </a>
-                    <a href="#" class="elemento-menu">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
-                        Mis Cotizaciones
-                        <span class="insignia insignia-oscura">2</span>
+                        Estados de Pedidos
                     </a>
                 </div>
 
                 <div class="seccion-menu">
-                    <span class="titulo-menu">CLIENTES</span>
-                    <a href="#" class="elemento-menu">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        Mi Cartera
+                    <span class="titulo-menu">INVENTARIO Y LOGÍSTICA</span>
+                    <a href="#" class="elemento-menu" data-target="proveedores">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                        Proveedores
                     </a>
-                    <a href="#" class="elemento-menu">
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
-                        Seguimientos
+                    <a href="#" class="elemento-menu" data-target="stock">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                        Stock de Productos
                     </a>
                 </div>
             </div>
@@ -105,150 +102,206 @@
             <!-- Dashboard Content -->
             <div class="cuerpo-panel">
                 
-                <!-- KPI Cards (Orientado al vendedor) -->
-                <div class="cuadricula-kpi">
-                    <div class="tarjeta-kpi">
-                        <div class="icono-kpi fondo-verde-claro">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                <!-- VISTA: RESUMEN DE VENTAS -->
+                <div id="vista-ventas" class="vista-panel">
+                    <div class="cuadricula-kpi">
+                        <div class="tarjeta-kpi">
+                            <div class="icono-kpi fondo-verde-claro">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"></line><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg>
+                            </div>
+                            <div class="info-kpi">
+                                <span class="etiqueta-kpi">Resumen de Ventas</span>
+                                <span class="valor-kpi">$ 22.450.000</span>
+                                <span class="tendencia-kpi texto-verde">↑ 12% este mes</span>
+                            </div>
                         </div>
-                        <div class="info-kpi">
-                            <span class="etiqueta-kpi">Mis Ventas (Mes)</span>
-                            <span class="valor-kpi">$ 22.450.000</span>
-                            <span class="tendencia-kpi texto-verde">85% de la meta</span>
+                        
+                        <div class="tarjeta-kpi">
+                            <div class="icono-kpi fondo-naranja-claro">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="var(--naranja)" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
+                            </div>
+                            <div class="info-kpi">
+                                <span class="etiqueta-kpi">Estados de Pedidos</span>
+                                <span class="valor-kpi">24</span>
+                                <span class="tendencia-kpi texto-naranja">7 en proceso</span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="tarjeta-kpi">
-                        <div class="icono-kpi fondo-naranja-claro">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="var(--naranja)" stroke-width="2"><circle cx="9" cy="21" r="1"></circle><circle cx="20" cy="21" r="1"></circle><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path></svg>
-                        </div>
-                        <div class="info-kpi">
-                            <span class="etiqueta-kpi">Pedidos a cargo</span>
-                            <span class="valor-kpi">5</span>
-                            <span class="tendencia-kpi texto-naranja">3 requieren atención</span>
-                        </div>
-                    </div>
 
-                    <div class="tarjeta-kpi">
-                        <div class="icono-kpi fondo-azul-claro">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+                        <div class="tarjeta-kpi">
+                            <div class="icono-kpi fondo-azul-claro">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#3b82f6" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
+                            </div>
+                            <div class="info-kpi">
+                                <span class="etiqueta-kpi">Stock de Productos</span>
+                                <span class="valor-kpi">1,450</span>
+                                <span class="tendencia-kpi texto-azul">En inventario</span>
+                            </div>
                         </div>
-                        <div class="info-kpi">
-                            <span class="etiqueta-kpi">Cotizaciones Abiertas</span>
-                            <span class="valor-kpi">2</span>
-                            <span class="tendencia-kpi texto-azul">Por cerrar esta semana</span>
-                        </div>
-                    </div>
 
-                    <div class="tarjeta-kpi">
-                        <div class="icono-kpi fondo-gris-claro">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
-                        </div>
-                        <div class="info-kpi">
-                            <span class="etiqueta-kpi">Mi Cartera Activa</span>
-                            <span class="valor-kpi">14</span>
-                            <span class="tendencia-kpi texto-gris">Clientes recurrentes</span>
+                        <div class="tarjeta-kpi">
+                            <div class="icono-kpi fondo-gris-claro">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="#64748b" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                            </div>
+                            <div class="info-kpi">
+                                <span class="etiqueta-kpi">Proveedores</span>
+                                <span class="valor-kpi">12</span>
+                                <span class="tendencia-kpi texto-gris">Asociados activos</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Main Tables -->
-                <div class="tarjeta-datos">
-                    <div class="cabecera-tarjeta cabecera-filtros">
-                        <div>
-                            <h2>Mis Pedidos Recientes</h2>
-                            <span class="subtitulo-tarjeta">Seguimiento de pedidos de mi cartera de clientes</span>
+                <!-- VISTA: ESTADOS DE PEDIDOS -->
+                <div id="vista-pedidos" class="vista-panel" style="display: none;">
+                    <div class="tarjeta-datos">
+                        <div class="cabecera-tarjeta cabecera-filtros">
+                            <div>
+                                <h2>Estados de Pedidos</h2>
+                                <span class="subtitulo-tarjeta">Seguimiento de pedidos activos</span>
+                            </div>
+                            <div class="grupo-filtros">
+                                <input type="text" placeholder="Buscar por ID..." class="entrada-filtro">
+                            </div>
                         </div>
-                        <div class="grupo-filtros">
-                            <input type="text" placeholder="Buscar por ID o Cliente..." class="entrada-filtro">
+                        <div class="tabla-responsiva">
+                            <table class="tabla-datos">
+                                <thead>
+                                    <tr>
+                                        <th>ID PEDIDO</th>
+                                        <th>CLIENTE</th>
+                                        <th>MONTO</th>
+                                        <th>ESTADO</th>
+                                        <th>FECHA COMPRA</th>
+                                        <th>ACCIONES</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>#ORD-20491</td>
+                                        <td>Industrias Metalmecánicas</td>
+                                        <td>$ 4.195.400</td>
+                                        <td><span class="estado estado-pendiente">● pendiente</span></td>
+                                        <td>Hoy, 15:40</td>
+                                        <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#ORD-20490</td>
+                                        <td>Logística del Norte Ltda.</td>
+                                        <td>$ 8.139.700</td>
+                                        <td><span class="estado estado-procesando">● procesando</span></td>
+                                        <td>Ayer, 11:15</td>
+                                        <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                                    </tr>
+                                    <tr>
+                                        <td>#ORD-20489</td>
+                                        <td>Acero Corp.</td>
+                                        <td>$ 1.959.800</td>
+                                        <td><span class="estado estado-enviado">● enviado</span></td>
+                                        <td>29/08/2026</td>
+                                        <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                    <div class="tabla-responsiva">
-                        <table class="tabla-datos">
-                            <thead>
-                                <tr>
-                                    <th>ID PEDIDO</th>
-                                    <th>CLIENTE</th>
-                                    <th>MONTO</th>
-                                    <th>ESTADO</th>
-                                    <th>FECHA COMPRA</th>
-                                    <th>ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#ORD-20491</td>
-                                    <td>Industrias Metalmecánicas</td>
-                                    <td>$ 4.195.400</td>
-                                    <td><span class="estado estado-pendiente">● pendiente</span></td>
-                                    <td>Hoy, 15:40</td>
-                                    <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-20490</td>
-                                    <td>Logística del Norte Ltda.</td>
-                                    <td>$ 8.139.700</td>
-                                    <td><span class="estado estado-procesando">● procesando</span></td>
-                                    <td>Ayer, 11:15</td>
-                                    <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-20489</td>
-                                    <td>Acero Corp.</td>
-                                    <td>$ 1.959.800</td>
-                                    <td><span class="estado estado-enviado">● enviado</span></td>
-                                    <td>29/08/2026</td>
-                                    <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                </tr>
-                            </tbody>
-                        </table>
                     </div>
                 </div>
 
-                <!-- Secondary Tables / Actions -->
-                <div class="tarjeta-datos">
-                    <div class="cabecera-tarjeta">
-                        <h2>Mis Cotizaciones Activas</h2>
-                        <span class="subtitulo-tarjeta">Cotizaciones enviadas pendientes de aprobación</span>
+                <!-- VISTA: PROVEEDORES -->
+                <div id="vista-proveedores" class="vista-panel" style="display: none;">
+                    <div class="tarjeta-datos">
+                        <div class="cabecera-tarjeta">
+                            <h2>Lista de Proveedores</h2>
+                            <span class="subtitulo-tarjeta">Directorio de aliados comerciales</span>
+                        </div>
+                        <div class="tabla-responsiva">
+                            <table class="tabla-datos">
+                                <thead>
+                                    <tr>
+                                        <th>EMPRESA</th>
+                                        <th>CONTACTO</th>
+                                        <th>CATEGORÍAS</th>
+                                        <th>CALIFICACIÓN</th>
+                                        <th>ESTADO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>MaqIndustrial Global</td>
+                                        <td>ventas@maqindustrial.com</td>
+                                        <td>Maquinaria Pesada</td>
+                                        <td><span class="texto-verde">★ 4.8</span></td>
+                                        <td><span class="estado estado-enviado">● Activo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>DeWalt Oficinas Sur</td>
+                                        <td>distribucion@dewalt.co</td>
+                                        <td>Herramientas Eléctricas</td>
+                                        <td><span class="texto-verde">★ 4.9</span></td>
+                                        <td><span class="estado estado-enviado">● Activo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>SafeGuard EPP</td>
+                                        <td>pedidos@safeguard.com</td>
+                                        <td>Seguridad</td>
+                                        <td><span class="texto-naranja">★ 4.2</span></td>
+                                        <td><span class="estado estado-procesando">● En revisión</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
-                    <div class="tabla-responsiva">
-                        <table class="tabla-datos">
-                            <thead>
-                                <tr>
-                                    <th>ID COTIZACIÓN</th>
-                                    <th>CLIENTE PROSPECTO</th>
-                                    <th>VALOR ESTIMADO</th>
-                                    <th>VENCE EN</th>
-                                    <th>ACCIONES</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>#COT-9901</td>
-                                    <td>Taller Mecánico El Veloz</td>
-                                    <td>$ 1.250.000</td>
-                                    <td><span class="texto-naranja">2 días</span></td>
-                                    <td>
-                                        <div style="display: flex; gap: 8px;">
-                                            <button class="btn-accion" title="Contactar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button>
-                                            <button class="btn-accion" title="Aprobar (Marcar Ganada)"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>#COT-9895</td>
-                                    <td>Constructora Valles</td>
-                                    <td>$ 14.500.000</td>
-                                    <td><span class="texto-gris">5 días</span></td>
-                                    <td>
-                                        <div style="display: flex; gap: 8px;">
-                                            <button class="btn-accion" title="Contactar"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg></button>
-                                            <button class="btn-accion" title="Aprobar (Marcar Ganada)"><svg viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                </div>
+
+                <!-- VISTA: STOCK DE PRODUCTOS -->
+                <div id="vista-stock" class="vista-panel" style="display: none;">
+                    <div class="tarjeta-datos">
+                        <div class="cabecera-tarjeta">
+                            <h2>Inventario de Productos</h2>
+                            <span class="subtitulo-tarjeta">Stock disponible en almacén central</span>
+                        </div>
+                        <div class="tabla-responsiva">
+                            <table class="tabla-datos">
+                                <thead>
+                                    <tr>
+                                        <th>PRODUCTO / SKU</th>
+                                        <th>CATEGORÍA</th>
+                                        <th>PROVEEDOR</th>
+                                        <th>STOCK</th>
+                                        <th>ESTADO</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Torno CNC T-800<br><span style="font-size: 0.75rem; color: var(--texto-secundario);">SKU: CNC-T800</span></td>
+                                        <td>Maquinaria Pesada</td>
+                                        <td>MaqIndustrial Global</td>
+                                        <td><strong>12</strong></td>
+                                        <td><span class="estado estado-enviado">● en stock</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Taladro Percutor 1200W<br><span style="font-size: 0.75rem; color: var(--texto-secundario);">SKU: TL-1200</span></td>
+                                        <td>Herramientas Eléctricas</td>
+                                        <td>DeWalt</td>
+                                        <td><strong>45</strong></td>
+                                        <td><span class="estado estado-enviado">● en stock</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Kit EPP Básico<br><span style="font-size: 0.75rem; color: var(--texto-secundario);">SKU: EPP-001</span></td>
+                                        <td>Seguridad</td>
+                                        <td>SafeGuard</td>
+                                        <td><strong>4</strong></td>
+                                        <td><span class="estado estado-procesando">● stock bajo</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Generador Eléctrico 5kW<br><span style="font-size: 0.75rem; color: var(--texto-secundario);">SKU: GEN-5K</span></td>
+                                        <td>Equipos de Potencia</td>
+                                        <td>Energía Plus</td>
+                                        <td><strong>0</strong></td>
+                                        <td><span class="estado estado-pendiente">● agotado</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 

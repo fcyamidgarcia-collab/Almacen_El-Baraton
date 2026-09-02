@@ -1,0 +1,658 @@
+/* ==========================================================================
+   SISTEMA GLOBAL DE MODO OSCURO (DARK MODE) - INDUSTRIAL SUPPLY CO.
+   Diseño Premium, Integración Nativa y Cero Inconsistencias Visuales
+   ========================================================================== */
+
+/* ==========================================================================
+   1. INTEGRACIÓN DEL HEADER Y BOTÓN EN EL ENCABEZADO
+   ========================================================================== */
+header, .encabezado, .barra-nav {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 16px !important;
+}
+
+header .barra-busqueda, .encabezado .barra-busqueda {
+    flex: 1 1 200px !important;
+    max-width: 350px !important;
+    min-width: 140px !important;
+}
+
+header .iconos-encabezado, .encabezado .iconos-encabezado, .iconos-cabecera, .header-icons {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    gap: 1.25rem !important;
+    flex-shrink: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* El botón de modo oscuro idéntico a los otros iconos del header */
+header .iconos-encabezado a.btn-modo-oscuro,
+header .iconos-encabezado .btn-modo-oscuro,
+.btn-modo-oscuro {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    background: transparent !important;
+    border: none !important;
+    color: #5a5a6a !important;
+    font-size: 1.15rem !important;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    border-radius: 50% !important;
+    cursor: pointer !important;
+    outline: none !important;
+    text-decoration: none !important;
+    line-height: 1 !important;
+    box-shadow: none !important;
+    transition: color 0.2s ease, transform 0.2s ease, background-color 0.2s ease !important;
+}
+
+header .iconos-encabezado a.btn-modo-oscuro:hover,
+header .iconos-encabezado .btn-modo-oscuro:hover,
+.btn-modo-oscuro:hover {
+    color: #e67e22 !important;
+    background: rgba(230, 126, 34, 0.1) !important;
+    transform: scale(1.1) rotate(15deg) !important;
+}
+
+/* Estado del botón en Modo Oscuro */
+html.dark-mode header .iconos-encabezado a.btn-modo-oscuro,
+html.dark-mode header .iconos-encabezado .btn-modo-oscuro,
+html.dark-mode .btn-modo-oscuro {
+    color: #fbbf24 !important; /* Ámbar radiante */
+    background: transparent !important;
+}
+
+html.dark-mode header .iconos-encabezado a.btn-modo-oscuro:hover,
+html.dark-mode header .iconos-encabezado .btn-modo-oscuro:hover,
+html.dark-mode .btn-modo-oscuro:hover {
+    color: #fde047 !important;
+    background: rgba(251, 191, 36, 0.15) !important;
+    text-shadow: 0 0 10px rgba(251, 191, 36, 0.5) !important;
+    transform: scale(1.15) rotate(45deg) !important;
+}
+
+/* ==========================================================================
+   2. VARIABLES RAÍZ EN MODO OSCURO
+   ========================================================================== */
+html.dark-mode {
+    --oscuro: #090d16;
+    --oscuro-secundario: #0f172a;
+    --nav-fondo: #0f172a;
+    --fondo-body: #090d16;
+    --fondo-claro: #090d16;
+    --bg-color: #090d16;
+    --card-bg: #151e2d;
+    --blue-bg: #1a2538;
+    --gray-bg: #1a2538;
+    --orange-bg: rgba(230, 126, 34, 0.15);
+    --red-bg: rgba(239, 68, 68, 0.15);
+    --white: #151e2d;
+    --blanco: #151e2d;
+    --tarjeta: #151e2d;
+    --gris-claro: #101724;
+    --gris-borde: #26354a;
+    --borde: #26354a;
+    --border-color: #26354a;
+    --aviso-bg: #1c273c;
+    --aviso-border: #26354a;
+    --texto-oscuro: #f8fafc;
+    --texto-secundario: #94a3b8;
+    --text-color: #f1f5f9;
+    --text-main: #f8fafc;
+    --text-muted: #94a3b8;
+    --text-light: #94a3b8;
+    --sombra: 0 4px 20px rgba(0, 0, 0, 0.5);
+    color-scheme: dark;
+}
+
+/* Transiciones */
+body, header, aside, main, section, footer, div, nav, .tarjeta, input, select, textarea, button, a {
+    transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+
+/* ==========================================================================
+   3. FONDOS GENERALES (ELIMINACIÓN RADICAL DE FONDOS BLANCOS/CLAROS)
+   ========================================================================== */
+html.dark-mode,
+html.dark-mode body,
+html.dark-mode main,
+html.dark-mode section,
+html.dark-mode article,
+html.dark-mode .contenido-principal,
+html.dark-mode .contenedor-pagina,
+html.dark-mode .contenedor-principal,
+html.dark-mode .perfil-layout,
+html.dark-mode .checkout-principal,
+html.dark-mode .carrito-principal,
+html.dark-mode .confirmacion-principal,
+html.dark-mode .diseno-panel,
+html.dark-mode .cuerpo-panel,
+html.dark-mode .fondo-claro,
+html.dark-mode .fondo-gris-claro,
+html.dark-mode .bg-light,
+html.dark-mode .contenedor-terminos,
+html.dark-mode .contenedor-contacto,
+html.dark-mode .contenedor-politica,
+html.dark-mode .hero-overlay {
+    background-color: #090d16 !important;
+    background: #090d16 !important;
+    color: #e2e8f0 !important;
+}
+
+/* ==========================================================================
+   4. SUPERFICIES, CAJAS, PANELES Y TARJETAS EN MODO OSCURO
+   ========================================================================== */
+html.dark-mode .caja-blanca,
+html.dark-mode .tarjeta,
+html.dark-mode .tarjeta-perfil,
+html.dark-mode .tarjeta-nivel,
+html.dark-mode .barra-lateral-perfil,
+html.dark-mode .item-historial,
+html.dark-mode .seccion-informacion,
+html.dark-mode .caracteristica-tarjeta,
+html.dark-mode .producto-tarjeta,
+html.dark-mode .tarjeta-categoria,
+html.dark-mode .tarjeta-pedido,
+html.dark-mode .tarjeta-metrica,
+html.dark-mode .tarjeta-producto,
+html.dark-mode .tarjeta-usuario,
+html.dark-mode .tarjeta-cliente,
+html.dark-mode .tarjeta-proveedor,
+html.dark-mode .tarjeta-reporte,
+html.dark-mode .card,
+html.dark-mode .stat-card,
+html.dark-mode .tarjeta-resumen,
+html.dark-mode .resumen-pedido,
+html.dark-mode .carrito-resumen,
+html.dark-mode .tarjeta-configuracion,
+html.dark-mode .panel-control,
+html.dark-mode .contenedor-formulario,
+html.dark-mode .formulario-contenedor,
+html.dark-mode .seccion-perfil,
+html.dark-mode .politica-seccion,
+html.dark-mode .info-tarjeta,
+html.dark-mode .formulario-contacto-wrapper,
+html.dark-mode .producto-detalle-contenedor,
+html.dark-mode .panel,
+html.dark-mode .contenedor-login,
+html.dark-mode .contenedor-registro,
+html.dark-mode .tarjeta-auth,
+html.dark-mode .tarjeta-contacto,
+html.dark-mode .tarjeta-confirmacion,
+html.dark-mode .bloque-pago,
+html.dark-mode .metodo-pago,
+html.dark-mode .opcion-envio,
+html.dark-mode .sidebar-filtros,
+html.dark-mode .filtros-contenedor,
+html.dark-mode .modal-contenido,
+html.dark-mode .contenido-modal,
+html.dark-mode .barra-lateral,
+html.dark-mode .sidebar,
+html.dark-mode [class*="tarjeta"],
+html.dark-mode [class*="card"],
+html.dark-mode [class*="panel-"],
+html.dark-mode [class*="box-"] {
+    background-color: #151e2d !important;
+    background: #151e2d !important;
+    border-color: #26354a !important;
+    color: #e2e8f0 !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
+}
+
+/* ==========================================================================
+   5. SECCIÓN TIENDA (PRODUCTOS.HTML) - CERO PARCHES BLANCOS
+   ========================================================================== */
+html.dark-mode .barra-superior {
+    background: #151e2d !important;
+    border-color: #26354a !important;
+}
+
+html.dark-mode .imagen-producto-contenedor-principal {
+    background: #1a2538 !important;
+    border-bottom: 1px solid #26354a !important;
+}
+
+html.dark-mode .imagen-producto {
+    mix-blend-mode: normal !important;
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.4)) !important;
+}
+
+html.dark-mode .prefijo-entrada {
+    background: #1a2538 !important;
+    border-color: #26354a !important;
+}
+
+html.dark-mode .prefijo-entrada input {
+    color: #f8fafc !important;
+    background: transparent !important;
+}
+
+html.dark-mode .grupo-control select {
+    background: #1a2538 !important;
+    color: #f8fafc !important;
+    border-color: #26354a !important;
+}
+
+html.dark-mode .rango-precio {
+    background: #26354a !important;
+}
+
+html.dark-mode .rango-deslizador {
+    background: #e67e22 !important;
+}
+
+html.dark-mode .manija-deslizador {
+    background: #f8fafc !important;
+    border: 2px solid #e67e22 !important;
+}
+
+html.dark-mode .info-producto {
+    background: #151e2d !important;
+}
+
+html.dark-mode .titulo-producto a {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .btn-agregar-carrito {
+    background: #1a2538 !important;
+    border: 1px solid #26354a !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode .btn-agregar-carrito:hover {
+    background: #e67e22 !important;
+    border-color: #e67e22 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .insignia-gris {
+    background: #26354a !important;
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .insignia-oscura {
+    background: #0f172a !important;
+    color: #f8fafc !important;
+    border: 1px solid #26354a !important;
+}
+
+/* ==========================================================================
+   6. SECCIÓN NOSOTROS (NOSOTROS.HTML) - CERO PARCHES BLANCOS
+   ========================================================================== */
+html.dark-mode .mision-seccion {
+    background-color: #090d16 !important;
+    background: #090d16 !important;
+}
+
+html.dark-mode .mision-contenedor {
+    background: #151e2d !important;
+    background-color: #151e2d !important;
+    border: 1px solid #26354a !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+html.dark-mode .mision-texto h2 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .mision-texto p {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .valor-card {
+    background: #1a2538 !important;
+    background-color: #1a2538 !important;
+    border: 1px solid #26354a !important;
+}
+
+html.dark-mode .contenedor-icono-valor {
+    background-color: #26354a !important;
+    background: #26354a !important;
+    color: #e67e22 !important;
+}
+
+html.dark-mode .valor-card h3 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .valor-card p {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .evolucion-seccion {
+    background-color: #090d16 !important;
+    background: #090d16 !important;
+}
+
+html.dark-mode .evolucion-contenedor h2 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .timeline-line {
+    background-color: #26354a !important;
+}
+
+html.dark-mode .timeline-punto {
+    background-color: #151e2d !important;
+    border-color: #e67e22 !important;
+}
+
+html.dark-mode .timeline-punto.final {
+    background-color: #e67e22 !important;
+    border-color: #e67e22 !important;
+}
+
+html.dark-mode .ano {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .hito {
+    color: #e67e22 !important;
+}
+
+html.dark-mode .timeline-contenido p {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .timeline-imagen {
+    border: 1px solid #26354a !important;
+}
+
+html.dark-mode .liderazgo-seccion {
+    background-color: #090d16 !important;
+    background: #090d16 !important;
+}
+
+html.dark-mode .liderazgo-contenedor h2 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .lider-card {
+    background: #151e2d !important;
+    background-color: #151e2d !important;
+    border: 1px solid #26354a !important;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4) !important;
+}
+
+html.dark-mode .lider-imagen {
+    border: 2px solid #26354a !important;
+}
+
+html.dark-mode .lider-info h3 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .lider-info .cargo {
+    color: #e67e22 !important;
+}
+
+html.dark-mode .lider-info .descripcion {
+    color: #cbd5e1 !important;
+}
+
+/* ==========================================================================
+   7. SECCIÓN TÉRMINOS Y POLÍTICA DE PRIVACIDAD
+   ========================================================================== */
+html.dark-mode .caja-aviso,
+html.dark-mode .aviso-box,
+html.dark-mode .alert-info {
+    background-color: #1c273c !important;
+    background: #1c273c !important;
+    border-left: 4px solid #e67e22 !important;
+    border-top: 1px solid #26354a !important;
+    border-right: 1px solid #26354a !important;
+    border-bottom: 1px solid #26354a !important;
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .caja-aviso strong,
+html.dark-mode .aviso-box strong {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .caja-aviso p,
+html.dark-mode .aviso-box p {
+    color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   8. TIPOGRAFÍA Y TEXTOS GLOBALES
+   ========================================================================== */
+html.dark-mode h1,
+html.dark-mode h2,
+html.dark-mode h3,
+html.dark-mode h4,
+html.dark-mode h5,
+html.dark-mode h6,
+html.dark-mode .titulo-pagina,
+html.dark-mode .titulo-categoria,
+html.dark-mode .logo-marca,
+html.dark-mode strong,
+html.dark-mode b,
+html.dark-mode [class*="titulo"] {
+    color: #f8fafc !important;
+}
+
+html.dark-mode p,
+html.dark-mode span:not(.insignia):not(.badge):not(.badge-carrito):not(.marca-verificacion),
+html.dark-mode li,
+html.dark-mode label,
+html.dark-mode .fecha-actualizacion,
+html.dark-mode [class*="descripcion"],
+html.dark-mode [class*="subtitulo"] {
+    color: #cbd5e1 !important;
+}
+
+html.dark-mode .texto-secundario,
+html.dark-mode .texto-mutado,
+html.dark-mode .metadato,
+html.dark-mode .text-light,
+html.dark-mode .conteo-categoria {
+    color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   9. HEADER Y NAVEGACIÓN EN MODO OSCURO
+   ========================================================================== */
+html.dark-mode header,
+html.dark-mode .encabezado,
+html.dark-mode .barra-nav {
+    background-color: #0f172a !important;
+    background: #0f172a !important;
+    border-bottom: 1px solid #1e293b !important;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4) !important;
+}
+
+html.dark-mode header .logo,
+html.dark-mode header .logo a,
+html.dark-mode .encabezado .logo,
+html.dark-mode .encabezado .logo a {
+    color: #f8fafc !important;
+}
+
+html.dark-mode header .barra-busqueda,
+html.dark-mode .encabezado .barra-busqueda,
+html.dark-mode .barra-busqueda {
+    background: #151e2d !important;
+    background-color: #151e2d !important;
+    border: 1px solid #26354a !important;
+}
+
+html.dark-mode header .barra-busqueda input,
+html.dark-mode .encabezado .barra-busqueda input,
+html.dark-mode .barra-busqueda input {
+    color: #f8fafc !important;
+}
+
+html.dark-mode header .barra-busqueda input::placeholder,
+html.dark-mode .encabezado .barra-busqueda input::placeholder {
+    color: #64748b !important;
+}
+
+html.dark-mode header nav a,
+html.dark-mode .enlaces-navegacion a {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode header nav a:hover,
+html.dark-mode header nav a.activo,
+html.dark-mode .enlaces-navegacion a:hover,
+html.dark-mode .enlaces-navegacion a.activo {
+    color: #ffffff !important;
+    border-bottom-color: #e67e22 !important;
+}
+
+html.dark-mode header .iconos-encabezado a:not(.btn-modo-oscuro),
+html.dark-mode .encabezado .iconos-encabezado a:not(.btn-modo-oscuro),
+html.dark-mode .iconos-encabezado svg {
+    color: #94a3b8 !important;
+}
+
+html.dark-mode header .iconos-encabezado a:hover:not(.btn-modo-oscuro),
+html.dark-mode .encabezado .iconos-encabezado a:hover:not(.btn-modo-oscuro) {
+    color: #e67e22 !important;
+}
+
+/* ==========================================================================
+   10. SIDEBAR Y MENÚS LATERALES (ADMIN, VENDEDOR Y PERFIL)
+   ========================================================================== */
+html.dark-mode .barra-lateral,
+html.dark-mode .sidebar,
+html.dark-mode aside {
+    background-color: #0f172a !important;
+    background: #0f172a !important;
+    border-right: 1px solid #1e293b !important;
+}
+
+html.dark-mode .encabezado-barra-lateral,
+html.dark-mode .sidebar-header,
+html.dark-mode .cabecera-lateral {
+    border-bottom: 1px solid #1e293b !important;
+}
+
+html.dark-mode .item-menu,
+html.dark-mode .menu-item,
+html.dark-mode .sidebar-nav a {
+    color: #94a3b8 !important;
+    border-bottom-color: #1e293b !important;
+}
+
+html.dark-mode .item-menu:hover,
+html.dark-mode .menu-item:hover,
+html.dark-mode .sidebar-nav a:hover {
+    background: rgba(255, 255, 255, 0.05) !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .item-menu.activo,
+html.dark-mode .menu-item.activo,
+html.dark-mode .sidebar-nav a.activo {
+    background: rgba(230, 126, 34, 0.15) !important;
+    color: #e67e22 !important;
+}
+
+html.dark-mode .pie-barra-lateral,
+html.dark-mode .sidebar-footer {
+    border-top: 1px solid #1e293b !important;
+    background: #090d16 !important;
+}
+
+/* ==========================================================================
+   11. TABLAS, INPUTS Y FORMULARIOS
+   ========================================================================== */
+html.dark-mode table {
+    background: #0f172a !important;
+    border-color: #26354a !important;
+    color: #f1f5f9 !important;
+}
+
+html.dark-mode th {
+    background: #151e2d !important;
+    color: #94a3b8 !important;
+    border-bottom: 2px solid #26354a !important;
+}
+
+html.dark-mode td {
+    color: #e2e8f0 !important;
+    border-bottom: 1px solid #1a2538 !important;
+}
+
+html.dark-mode tr:hover td {
+    background: rgba(255, 255, 255, 0.03) !important;
+}
+
+html.dark-mode input,
+html.dark-mode select,
+html.dark-mode textarea {
+    background: #151e2d !important;
+    background-color: #151e2d !important;
+    border: 1px solid #26354a !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode input:focus,
+html.dark-mode select:focus,
+html.dark-mode textarea:focus {
+    border-color: #e67e22 !important;
+    outline: none !important;
+    box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2) !important;
+}
+
+/* ==========================================================================
+   12. LÍNEAS DIVISORIAS, BOTONES SECUNDARIOS Y PIE DE PÁGINA
+   ========================================================================== */
+html.dark-mode hr,
+html.dark-mode .divisor,
+html.dark-mode [class*="divisor"],
+html.dark-mode [class*="separador"] {
+    border-color: #26354a !important;
+    border-top-color: #26354a !important;
+}
+
+html.dark-mode .btn-secundario,
+html.dark-mode .btn-light,
+html.dark-mode .btn-limpiar,
+html.dark-mode .boton-secundario,
+html.dark-mode .boton-filtro,
+html.dark-mode .btn-cancelar,
+html.dark-mode .btn-outline {
+    background: #151e2d !important;
+    border: 1px solid #26354a !important;
+    color: #f8fafc !important;
+}
+
+html.dark-mode .btn-secundario:hover,
+html.dark-mode .btn-light:hover,
+html.dark-mode .btn-limpiar:hover,
+html.dark-mode .boton-secundario:hover,
+html.dark-mode .btn-outline:hover {
+    background: #1f2b3e !important;
+    border-color: #3b4d68 !important;
+    color: #ffffff !important;
+}
+
+html.dark-mode .precio,
+html.dark-mode .precio-actual,
+html.dark-mode .producto-precio {
+    color: #e67e22 !important;
+}
+
+html.dark-mode .precio-antiguo,
+html.dark-mode .precio-anterior {
+    color: #64748b !important;
+}
+
+html.dark-mode footer,
+html.dark-mode .pie-pagina {
+    background: #060910 !important;
+    background-color: #060910 !important;
+    border-top: 1px solid #1e293b !important;
+}
