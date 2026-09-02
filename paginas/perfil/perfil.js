@@ -40,24 +40,24 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Configurar 2FA
-    const btn2FA = document.querySelector('.tarjeta-seguridad .btn-solid-brown');
-    if (btn2FA) {
-        btn2FA.addEventListener('click', () => {
-            const originalText = btn2FA.textContent;
-            btn2FA.textContent = 'Configurando...';
-            btn2FA.disabled = true;
+    // Actualizar Correo de Recuperación
+    const btnCorreo = document.querySelector('.tarjeta-seguridad .btn-solid-brown');
+    if (btnCorreo) {
+        btnCorreo.addEventListener('click', () => {
+            const originalText = btnCorreo.textContent;
+            btnCorreo.textContent = 'Enviando enlace...';
+            btnCorreo.disabled = true;
             
             setTimeout(() => {
-                btn2FA.innerHTML = '<i class="fi fi-rr-check"></i> 2FA Activado';
-                btn2FA.style.background = '#10b981';
+                btnCorreo.innerHTML = '✓ Enlace enviado al correo';
+                btnCorreo.style.background = '#10b981';
                 
                 setTimeout(() => {
-                    btn2FA.textContent = originalText;
-                    btn2FA.style.background = '';
-                    btn2FA.disabled = false;
+                    btnCorreo.textContent = originalText;
+                    btnCorreo.style.background = '';
+                    btnCorreo.disabled = false;
                 }, 3000);
-            }, 1500);
+            }, 1000);
         });
     }
 
