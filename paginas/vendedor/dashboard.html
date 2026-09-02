@@ -90,10 +90,10 @@
                     </button>
                     <!-- Perfil simplificado para el vendedor -->
                     <div style="display: flex; align-items: center; gap: 8px; margin-left: 12px; border-left: 1px solid var(--borde); padding-left: 16px;">
-                        <img src="../../Almacen/img/perfil_carlos.jpg" alt="Perfil" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover;">
+                        <div style="width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea580c);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:14px">V</div>
                         <div style="line-height: 1.2;">
-                            <span style="display: block; font-weight: 600; font-size: 0.85rem;">Roberto S.</span>
-                            <span style="display: block; font-size: 0.75rem; color: var(--texto-secundario);">Ventas B2B</span>
+                            <span id="vendedor-nombre" style="display: block; font-weight: 600; font-size: 0.85rem;">Vendedor</span>
+                            <span id="vendedor-rol" style="display: block; font-size: 0.75rem; color: var(--texto-secundario);">Ventas</span>
                         </div>
                     </div>
                 </div>
@@ -111,8 +111,8 @@
                             </div>
                             <div class="info-kpi">
                                 <span class="etiqueta-kpi">Resumen de Ventas</span>
-                                <span class="valor-kpi">$ 22.450.000</span>
-                                <span class="tendencia-kpi texto-verde">↑ 12% este mes</span>
+                                <span class="valor-kpi" id="kpi-ventas">$ 0</span>
+                                <span class="tendencia-kpi texto-verde">Este mes</span>
                             </div>
                         </div>
                         
@@ -122,8 +122,8 @@
                             </div>
                             <div class="info-kpi">
                                 <span class="etiqueta-kpi">Estados de Pedidos</span>
-                                <span class="valor-kpi">24</span>
-                                <span class="tendencia-kpi texto-naranja">7 en proceso</span>
+                                <span class="valor-kpi" id="kpi-pedidos">0</span>
+                                <span class="tendencia-kpi texto-naranja" id="kpi-pedidos-sub">0 pendientes</span>
                             </div>
                         </div>
 
@@ -133,7 +133,7 @@
                             </div>
                             <div class="info-kpi">
                                 <span class="etiqueta-kpi">Stock de Productos</span>
-                                <span class="valor-kpi">1,450</span>
+                                <span class="valor-kpi" id="kpi-stock">0</span>
                                 <span class="tendencia-kpi texto-azul">En inventario</span>
                             </div>
                         </div>
@@ -144,7 +144,7 @@
                             </div>
                             <div class="info-kpi">
                                 <span class="etiqueta-kpi">Proveedores</span>
-                                <span class="valor-kpi">12</span>
+                                <span class="valor-kpi" id="kpi-proveedores">0</span>
                                 <span class="tendencia-kpi texto-gris">Asociados activos</span>
                             </div>
                         </div>
@@ -160,7 +160,7 @@
                                 <span class="subtitulo-tarjeta">Seguimiento de pedidos activos</span>
                             </div>
                             <div class="grupo-filtros">
-                                <input type="text" placeholder="Buscar por ID..." class="entrada-filtro">
+                                <input type="text" id="busqueda-pedidos" placeholder="Buscar por ID o cliente..." class="entrada-filtro">
                             </div>
                         </div>
                         <div class="tabla-responsiva">
@@ -175,32 +175,7 @@
                                         <th>ACCIONES</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>#ORD-20491</td>
-                                        <td>Industrias Metalmecánicas</td>
-                                        <td>$ 4.195.400</td>
-                                        <td><span class="estado estado-pendiente">● pendiente</span></td>
-                                        <td>Hoy, 15:40</td>
-                                        <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>#ORD-20490</td>
-                                        <td>Logística del Norte Ltda.</td>
-                                        <td>$ 8.139.700</td>
-                                        <td><span class="estado estado-procesando">● procesando</span></td>
-                                        <td>Ayer, 11:15</td>
-                                        <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                    </tr>
-                                    <tr>
-                                        <td>#ORD-20489</td>
-                                        <td>Acero Corp.</td>
-                                        <td>$ 1.959.800</td>
-                                        <td><span class="estado estado-enviado">● enviado</span></td>
-                                        <td>29/08/2026</td>
-                                        <td><button class="btn-accion" title="Ver detalles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path><circle cx="12" cy="12" r="3"></circle></svg></button></td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="tbody-pedidos"></tbody>
                             </table>
                         </div>
                     </div>
@@ -224,29 +199,7 @@
                                         <th>ESTADO</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>MaqIndustrial Global</td>
-                                        <td>ventas@maqindustrial.com</td>
-                                        <td>Maquinaria Pesada</td>
-                                        <td><span class="texto-verde">★ 4.8</span></td>
-                                        <td><span class="estado estado-enviado">● Activo</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>DeWalt Oficinas Sur</td>
-                                        <td>distribucion@dewalt.co</td>
-                                        <td>Herramientas Eléctricas</td>
-                                        <td><span class="texto-verde">★ 4.9</span></td>
-                                        <td><span class="estado estado-enviado">● Activo</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>SafeGuard EPP</td>
-                                        <td>pedidos@safeguard.com</td>
-                                        <td>Seguridad</td>
-                                        <td><span class="texto-naranja">★ 4.2</span></td>
-                                        <td><span class="estado estado-procesando">● En revisión</span></td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="tbody-proveedores"></tbody>
                             </table>
                         </div>
                     </div>
@@ -270,36 +223,7 @@
                                         <th>ESTADO</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Torno CNC T-800<br><span style="font-size: 0.75rem; color: var(--texto-secundario);">SKU: CNC-T800</span></td>
-                                        <td>Maquinaria Pesada</td>
-                                        <td>MaqIndustrial Global</td>
-                                        <td><strong>12</strong></td>
-                                        <td><span class="estado estado-enviado">● en stock</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Taladro Percutor 1200W<br><span style="font-size: 0.75rem; color: var(--texto-secundario);">SKU: TL-1200</span></td>
-                                        <td>Herramientas Eléctricas</td>
-                                        <td>DeWalt</td>
-                                        <td><strong>45</strong></td>
-                                        <td><span class="estado estado-enviado">● en stock</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Kit EPP Básico<br><span style="font-size: 0.75rem; color: var(--texto-secundario);">SKU: EPP-001</span></td>
-                                        <td>Seguridad</td>
-                                        <td>SafeGuard</td>
-                                        <td><strong>4</strong></td>
-                                        <td><span class="estado estado-procesando">● stock bajo</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Generador Eléctrico 5kW<br><span style="font-size: 0.75rem; color: var(--texto-secundario);">SKU: GEN-5K</span></td>
-                                        <td>Equipos de Potencia</td>
-                                        <td>Energía Plus</td>
-                                        <td><strong>0</strong></td>
-                                        <td><span class="estado estado-pendiente">● agotado</span></td>
-                                    </tr>
-                                </tbody>
+                                <tbody id="tbody-stock"></tbody>
                             </table>
                         </div>
                     </div>
@@ -356,9 +280,8 @@
         </div>
     </footer>
 
-<script src="dashboard.js"></script>
-    
     <script src="../js/api.js"></script>
     <script src="../js/sesion.js"></script>
+    <script src="dashboard.js"></script>
 </body>
 </html>

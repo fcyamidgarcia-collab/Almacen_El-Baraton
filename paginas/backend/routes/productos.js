@@ -10,9 +10,11 @@ router.get('/', async (req, res) => {
             SELECT p.id_producto, p.nombre_producto, p.descripcion, p.precio, p.imagen, p.estado,
                    p.id_categoria, p.id_proveedor,
                    c.nombre_categoria,
+                   pr.nombre_proveedor,
                    COALESCE(i.cantidad_disponible, 0) AS stock
             FROM producto p
             LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
+            LEFT JOIN proveedor pr ON p.id_proveedor = pr.id_proveedor
             LEFT JOIN inventario i ON p.id_producto = i.id_producto
             WHERE 1=1
         `;

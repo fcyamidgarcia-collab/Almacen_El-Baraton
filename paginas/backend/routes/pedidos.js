@@ -5,7 +5,7 @@ const pool = require('../db');
 // GET /api/pedidos
 router.get('/', async (req, res) => {
     try {
-        const { estado, id_cliente } = req.query;
+        const { estado, id_cliente, id_usuario } = req.query;
         let query = `
             SELECT pe.id_pedido, pe.id_cliente, pe.id_venta, pe.fecha_pedido,
                    pe.direccion_entrega, pe.estado_pedido, pe.total, pe.observaciones,
@@ -20,6 +20,7 @@ router.get('/', async (req, res) => {
 
         if (estado) { query += ' AND pe.estado_pedido = ?'; params.push(estado); }
         if (id_cliente) { query += ' AND pe.id_cliente = ?'; params.push(id_cliente); }
+        if (id_usuario) { query += ' AND (c.id_usuario = ? OR pe.id_cliente IN (SELECT id_cliente FROM cliente WHERE id_usuario = ?))'; params.push(id_usuario, id_usuario); }
 
         query += ' ORDER BY pe.fecha_pedido DESC';
         const [pedidos] = await pool.query(query, params);
@@ -76,11 +77,47 @@ router.post('/', async (req, res) => {
     try {
         await conn.beginTransaction();
 
-        const { id_cliente, id_usuario, items, direccion_entrega, metodo_pago, observaciones } = req.body;
+        let { id_cliente, id_usuario, items, direccion_entrega, metodo_pago, observaciones, documento_identidad } = req.body;
 
-        if (!id_cliente || !items || items.length === 0) {
+        if (!items || items.length === 0) {
             await conn.rollback();
-            return res.status(400).json({ error: 'Se requiere id_cliente e items del pedido' });
+            return res.status(400).json({ error: 'Se requieren items para el pedido' });
+        }
+
+        const docIdentidad = documento_identidad || `CC-${Date.now().toString().slice(-8)}`;
+
+        // Si no hay id_cliente pero sí id_usuario, buscarlo o crearlo automáticamente
+        if (!id_cliente && id_usuario) {
+            const [cliRows] = await conn.query('SELECT id_cliente FROM cliente WHERE id_usuario = ? LIMIT 1', [id_usuario]);
+            if (cliRows.length > 0) {
+                id_cliente = cliRows[0].id_cliente;
+            } else {
+                // Obtener datos del usuario
+                const [usrRows] = await conn.query('SELECT * FROM usuario WHERE id_usuario = ? LIMIT 1', [id_usuario]);
+                if (usrRows.length > 0) {
+                    const u = usrRows[0];
+                    const [resCli] = await conn.query(
+                        `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
+                         VALUES (?, ?, ?, ?, ?, ?, 'Bogotá', NOW(), 'activo')`,
+                        [id_usuario, u.nombre || 'Cliente', u.apellido || 'General', docIdentidad, u.telefono || null, direccion_entrega || '']
+                    );
+                    id_cliente = resCli.insertId;
+                }
+            }
+        }
+
+        // Si todavía no hay id_cliente, asignar primer cliente existente o crear uno genérico
+        if (!id_cliente) {
+            const [cliGen] = await conn.query('SELECT id_cliente FROM cliente LIMIT 1');
+            if (cliGen.length > 0) {
+                id_cliente = cliGen[0].id_cliente;
+            } else {
+                const [resGen] = await conn.query(
+                    `INSERT INTO cliente (nombre, apellido, documento_identidad, fecha_registro, estado) VALUES ('Consumidor', 'Final', ?, NOW(), 'activo')`,
+                    [docIdentidad]
+                );
+                id_cliente = resGen.insertId;
+            }
         }
 
         // Calcular total
@@ -154,7 +191,9 @@ router.post('/', async (req, res) => {
 // PUT /api/pedidos/:id - Actualizar estado del pedido
 router.put('/:id', async (req, res) => {
     try {
-        const { estado_pedido, observaciones } = req.body;
+        let { estado_pedido, observaciones } = req.body;
+        if (estado_pedido === 'en proceso') estado_pedido = 'en_proceso';
+
         await pool.query(
             'UPDATE pedido SET estado_pedido=?, observaciones=? WHERE id_pedido=?',
             [estado_pedido, observaciones || null, req.params.id]

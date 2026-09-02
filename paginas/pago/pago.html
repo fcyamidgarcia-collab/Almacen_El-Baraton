@@ -55,18 +55,30 @@
                         </div>
                         <div class="formulario-envio">
                             <div class="grupo-input completo">
-                                <label>Dirección de entrega completa</label>
-                                <input type="text" placeholder="Ej. Av. Principal 123, Bodega 4">
+                                <label>Nombre completo</label>
+                                <input type="text" id="nombre" placeholder="Tu nombre completo">
+                            </div>
+                            <div class="grupo-input completo">
+                                <label>Correo electrónico</label>
+                                <input type="email" id="email" placeholder="correo@ejemplo.com">
                             </div>
                             <div class="grupo-input-fila">
                                 <div class="grupo-input mitad">
-                                    <label>Ciudad / Municipio</label>
-                                    <input type="text" placeholder="Ej. Ciudad Industrial">
+                                    <label>Documento de Identidad / NIT</label>
+                                    <input type="text" id="documento" placeholder="Ej. 1020304050">
                                 </div>
                                 <div class="grupo-input mitad">
                                     <label>Teléfono / Celular de contacto</label>
-                                    <input type="text" placeholder="Ej. 555-0198">
+                                    <input type="text" id="telefono" placeholder="Ej. 300 123 4567">
                                 </div>
+                            </div>
+                            <div class="grupo-input completo">
+                                <label>Dirección de entrega completa</label>
+                                <input type="text" id="direccion" placeholder="Ej. Av. Principal 123, Bodega 4">
+                            </div>
+                            <div class="grupo-input completo">
+                                <label>Ciudad / Municipio</label>
+                                <input type="text" id="ciudad" placeholder="Ej. Bogotá D.C.">
                             </div>
                         </div>
                     </section>
@@ -179,38 +191,29 @@
                             <span class="badge-items">1 item</span>
                         </div>
                         
-                        <div class="resumen-productos">
-                            <div class="producto-resumen">
-                                <div class="prod-img-contenedor">
-                                    <img src="../../img/producto1.jpg" alt="Llave de Impacto">
-                                    <span class="prod-cantidad-badge">2</span>
-                                </div>
-                                <div class="prod-info-resumen">
-                                    <h4>Llave de Impacto Neumática 1/2" PRO-X</h4>
-                                    <span class="prod-sku">SKU: DW-9982-IP</span>
-                                    <span class="prod-precio">$ 490.00</span>
-                                </div>
-                            </div>
+                        <div class="resumen-productos" id="resumen-items" style="max-height:220px;overflow-y:auto;margin-bottom:12px">
+                            <!-- Items cargados dinámicamente desde el carrito -->
+                            <div style="text-align:center;padding:20px;color:#94a3b8"><i class="fas fa-spinner fa-spin"></i> Cargando carrito...</div>
                         </div>
 
                         <div class="resumen-desglose">
                             <div class="desglose-fila">
                                 <span>Subtotal</span>
-                                <span>$ 490.00</span>
+                                <span id="resumen-subtotal">$ 0</span>
                             </div>
                             <div class="desglose-fila">
                                 <span>Costo de envío</span>
                                 <span class="texto-naranja">Gratis</span>
                             </div>
                             <div class="desglose-fila">
-                                <span>Impuestos (IVA 16%)</span>
-                                <span>$ 78.40</span>
+                                <span>Impuestos (IVA 19%)</span>
+                                <span id="resumen-iva">$ 0</span>
                             </div>
                         </div>
                         
                         <div class="resumen-total">
                             <span>Total a Pagar</span>
-                            <span class="total-valor">$ 568.40</span>
+                            <span class="total-valor">$ 0</span>
                         </div>
                         
                         <button class="btn-confirmar" id="btn-procesar-checkout" type="button">

@@ -30,9 +30,14 @@ router.get('/:id_usuario', async (req, res) => {
             WHERE dc.id_carrito = ?
         `, [carrito.id_carrito]);
 
-        const total = items.reduce((sum, i) => sum + parseFloat(i.subtotal), 0);
+        const subtotal = items.reduce((sum, i) => sum + parseFloat(i.subtotal), 0);
+        const iva = subtotal * 0.19;
+        const total = subtotal + iva;
 
-        res.json({ ...carrito, items, total });
+        // Normalizar campo nombre para compatibilidad frontend
+        const itemsNorm = items.map(i => ({ ...i, nombre: i.nombre_producto, sku: `PROD-${i.id_producto}` }));
+
+        res.json({ ...carrito, items: itemsNorm, subtotal, iva, total });
     } catch (error) {
         res.status(500).json({ error: error.message });
     }
@@ -53,7 +58,7 @@ router.post('/agregar', async (req, res) => {
         // Obtener precio del producto
         const [prods] = await pool.query('SELECT precio FROM producto WHERE id_producto = ?', [id_producto]);
         if (prods.length === 0) return res.status(404).json({ error: 'Producto no encontrado' });
-        const precio_unitario = prods[0].precio;
+        const precio_unitario = parseFloat(prods[0].precio);
 
         // Buscar o crear carrito activo
         let [carritos] = await pool.query(
@@ -79,16 +84,19 @@ router.post('/agregar', async (req, res) => {
         );
 
         if (existentes.length > 0) {
-            // Actualizar cantidad
+            // Actualizar cantidad y subtotal
+            const nuevaCantidad = existentes[0].cantidad + cantidad;
+            const nuevoSubtotal = nuevaCantidad * precio_unitario;
             await pool.query(
-                'UPDATE detalle_carrito SET cantidad = cantidad + ?, precio_unitario = ? WHERE id_carrito = ? AND id_producto = ?',
-                [cantidad, precio_unitario, id_carrito, id_producto]
+                'UPDATE detalle_carrito SET cantidad = ?, precio_unitario = ?, subtotal = ? WHERE id_carrito = ? AND id_producto = ?',
+                [nuevaCantidad, precio_unitario, nuevoSubtotal, id_carrito, id_producto]
             );
         } else {
-            // Insertar nuevo item
+            // Insertar nuevo item con subtotal y fecha_agregado
+            const subtotal = cantidad * precio_unitario;
             await pool.query(
-                'INSERT INTO detalle_carrito (id_carrito, id_producto, cantidad, precio_unitario) VALUES (?, ?, ?, ?)',
-                [id_carrito, id_producto, cantidad, precio_unitario]
+                'INSERT INTO detalle_carrito (id_carrito, id_producto, cantidad, precio_unitario, subtotal, fecha_agregado) VALUES (?, ?, ?, ?, ?, NOW())',
+                [id_carrito, id_producto, cantidad, precio_unitario, subtotal]
             );
         }
 
@@ -107,7 +115,7 @@ router.put('/item/:id_detalle', async (req, res) => {
             return res.json({ mensaje: 'Item eliminado del carrito' });
         }
         await pool.query(
-            'UPDATE detalle_carrito SET cantidad = ? WHERE id_detalle_carrito = ?',
+            'UPDATE detalle_carrito SET cantidad = ?, subtotal = (cantidad * precio_unitario) WHERE id_detalle_carrito = ?',
             [cantidad, req.params.id_detalle]
         );
         res.json({ mensaje: 'Cantidad actualizada' });
@@ -130,7 +138,7 @@ router.delete('/item/:id_detalle', async (req, res) => {
 router.delete('/vaciar/:id_carrito', async (req, res) => {
     try {
         await pool.query('DELETE FROM detalle_carrito WHERE id_carrito = ?', [req.params.id_carrito]);
-        await pool.query("UPDATE carrito SET estado = 'inactivo' WHERE id_carrito = ?", [req.params.id_carrito]);
+        await pool.query("UPDATE carrito SET estado = 'convertido' WHERE id_carrito = ?", [req.params.id_carrito]);
         res.json({ mensaje: 'Carrito vaciado' });
     } catch (error) {
         res.status(500).json({ error: error.message });
