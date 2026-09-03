@@ -35,7 +35,7 @@
 
     
 
-    <main class="contenido-principal fondo-claro">
+    <main class="contenido-principal">
         <div class="tarjeta-acceso tarjeta-registro">
             <h2>Crear Cuenta</h2>
             <p class="subtitulo">Únase a Almacen El Baraton para gestionar sus compras, seguir pedidos y<br>acceder a ofertas exclusivas.</p>
@@ -122,10 +122,15 @@
                     <label for="terminos">He leído y acepto los <a href="../terminos/terminos.html" target="_blank" class="enlace-terminos">Términos y Condiciones</a> y la <a href="../privacidad/index.html" target="_blank" class="enlace-terminos">Política de Privacidad</a> de Almacen El Baraton, y autorizo el procesamiento de mis datos corporativos.</label>
                 </div>
 
-                <button type="submit" class="btn-oscuro" id="btn-submit-registro">
-                    Crear Cuenta
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
-                </button>
+                <div style="display: flex; gap: 15px; margin-top: 20px;">
+                    <a href="../sesion/index.html" class="btn-oscuro" style="background-color: #64748b; flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; border: 1px solid #64748b;">
+                        <i class="fas fa-arrow-left"></i> Volver al Login
+                    </a>
+                    <button type="submit" class="btn-oscuro" id="btn-submit-registro" style="flex: 1; margin-top: 0;">
+                        Crear Cuenta
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+                    </button>
+                </div>
                 
                 <div class="enlace-registro" style="text-align: center; margin-top: 15px;">
                     ¿Ya tiene una cuenta? <a href="../sesion/index.html">Inicie sesión aquí</a>
