@@ -110,24 +110,73 @@ window.addEventListener('scroll', () => {
     });
 });
 
-// ===== Formulario del boletín =====
+// ===== Formulario del boletín con validación directa =====
 const formBoletin = document.getElementById('formBoletin');
 
-formBoletin.addEventListener('submit', (e) => {
-    e.preventDefault();
+if (formBoletin) {
+    const inputEmail = document.getElementById('inputEmail');
 
-    const btnSuscribir = formBoletin.querySelector('.btn-suscribir');
-    const textoOriginal = btnSuscribir.textContent;
+    if (inputEmail) {
+        inputEmail.addEventListener('input', () => {
+            inputEmail.style.borderColor = '';
+            const msg = formBoletin.querySelector('.error-boletin-msg');
+            if (msg) msg.remove();
+        });
+    }
 
-    btnSuscribir.innerHTML = '<i class="fi fi-rr-check"></i> Enviado';
-    btnSuscribir.style.backgroundColor = '#27ae60';
+    formBoletin.addEventListener('submit', (e) => {
+        e.preventDefault();
 
-    setTimeout(() => {
-        btnSuscribir.textContent = textoOriginal;
-        btnSuscribir.style.backgroundColor = '';
-        document.getElementById('inputEmail').value = '';
-    }, 2500);
-});
+        const email = inputEmail ? inputEmail.value.trim() : '';
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+        if (!email || !emailRegex.test(email)) {
+            if (inputEmail) {
+                inputEmail.style.borderColor = '#ef4444';
+                const msgPrev = formBoletin.querySelector('.error-boletin-msg');
+                if (msgPrev) msgPrev.remove();
+
+                const span = document.createElement('span');
+                span.className = 'error-boletin-msg';
+                span.style.cssText = 'color:#ef4444;font-size:0.8rem;margin-top:6px;display:block;font-weight:600;';
+                span.innerHTML = '<i class="fas fa-exclamation-circle"></i> Ingresa un correo electrónico válido.';
+                formBoletin.appendChild(span);
+            }
+            return;
+        }
+
+        const btnSuscribir = formBoletin.querySelector('.btn-suscribir');
+        const textoOriginal = btnSuscribir.textContent;
+
+        btnSuscribir.innerHTML = '<i class="fas fa-check"></i> ¡Suscrito con Éxito!';
+        btnSuscribir.style.backgroundColor = '#10b981';
+
+        setTimeout(() => {
+            btnSuscribir.textContent = textoOriginal;
+            btnSuscribir.style.backgroundColor = '';
+            if (inputEmail) inputEmail.value = '';
+            const msg = formBoletin.querySelector('.error-boletin-msg');
+            if (msg) msg.remove();
+        }, 3000);
+    });
+}
+
+// ===== Buscador en encabezado con validación =====
+const inputBusquedaGlobal = document.querySelector('.barra-busqueda input');
+if (inputBusquedaGlobal) {
+    inputBusquedaGlobal.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            const query = inputBusquedaGlobal.value.trim();
+            if (!query) {
+                inputBusquedaGlobal.style.outline = '2px solid #ef4444';
+                setTimeout(() => { inputBusquedaGlobal.style.outline = ''; }, 1500);
+                return;
+            }
+            window.location.href = `../productos/productos.html?buscar=${encodeURIComponent(query)}`;
+        }
+    });
+}
 
 // ===== Scroll suave para los enlaces internos =====
 document.querySelectorAll('a[href^="#"]').forEach(enlace => {

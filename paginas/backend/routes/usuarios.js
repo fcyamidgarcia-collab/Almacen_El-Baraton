@@ -40,11 +40,11 @@ router.get('/:id', async (req, res) => {
 router.post('/', async (req, res) => {
     try {
         const { nombre, apellido, correo, contrasena, id_rol } = req.body;
-        const hashedPassword = await bcrypt.hash(contrasena, 10);
+        const contrasenaPlana = String(contrasena).trim();
         const [result] = await pool.query(
             `INSERT INTO usuario (id_rol, nombre, apellido, correo, contrasena, fecha_registro, estado)
              VALUES (?, ?, ?, ?, ?, NOW(), 'activo')`,
-            [id_rol || 3, nombre, apellido || '', correo, hashedPassword]
+            [id_rol || 3, nombre, apellido || '', correo, contrasenaPlana]
         );
         res.status(201).json({ mensaje: 'Usuario creado exitosamente', id_usuario: result.insertId });
     } catch (error) {
@@ -57,10 +57,10 @@ router.put('/:id', async (req, res) => {
     try {
         const { nombre, apellido, correo, id_rol, estado, contrasena } = req.body;
         if (contrasena) {
-            const hashed = await bcrypt.hash(contrasena, 10);
+            const contrasenaPlana = String(contrasena).trim();
             await pool.query(
                 'UPDATE usuario SET nombre=?, apellido=?, correo=?, id_rol=?, estado=?, contrasena=? WHERE id_usuario=?',
-                [nombre, apellido || '', correo, id_rol, estado || 'activo', hashed, req.params.id]
+                [nombre, apellido || '', correo, id_rol, estado || 'activo', contrasenaPlana, req.params.id]
             );
         } else {
             await pool.query(

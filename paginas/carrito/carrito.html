@@ -45,71 +45,7 @@
             <div class="carrito-grid">
                 <!-- Columna Izquierda: Lista de Productos -->
                 <div class="carrito-productos">
-                    <!-- Cabeceras de tabla -->
-                    <div class="productos-cabecera">
-                        <div class="col-producto">PRODUCTO</div>
-                        <div class="col-cantidad">CANTIDAD</div>
-                        <div class="col-precio">PRECIO UNITARIO</div>
-                        <div class="col-subtotal">SUBTOTAL</div>
-                    </div>
-
-                    <!-- Producto 1 -->
-                    <div class="producto-item">
-                        <div class="col-producto info-producto">
-                            <div class="producto-img">
-                                <img src="../../img/producto1.jpg" alt="Llave de Impacto Neumática 1/2' PRO-X">
-                            </div>
-                            <div class="producto-detalles">
-                                <span class="marca-badge">DEWALT</span>
-                                <h3>Llave de Impacto Neumática 1/2" PRO-X</h3>
-                                <span class="producto-sku">SKU: DW-9982-IP</span>
-                                <span class="producto-stock">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                    En Stock
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-cantidad">
-                            <div class="control-cantidad">
-                                <button class="btn-restar">-</button>
-                                <input type="number" value="2" min="1" readonly>
-                                <button class="btn-sumar">+</button>
-                            </div>
-                        </div>
-                        <div class="col-precio precio-valor">$245.00</div>
-                        <div class="col-subtotal subtotal-valor">$490.00</div>
-                    </div>
-
-                    <!-- Producto 2 -->
-                    <div class="producto-item">
-                        <div class="col-producto info-producto">
-                            <div class="producto-img">
-                                <img src="../../img/producto2.jpg" alt="Set Brocas HSS-Co Cobalto 19 Pzas">
-                            </div>
-                            <div class="producto-detalles">
-                                <span class="marca-badge">BOSCH</span>
-                                <h3>Set Brocas HSS-Co Cobalto 19 Pzas</h3>
-                                <span class="producto-sku">SKU: BO-2608-CO</span>
-                                <span class="producto-stock">
-                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="20 6 9 17 4 12"></polyline>
-                                    </svg>
-                                    En Stock
-                                </span>
-                            </div>
-                        </div>
-                        <div class="col-cantidad">
-                            <div class="control-cantidad">
-                                <button class="btn-restar">-</button>
-                                <input type="number" value="1" min="1" readonly>
-                                <button class="btn-sumar">+</button>
-                            </div>
-                        </div>
-                        <div class="col-precio precio-valor">$89.50</div>
-                        <div class="col-subtotal subtotal-valor">$89.50</div>
-                    </div>
+                    <!-- Los productos del carrito se cargan dinámicamente desde la BD o localStorage -->
                 </div>
 
                 <!-- Columna Derecha: Resumen -->
@@ -202,6 +138,7 @@
 
     <script src="../js/api.js"></script>
     <script src="../js/sesion.js"></script>
+    <script src="../js/buscador.js"></script>
     <script src="carrito.js"></script>
 </body>
 </html>

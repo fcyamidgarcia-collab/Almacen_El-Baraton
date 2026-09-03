@@ -295,7 +295,12 @@
                 }
             }
         }
-        // Si no hay sesión, el ícono permanece igual (lleva a /sesion/)
+        // Garantizar carga del buscador global si aún no está presente
+        if (!window.__buscadorInicializado && !document.querySelector('script[src*="buscador.js"]')) {
+            const s = document.createElement('script');
+            s.src = '../js/buscador.js';
+            document.head.appendChild(s);
+        }
     }
 
     // Ejecutar cuando el DOM esté listo

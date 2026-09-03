@@ -252,6 +252,30 @@ document.addEventListener('DOMContentLoaded', async () => {
                 document.getElementById('prodCategoria').value = prod.id_categoria || '';
                 document.getElementById('prodProveedor').value = prod.id_proveedor || '';
 
+                // Cargar imagen principal
+                if (inputProdImagen) inputProdImagen.value = prod.imagen || '';
+                actualizarPreviewPrincipal(prod.imagen || '');
+
+                // Cargar imágenes secundarias
+                if (contenedorImagenesSecundarias) contenedorImagenesSecundarias.innerHTML = '';
+                let secList = [];
+                try {
+                    if (prod.imagenes_secundarias) {
+                        secList = typeof prod.imagenes_secundarias === 'string'
+                            ? JSON.parse(prod.imagenes_secundarias)
+                            : prod.imagenes_secundarias;
+                    }
+                } catch (_) {
+                    if (typeof prod.imagenes_secundarias === 'string') {
+                        secList = prod.imagenes_secundarias.split(',').map(s => s.trim()).filter(Boolean);
+                    }
+                }
+                if (Array.isArray(secList) && secList.length > 0) {
+                    secList.forEach(url => agregarFilaImagenSecundaria(url));
+                } else {
+                    agregarFilaImagenSecundaria();
+                }
+
                 modal.classList.add('activo');
             });
         });
@@ -366,12 +390,174 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // --- GESTIÓN DE IMAGEN PRINCIPAL E IMÁGENES SECUNDARIAS ---
+    const inputProdImagen = document.getElementById('prodImagen');
+    const inputProdImagenFile = document.getElementById('prodImagenFile');
+    const contPreviewPrincipal = document.getElementById('previewImagenPrincipalCont');
+    const imgPreviewPrincipal = document.getElementById('previewImagenPrincipal');
+    const nombrePreviewPrincipal = document.getElementById('nombreImagenPrincipal');
+    const btnQuitarImgPrincipal = document.getElementById('btnQuitarImgPrincipal');
+    const btnAgregarImgSecundaria = document.getElementById('btnAgregarImgSecundaria');
+    const contenedorImagenesSecundarias = document.getElementById('contenedorImagenesSecundarias');
+
+    function actualizarPreviewPrincipal(url, nombre = '') {
+        if (!contPreviewPrincipal || !imgPreviewPrincipal) return;
+        if (url && url.trim()) {
+            imgPreviewPrincipal.src = url.trim();
+            if (nombrePreviewPrincipal) nombrePreviewPrincipal.textContent = nombre || url.trim();
+            contPreviewPrincipal.style.display = 'flex';
+        } else {
+            imgPreviewPrincipal.src = '';
+            if (nombrePreviewPrincipal) nombrePreviewPrincipal.textContent = '';
+            contPreviewPrincipal.style.display = 'none';
+        }
+    }
+
+    // Optimizar imagen cargada para almacenamiento rápido y ligero
+    function procesarArchivoImagen(file, callback) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                const maxDim = 1200;
+                let width = img.width;
+                let height = img.height;
+                if (width > maxDim || height > maxDim) {
+                    if (width > height) {
+                        height = Math.round((height * maxDim) / width);
+                        width = maxDim;
+                    } else {
+                        width = Math.round((width * maxDim) / height);
+                        height = maxDim;
+                    }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                const optimizedDataUrl = canvas.toDataURL('image/jpeg', 0.85);
+                callback(optimizedDataUrl);
+            };
+            img.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+
+    if (inputProdImagen) {
+        inputProdImagen.addEventListener('input', () => {
+            actualizarPreviewPrincipal(inputProdImagen.value);
+        });
+    }
+
+    if (inputProdImagenFile) {
+        inputProdImagenFile.addEventListener('change', () => {
+            const file = inputProdImagenFile.files[0];
+            if (file) {
+                procesarArchivoImagen(file, (dataUrl) => {
+                    if (inputProdImagen) inputProdImagen.value = dataUrl;
+                    actualizarPreviewPrincipal(dataUrl, file.name);
+                });
+            }
+        });
+    }
+
+    if (btnQuitarImgPrincipal) {
+        btnQuitarImgPrincipal.addEventListener('click', () => {
+            if (inputProdImagen) inputProdImagen.value = '';
+            if (inputProdImagenFile) inputProdImagenFile.value = '';
+            actualizarPreviewPrincipal('');
+        });
+    }
+
+    // Funciones para Imágenes Secundarias
+    function agregarFilaImagenSecundaria(urlInicial = '') {
+        if (!contenedorImagenesSecundarias) return;
+
+        const row = document.createElement('div');
+        row.className = 'fila-img-secundaria';
+        row.style.cssText = 'display:flex;gap:8px;align-items:center;background:#fff;padding:6px 10px;border:1px solid #e2e8f0;border-radius:6px;';
+
+        const imgPreview = document.createElement('img');
+        imgPreview.src = urlInicial || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' fill='%23f1f5f9'%3E%3Crect width='50' height='50'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%2394a3b8'%3E+%3C/text%3E%3C/svg%3E";
+        imgPreview.style.cssText = 'width:42px;height:42px;object-fit:contain;border:1px solid #e2e8f0;border-radius:4px;background:#f8fafc;padding:2px;';
+
+        const inputUrl = document.createElement('input');
+        inputUrl.type = 'text';
+        inputUrl.className = 'entrada-filtro input-secundaria-url';
+        inputUrl.placeholder = 'URL imagen secundaria (ej: https://... o ../../img/detalle1.jpg)';
+        inputUrl.value = urlInicial;
+        inputUrl.style.cssText = 'flex:1;font-size:0.85rem;padding:7px 10px;';
+
+        const labelFile = document.createElement('label');
+        labelFile.className = 'boton boton-secundario';
+        labelFile.style.cssText = 'cursor:pointer;padding:6px 10px;font-size:0.75rem;margin:0;white-space:nowrap;';
+        labelFile.innerHTML = '<i class="fas fa-folder"></i>';
+        labelFile.title = 'Subir archivo de imagen';
+
+        const inputFile = document.createElement('input');
+        inputFile.type = 'file';
+        inputFile.accept = 'image/*';
+        inputFile.style.display = 'none';
+
+        labelFile.appendChild(inputFile);
+
+        inputFile.addEventListener('change', () => {
+            const file = inputFile.files[0];
+            if (file) {
+                procesarArchivoImagen(file, (dataUrl) => {
+                    inputUrl.value = dataUrl;
+                    imgPreview.src = dataUrl;
+                });
+            }
+        });
+
+        inputUrl.addEventListener('input', () => {
+            imgPreview.src = inputUrl.value.trim() || "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='50' height='50' fill='%23f1f5f9'%3E%3Crect width='50' height='50'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='20' fill='%2394a3b8'%3E+%3C/text%3E%3C/svg%3E";
+        });
+
+        const btnQuitar = document.createElement('button');
+        btnQuitar.type = 'button';
+        btnQuitar.className = 'boton-accion';
+        btnQuitar.style.cssText = 'color:#ef4444;background:none;border:none;cursor:pointer;padding:6px;font-size:0.9rem;';
+        btnQuitar.title = 'Eliminar imagen secundaria';
+        btnQuitar.innerHTML = '<i class="fas fa-trash-alt"></i>';
+        btnQuitar.addEventListener('click', () => row.remove());
+
+        row.appendChild(imgPreview);
+        row.appendChild(inputUrl);
+        row.appendChild(labelFile);
+        row.appendChild(btnQuitar);
+
+        contenedorImagenesSecundarias.appendChild(row);
+    }
+
+    if (btnAgregarImgSecundaria) {
+        btnAgregarImgSecundaria.addEventListener('click', () => agregarFilaImagenSecundaria());
+    }
+
+    function obtenerImagenesSecundarias() {
+        if (!contenedorImagenesSecundarias) return [];
+        const urls = [];
+        contenedorImagenesSecundarias.querySelectorAll('.input-secundaria-url').forEach(inp => {
+            const val = inp.value.trim();
+            if (val) urls.push(val);
+        });
+        return urls;
+    }
+
     // --- MODAL CREAR / EDITAR PRODUCTO ---
     if (btnNuevo) {
         btnNuevo.addEventListener('click', () => {
             modoEdicion = null;
             if (tituloModal) tituloModal.textContent = 'Registrar Nuevo Producto';
             form.reset();
+            if (inputProdImagen) inputProdImagen.value = '';
+            if (inputProdImagenFile) inputProdImagenFile.value = '';
+            actualizarPreviewPrincipal('');
+            if (contenedorImagenesSecundarias) contenedorImagenesSecundarias.innerHTML = '';
+            agregarFilaImagenSecundaria();
             modal.classList.add('activo');
         });
     }
@@ -379,23 +565,86 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnCerrarModal) btnCerrarModal.addEventListener('click', () => modal.classList.remove('activo'));
     if (btnCancelar) btnCancelar.addEventListener('click', () => modal.classList.remove('activo'));
 
+    // Helper de validación modal producto
+    function mostrarErrorProd(input, msg) {
+        limpiarErrorProd(input);
+        input.style.borderColor = '#ef4444';
+        const span = document.createElement('span');
+        span.className = 'error-prod-msg';
+        span.style.cssText = 'color:#ef4444;font-size:0.75rem;margin-top:3px;display:block;font-weight:500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+        input.insertAdjacentElement('afterend', span);
+    }
+
+    function limpiarErrorProd(input) {
+        input.style.borderColor = '';
+        const sig = input.nextElementSibling;
+        if (sig && sig.classList.contains('error-prod-msg')) sig.remove();
+    }
+
+    ['prodNombre', 'prodPrecio', 'prodStock', 'prodCategoria'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => limpiarErrorProd(el));
+        if (el) el.addEventListener('change', () => limpiarErrorProd(el));
+    });
+
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const elNombre = document.getElementById('prodNombre');
+            const elPrecio = document.getElementById('prodPrecio');
+            const elStock = document.getElementById('prodStock');
+            const elCat = document.getElementById('prodCategoria');
+            const elProv = document.getElementById('prodProveedor');
+            const elDesc = document.getElementById('prodDescripcion');
+
+            const nombre_producto = elNombre.value.trim();
+            const precioRaw = elPrecio.value.trim();
+            const precio = parseFloat(precioRaw);
+            const stockRaw = elStock.value.trim();
+            const stock = parseInt(stockRaw);
+            const id_categoria = parseInt(elCat.value);
+            const id_proveedor = parseInt(elProv.value) || null;
+            const descripcion = elDesc.value.trim();
+
+            let esValido = true;
+
+            if (!nombre_producto || nombre_producto.length < 3) {
+                mostrarErrorProd(elNombre, 'El nombre debe tener al menos 3 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorProd(elNombre);
+            }
+
+            if (!precioRaw || isNaN(precio) || precio <= 0) {
+                mostrarErrorProd(elPrecio, 'El precio debe ser un número mayor a cero.');
+                esValido = false;
+            } else {
+                limpiarErrorProd(elPrecio);
+            }
+
+            if (stockRaw === '' || isNaN(stock) || stock < 0) {
+                mostrarErrorProd(elStock, 'El stock debe ser un número entero mayor o igual a 0.');
+                esValido = false;
+            } else {
+                limpiarErrorProd(elStock);
+            }
+
+            if (!id_categoria || isNaN(id_categoria)) {
+                mostrarErrorProd(elCat, 'Por favor selecciona una categoría.');
+                esValido = false;
+            } else {
+                limpiarErrorProd(elCat);
+            }
+
+            if (!esValido) return;
+
             const btnSubmit = form.querySelector('button[type="submit"]');
             const originalHTML = btnSubmit.innerHTML;
 
-            const nombre_producto = document.getElementById('prodNombre').value.trim();
-            const precio = parseFloat(document.getElementById('prodPrecio').value) || 0;
-            const stock = parseInt(document.getElementById('prodStock').value) || 0;
-            const id_categoria = parseInt(document.getElementById('prodCategoria').value);
-            const id_proveedor = parseInt(document.getElementById('prodProveedor').value) || null;
-            const descripcion = document.getElementById('prodDescripcion').value.trim();
-
-            if (!id_categoria) {
-                alert('Por favor selecciona una categoría válida.');
-                return;
-            }
+            const imagenPrincipal = inputProdImagen ? inputProdImagen.value.trim() : null;
+            const imagenesSecundarias = obtenerImagenesSecundarias();
 
             const payload = {
                 nombre_producto,
@@ -405,6 +654,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 id_categoria,
                 id_proveedor,
                 descripcion,
+                imagen: imagenPrincipal || null,
+                imagenes_secundarias: imagenesSecundarias.length > 0 ? imagenesSecundarias : null,
                 estado: 'activo'
             };
 
@@ -414,10 +665,10 @@ document.addEventListener('DOMContentLoaded', async () => {
 
                 if (modoEdicion) {
                     await API.actualizarProducto(modoEdicion, payload);
-                    alert(`¡Producto "${nombre_producto}" actualizado exitosamente en MySQL!`);
+                    alert(`¡Producto "${nombre_producto}" actualizado exitosamente con sus imágenes en MySQL!`);
                 } else {
                     await API.crearProducto(payload);
-                    alert(`¡Producto "${nombre_producto}" registrado exitosamente en MySQL con stock de ${stock} unidades!`);
+                    alert(`¡Producto "${nombre_producto}" registrado exitosamente con sus imágenes en MySQL!`);
                 }
 
                 modal.classList.remove('activo');

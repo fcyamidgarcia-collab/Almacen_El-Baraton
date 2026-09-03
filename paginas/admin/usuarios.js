@@ -104,9 +104,35 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Helper de error en modal usuario
+    function mostrarErrorUsr(input, msg) {
+        limpiarErrorUsr(input);
+        input.style.borderColor = '#ef4444';
+        const span = document.createElement('span');
+        span.className = 'error-usr-msg';
+        span.style.cssText = 'color:#ef4444;font-size:0.75rem;margin-top:3px;display:block;font-weight:500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+        input.insertAdjacentElement('afterend', span);
+    }
+
+    function limpiarErrorUsr(input) {
+        input.style.borderColor = '';
+        const sig = input.nextElementSibling;
+        if (sig && sig.classList.contains('error-usr-msg')) sig.remove();
+    }
+
+    ['usrNombre', 'usrApellido', 'usrEmail', 'usrPassword', 'usrTelefono'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => limpiarErrorUsr(el));
+    });
+
     btnNuevo?.addEventListener('click', () => {
         modoEdicion = null;
         form.reset();
+        ['usrNombre', 'usrApellido', 'usrEmail', 'usrPassword', 'usrTelefono'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) limpiarErrorUsr(el);
+        });
         const titulo = document.getElementById('tituloModalUsuario');
         if (titulo) titulo.textContent = 'Crear Nuevo Usuario';
         modal.classList.add('activo');
@@ -116,17 +142,57 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     form?.addEventListener('submit', async e => {
         e.preventDefault();
-        const nombre = document.getElementById('usrNombre').value.trim();
-        const apellido = document.getElementById('usrApellido')?.value.trim() || '';
-        const correo = document.getElementById('usrEmail').value.trim();
-        const contrasena = document.getElementById('usrPassword')?.value.trim() || '';
-        const id_rol = parseInt(document.getElementById('usrRol')?.value) || 3;
-        const telefono = document.getElementById('usrTelefono')?.value.trim() || '';
 
-        if (!modoEdicion && !contrasena) {
-            alert('La contraseña es obligatoria para crear un usuario.');
-            return;
+        const elNombre = document.getElementById('usrNombre');
+        const elApellido = document.getElementById('usrApellido');
+        const elEmail = document.getElementById('usrEmail');
+        const elPass = document.getElementById('usrPassword');
+        const elRol = document.getElementById('usrRol');
+        const elTel = document.getElementById('usrTelefono');
+
+        const nombre = elNombre.value.trim();
+        const apellido = elApellido?.value.trim() || '';
+        const correo = elEmail.value.trim();
+        const contrasena = elPass?.value.trim() || '';
+        const id_rol = parseInt(elRol?.value) || 3;
+        const telefono = elTel?.value.trim() || '';
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
+        let esValido = true;
+
+        if (!nombre || nombre.length < 2) {
+            mostrarErrorUsr(elNombre, 'El nombre debe tener al menos 2 caracteres.');
+            esValido = false;
+        } else {
+            limpiarErrorUsr(elNombre);
         }
+
+        if (!correo || !emailRegex.test(correo)) {
+            mostrarErrorUsr(elEmail, 'Ingresa un correo electrónico corporativo válido.');
+            esValido = false;
+        } else {
+            limpiarErrorUsr(elEmail);
+        }
+
+        if (!modoEdicion && (!contrasena || contrasena.length < 6)) {
+            mostrarErrorUsr(elPass, 'La contraseña es obligatoria (mínimo 6 caracteres).');
+            esValido = false;
+        } else if (modoEdicion && contrasena && contrasena.length < 6) {
+            mostrarErrorUsr(elPass, 'La nueva contraseña debe tener al menos 6 caracteres.');
+            esValido = false;
+        } else if (elPass) {
+            limpiarErrorUsr(elPass);
+        }
+
+        if (telefono && !telefonoRegex.test(telefono)) {
+            mostrarErrorUsr(elTel, 'Teléfono inválido (mínimo 7 dígitos).');
+            esValido = false;
+        } else if (elTel) {
+            limpiarErrorUsr(elTel);
+        }
+
+        if (!esValido) return;
 
         const payload = { nombre, apellido, correo, id_rol, estado: 'activo' };
         if (telefono) payload.telefono = telefono;

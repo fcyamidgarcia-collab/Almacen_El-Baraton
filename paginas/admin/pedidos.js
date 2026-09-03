@@ -364,7 +364,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (estado === 'pendiente') {
             if (p1) p1.classList.add('activo');
-        } else if (estado === 'procesando') {
+        } else if (estado === 'procesando' || estado === 'en_proceso') {
             if (p1) p1.classList.add('completado');
             if (l1) l1.classList.add('activo');
             if (p2) p2.classList.add('activo');
@@ -437,7 +437,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const selectEstado = document.getElementById('selectModalEstado');
         if (selectEstado) {
-            selectEstado.value = p.estado;
+            selectEstado.value = (p.estado === 'procesando' || p.estado_original === 'en_proceso') ? 'en_proceso' : p.estado;
         }
 
         if (modalDetallePedido) modalDetallePedido.classList.add('activo');
@@ -455,6 +455,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                 btnActualizarEstadoModal.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Actualizando en BD...';
 
                 await API.actualizarEstadoPedido(pedidoSeleccionadoActual.id_raw, nuevoEstado);
+
+                pedidoSeleccionadoActual.estado = normalizarEstado(nuevoEstado);
+                pedidoSeleccionadoActual.estado_original = nuevoEstado;
+                const badgeEl = document.getElementById('modalEstadoPedido');
+                if (badgeEl) badgeEl.innerHTML = obtenerInsigniaEstado(pedidoSeleccionadoActual.estado);
+                actualizarStepper(pedidoSeleccionadoActual.estado);
 
                 alert(`¡Estado del pedido ${pedidoSeleccionadoActual.id} actualizado a '${nuevoEstado.toUpperCase()}' en la base de datos!`);
                 if (modalDetallePedido) modalDetallePedido.classList.remove('activo');
@@ -572,22 +578,118 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnCerrarModalNuevoPedido) btnCerrarModalNuevoPedido.addEventListener('click', () => modalNuevoPedido.classList.remove('activo'));
     if (btnCancelarNuevoPedido) btnCancelarNuevoPedido.addEventListener('click', () => modalNuevoPedido.classList.remove('activo'));
 
+    // --- VALIDACIÓN DIRECTA PARA NUEVO PEDIDO ADMIN ---
+    function mostrarErrorPedAdmin(input, msg) {
+        limpiarErrorPedAdmin(input);
+        input.style.borderColor = '#ef4444';
+        const span = document.createElement('span');
+        span.className = 'error-ped-admin-msg';
+        span.style.cssText = 'color:#ef4444;font-size:0.75rem;margin-top:3px;display:block;font-weight:500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+        input.insertAdjacentElement('afterend', span);
+    }
+
+    function limpiarErrorPedAdmin(input) {
+        input.style.borderColor = '';
+        const sig = input.nextElementSibling;
+        if (sig && sig.classList.contains('error-ped-admin-msg')) sig.remove();
+    }
+
+    ['nuevoNombreCliente', 'nuevoNombreContacto', 'nuevoEmailContacto', 'nuevaDireccionEntrega', 'nuevaCiudadEntrega', 'nuevoNombreProducto', 'nuevoMontoTotal', 'nuevoMetodoPago'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => limpiarErrorPedAdmin(el));
+        if (el) el.addEventListener('change', () => limpiarErrorPedAdmin(el));
+    });
+
     // --- REGISTRAR NUEVO PEDIDO DESDE ADMIN ---
     if (formularioNuevoPedido) {
         formularioNuevoPedido.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const elEmpresa = document.getElementById('nuevoNombreCliente');
+            const elResponsable = document.getElementById('nuevoNombreContacto');
+            const elEmail = document.getElementById('nuevoEmailContacto');
+            const elDireccion = document.getElementById('nuevaDireccionEntrega');
+            const elCiudad = document.getElementById('nuevaCiudadEntrega');
+            const elProd = document.getElementById('nuevoNombreProducto');
+            const elMonto = document.getElementById('nuevoMontoTotal');
+            const elMetodo = document.getElementById('nuevoMetodoPago');
+            const elEstado = document.getElementById('nuevoEstadoPedido');
+
+            const nombreEmpresa = elEmpresa.value.trim();
+            const responsable = elResponsable.value.trim();
+            const email = elEmail.value.trim();
+            const direccion = elDireccion.value.trim();
+            const ciudad = elCiudad.value.trim();
+            const nombreProducto = elProd.value.trim();
+            const montoRaw = elMonto.value.trim();
+            const monto = parseFloat(montoRaw);
+            const metodoPago = elMetodo.value;
+            const estadoInicial = elEstado.value;
+
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            let esValido = true;
+
+            if (!nombreEmpresa || nombreEmpresa.length < 3) {
+                mostrarErrorPedAdmin(elEmpresa, 'El nombre de empresa/cliente debe tener al menos 3 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorPedAdmin(elEmpresa);
+            }
+
+            if (!responsable || responsable.length < 3) {
+                mostrarErrorPedAdmin(elResponsable, 'El nombre de contacto debe tener al menos 3 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorPedAdmin(elResponsable);
+            }
+
+            if (!email || !emailRegex.test(email)) {
+                mostrarErrorPedAdmin(elEmail, 'Ingresa un correo electrónico corporativo válido.');
+                esValido = false;
+            } else {
+                limpiarErrorPedAdmin(elEmail);
+            }
+
+            if (!direccion || direccion.length < 5) {
+                mostrarErrorPedAdmin(elDireccion, 'La dirección de entrega es obligatoria (mínimo 5 caracteres).');
+                esValido = false;
+            } else {
+                limpiarErrorPedAdmin(elDireccion);
+            }
+
+            if (!ciudad || ciudad.length < 3) {
+                mostrarErrorPedAdmin(elCiudad, 'Ingresa una ciudad válida.');
+                esValido = false;
+            } else {
+                limpiarErrorPedAdmin(elCiudad);
+            }
+
+            if (!nombreProducto || nombreProducto.length < 3) {
+                mostrarErrorPedAdmin(elProd, 'El nombre del producto/referencia es obligatorio.');
+                esValido = false;
+            } else {
+                limpiarErrorPedAdmin(elProd);
+            }
+
+            if (!montoRaw || isNaN(monto) || monto <= 0) {
+                mostrarErrorPedAdmin(elMonto, 'El monto total debe ser un número mayor a 0.');
+                esValido = false;
+            } else {
+                limpiarErrorPedAdmin(elMonto);
+            }
+
+            if (!metodoPago) {
+                mostrarErrorPedAdmin(elMetodo, 'Selecciona un método de pago.');
+                esValido = false;
+            } else {
+                limpiarErrorPedAdmin(elMetodo);
+            }
+
+            if (!esValido) return;
+
             const btnSubmit = formularioNuevoPedido.querySelector('button[type="submit"]');
             const originalHTML = btnSubmit.innerHTML;
-
-            const nombreEmpresa = document.getElementById('nuevoNombreCliente').value.trim();
-            const responsable = document.getElementById('nuevoNombreContacto').value.trim();
-            const email = document.getElementById('nuevoEmailContacto').value.trim();
-            const direccion = document.getElementById('nuevaDireccionEntrega').value.trim();
-            const ciudad = document.getElementById('nuevaCiudadEntrega').value.trim();
-            const nombreProducto = document.getElementById('nuevoNombreProducto').value.trim();
-            const monto = parseFloat(document.getElementById('nuevoMontoTotal').value) || 0;
-            const metodoPago = document.getElementById('nuevoMetodoPago').value;
-            const estadoInicial = document.getElementById('nuevoEstadoPedido').value;
 
             // Obtener primer producto disponible para asociar
             let idProducto = 1;

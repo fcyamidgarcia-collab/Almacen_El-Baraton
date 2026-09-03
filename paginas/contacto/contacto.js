@@ -1,39 +1,137 @@
-// ========== CONTACTO JS - PREMIUM ==========
+// ========== CONTACTO JS - PREMIUM (VALIDACIONES INTEGRADAS) ==========
 
-// --- Formulario de contacto ---
+// --- Formulario de contacto y validaciones directas ---
 const formContacto = document.getElementById('formContacto');
+
 if (formContacto) {
+    const inputNombre = document.getElementById('nombreCompleto');
+    const inputEmail = document.getElementById('emailCorporativo');
+    const inputTelefono = document.getElementById('telefono');
+    const selectAsunto = document.getElementById('asunto');
+    const textareaMensaje = document.getElementById('mensaje');
+
+    // Funciones de error visual en el archivo
+    function mostrarErrorContacto(input, mensaje) {
+        limpiarErrorContacto(input);
+        const grupo = input.closest('.campo-grupo') || input.parentElement;
+        input.style.borderColor = '#ef4444';
+        input.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.15)';
+
+        const span = document.createElement('span');
+        span.className = 'error-contacto-msg';
+        span.style.cssText = 'color: #ef4444; font-size: 0.8rem; margin-top: 5px; display: flex; align-items: center; gap: 4px; font-weight: 500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${mensaje}`;
+        grupo.appendChild(span);
+    }
+
+    function limpiarErrorContacto(input) {
+        const grupo = input.closest('.campo-grupo') || input.parentElement;
+        input.style.borderColor = '';
+        input.style.boxShadow = '';
+        const msg = grupo.querySelector('.error-contacto-msg');
+        if (msg) msg.remove();
+    }
+
+    // Limpiar errores mientras el usuario escribe
+    [inputNombre, inputEmail, inputTelefono, selectAsunto, textareaMensaje].forEach(campo => {
+        if (campo) {
+            campo.addEventListener('input', () => limpiarErrorContacto(campo));
+            campo.addEventListener('change', () => limpiarErrorContacto(campo));
+        }
+    });
+
     formContacto.addEventListener('submit', (e) => {
         e.preventDefault();
 
-        const nombre = document.getElementById('nombreCompleto').value;
-        const email = document.getElementById('emailCorporativo').value;
-        const asunto = document.getElementById('asunto').value;
-        const mensaje = document.getElementById('mensaje').value;
+        const nombre = inputNombre ? inputNombre.value.trim() : '';
+        const email = inputEmail ? inputEmail.value.trim() : '';
+        const tel = inputTelefono ? inputTelefono.value.trim() : '';
+        const asunto = selectAsunto ? selectAsunto.value : '';
+        const mensaje = textareaMensaje ? textareaMensaje.value.trim() : '';
 
-        if (nombre && email && mensaje) {
-            // Animación del botón premium
-            const btn = formContacto.querySelector('.btn-enviar');
-            const textoOriginal = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>¡Enviado con Éxito!</span>';
-            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-            btn.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.35)';
-            btn.disabled = true;
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
 
-            // Efecto de partículas en el botón
-            btn.style.transform = 'scale(1.05)';
-            setTimeout(() => {
-                btn.style.transform = 'scale(1)';
-            }, 200);
+        let esValido = true;
 
-            setTimeout(() => {
-                btn.innerHTML = textoOriginal;
-                btn.style.background = '';
-                btn.style.boxShadow = '';
-                btn.disabled = false;
-                formContacto.reset();
-            }, 3000);
+        // 1. Validar Nombre
+        if (!nombre) {
+            mostrarErrorContacto(inputNombre, 'Por favor ingresa tu nombre completo.');
+            esValido = false;
+        } else if (nombre.length < 3) {
+            mostrarErrorContacto(inputNombre, 'El nombre debe tener al menos 3 caracteres.');
+            esValido = false;
+        } else {
+            limpiarErrorContacto(inputNombre);
         }
+
+        // 2. Validar Email Corporativo
+        if (!email) {
+            mostrarErrorContacto(inputEmail, 'El correo electrónico corporativo es obligatorio.');
+            esValido = false;
+        } else if (!emailRegex.test(email)) {
+            mostrarErrorContacto(inputEmail, 'Formato de correo no válido (ej. contacto@empresa.com).');
+            esValido = false;
+        } else {
+            limpiarErrorContacto(inputEmail);
+        }
+
+        // 3. Validar Teléfono (opcional, pero si se escribe debe ser válido)
+        if (tel && !telefonoRegex.test(tel)) {
+            mostrarErrorContacto(inputTelefono, 'Número de teléfono inválido (mínimo 7 dígitos).');
+            esValido = false;
+        } else if (inputTelefono) {
+            limpiarErrorContacto(inputTelefono);
+        }
+
+        // 4. Validar Asunto
+        if (!asunto) {
+            mostrarErrorContacto(selectAsunto, 'Selecciona un asunto para tu consulta.');
+            esValido = false;
+        } else {
+            limpiarErrorContacto(selectAsunto);
+        }
+
+        // 5. Validar Mensaje
+        if (!mensaje) {
+            mostrarErrorContacto(textareaMensaje, 'Por favor redacta tu mensaje.');
+            esValido = false;
+        } else if (mensaje.length < 10) {
+            mostrarErrorContacto(textareaMensaje, 'El mensaje debe contener al menos 10 caracteres explicativos.');
+            esValido = false;
+        } else {
+            limpiarErrorContacto(textareaMensaje);
+        }
+
+        if (!esValido) {
+            const primerError = formContacto.querySelector('.error-contacto-msg');
+            if (primerError) {
+                primerError.parentElement.querySelector('input, select, textarea')?.focus();
+            }
+            return;
+        }
+
+        // Animación del botón premium tras validación exitosa
+        const btn = formContacto.querySelector('.btn-enviar');
+        const textoOriginal = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>¡Consulta Enviada con Éxito!</span>';
+        btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+        btn.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.35)';
+        btn.disabled = true;
+
+        // Efecto de partículas / escala en el botón
+        btn.style.transform = 'scale(1.03)';
+        setTimeout(() => {
+            btn.style.transform = 'scale(1)';
+        }, 200);
+
+        setTimeout(() => {
+            btn.innerHTML = textoOriginal;
+            btn.style.background = '';
+            btn.style.boxShadow = '';
+            btn.disabled = false;
+            formContacto.reset();
+        }, 3200);
     });
 }
 
@@ -46,7 +144,6 @@ const observerOptions = {
 const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry, index) => {
         if (entry.isIntersecting) {
-            // Delay escalonado para cada elemento
             const delay = index * 100;
             setTimeout(() => {
                 entry.target.style.opacity = '1';

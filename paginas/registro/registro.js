@@ -1,50 +1,230 @@
 // =======================================================
-// REGISTRO SCRIPT - ALMACEN EL BARATON
+// REGISTRO SCRIPT - ALMACEN EL BARATON (VALIDACIONES INTEGRADAS)
 // =======================================================
 
-document.getElementById('formulario-registro').addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const nombres = document.getElementById('nombres').value.trim();
-    const apellidos = document.getElementById('apellidos').value.trim();
-    const tipoDoc = document.getElementById('tipo_doc').value;
-    const numDoc = document.getElementById('num_doc').value.trim();
-    const telefono = document.getElementById('telefono').value.trim();
-    const correo = document.getElementById('correo_reg').value.trim();
-    const contrasena = document.getElementById('contra_reg').value;
-    const confirmarContrasena = document.getElementById('contra_conf').value;
-    const btnSubmit = document.getElementById('btn-submit-registro') || this.querySelector('button[type="submit"]');
+document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('formulario-registro');
+    if (!form) return;
 
-    if (contrasena !== confirmarContrasena) {
-        alert('Las contraseñas no coinciden. Por favor verifica.');
-        return;
+    const inputNombres = document.getElementById('nombres');
+    const inputApellidos = document.getElementById('apellidos');
+    const selectTipoDoc = document.getElementById('tipo_doc');
+    const inputNumDoc = document.getElementById('num_doc');
+    const inputTelefono = document.getElementById('telefono');
+    const inputCorreo = document.getElementById('correo_reg');
+    const inputContra = document.getElementById('contra_reg');
+    const inputContraConf = document.getElementById('contra_conf');
+    const checkTerminos = document.getElementById('terminos');
+    const btnSubmit = document.getElementById('btn-submit-registro') || form.querySelector('button[type="submit"]');
+
+    // --- Helpers de error visual directo en el archivo ---
+    function mostrarError(input, mensaje) {
+        limpiarError(input);
+        const contenedor = input.closest('.grupo-entrada') || input.closest('.caja-terminos') || input.parentElement;
+        const envoltorio = input.closest('.envoltorio-entrada') || input;
+        
+        if (envoltorio !== input) {
+            envoltorio.style.borderColor = '#ef4444';
+            envoltorio.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.15)';
+        } else {
+            input.style.outline = '2px solid #ef4444';
+        }
+
+        const spanError = document.createElement('span');
+        spanError.className = 'error-validacion-msg';
+        spanError.style.cssText = 'color: #ef4444; font-size: 0.78rem; margin-top: 4px; display: flex; align-items: center; gap: 4px; font-weight: 500;';
+        spanError.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${mensaje}`;
+        contenedor.appendChild(spanError);
     }
 
-    if (contrasena.length < 6) {
-        alert('La contraseña debe tener al menos 6 caracteres.');
-        return;
+    function limpiarError(input) {
+        const contenedor = input.closest('.grupo-entrada') || input.closest('.caja-terminos') || input.parentElement;
+        const envoltorio = input.closest('.envoltorio-entrada') || input;
+        
+        if (envoltorio !== input) {
+            envoltorio.style.borderColor = '';
+            envoltorio.style.boxShadow = '';
+        } else {
+            input.style.outline = '';
+        }
+
+        const msgPrevio = contenedor.querySelector('.error-validacion-msg');
+        if (msgPrevio) msgPrevio.remove();
     }
 
-    try {
-        btnSubmit.disabled = true;
-        btnSubmit.innerHTML = 'Creando cuenta...';
-
-        const nombreCompleto = `${nombres} ${apellidos}`.trim();
-        const nit = numDoc ? `${tipoDoc.toUpperCase()}: ${numDoc}` : null;
-
-        const data = await API.registro({
-            nombre: nombreCompleto,
-            email: correo,
-            password: contrasena,
-            telefono,
-            nit
-        });
-
-        alert(`¡Registro exitoso! Bienvenido, ${nombreCompleto}.`);
-        window.location.href = '../perfil/perfil.html';
-    } catch (error) {
-        alert('Error al registrar usuario: ' + error.message);
-    } finally {
-        btnSubmit.disabled = false;
-        btnSubmit.innerHTML = `Crear Cuenta <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>`;
+    // Limpieza en tiempo real al interactuar
+    [inputNombres, inputApellidos, selectTipoDoc, inputNumDoc, inputTelefono, inputCorreo, inputContra, inputContraConf].forEach(el => {
+        if (el) {
+            el.addEventListener('input', () => limpiarError(el));
+            el.addEventListener('change', () => limpiarError(el));
+        }
+    });
+    if (checkTerminos) {
+        checkTerminos.addEventListener('change', () => limpiarError(checkTerminos));
     }
+
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const nombres = inputNombres ? inputNombres.value.trim() : '';
+        const apellidos = inputApellidos ? inputApellidos.value.trim() : '';
+        const tipoDoc = selectTipoDoc ? selectTipoDoc.value : '';
+        const numDoc = inputNumDoc ? inputNumDoc.value.trim() : '';
+        const telefono = inputTelefono ? inputTelefono.value.trim() : '';
+        const correo = inputCorreo ? inputCorreo.value.trim() : '';
+        const contrasena = inputContra ? inputContra.value : '';
+        const confirmarContrasena = inputContraConf ? inputContraConf.value : '';
+        const aceptoTerminos = checkTerminos ? checkTerminos.checked : false;
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
+        const soloLetrasRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/;
+
+        let esValido = true;
+
+        // 1. Validar Nombres
+        if (!nombres) {
+            mostrarError(inputNombres, 'El nombre es obligatorio.');
+            esValido = false;
+        } else if (nombres.length < 2) {
+            mostrarError(inputNombres, 'Debe tener al menos 2 caracteres.');
+            esValido = false;
+        } else if (!soloLetrasRegex.test(nombres)) {
+            mostrarError(inputNombres, 'Solo se permiten letras y espacios.');
+            esValido = false;
+        } else {
+            limpiarError(inputNombres);
+        }
+
+        // 2. Validar Apellidos
+        if (!apellidos) {
+            mostrarError(inputApellidos, 'El apellido es obligatorio.');
+            esValido = false;
+        } else if (apellidos.length < 2) {
+            mostrarError(inputApellidos, 'Debe tener al menos 2 caracteres.');
+            esValido = false;
+        } else if (!soloLetrasRegex.test(apellidos)) {
+            mostrarError(inputApellidos, 'Solo se permiten letras y espacios.');
+            esValido = false;
+        } else {
+            limpiarError(inputApellidos);
+        }
+
+        // 3. Validar Tipo de Documento
+        if (!tipoDoc) {
+            mostrarError(selectTipoDoc, 'Selecciona un tipo de documento.');
+            esValido = false;
+        } else {
+            limpiarError(selectTipoDoc);
+        }
+
+        // 4. Validar Número de Documento
+        if (!numDoc) {
+            mostrarError(inputNumDoc, 'El número de documento es obligatorio.');
+            esValido = false;
+        } else if (numDoc.length < 5) {
+            mostrarError(inputNumDoc, 'Debe tener al menos 5 dígitos o caracteres.');
+            esValido = false;
+        } else {
+            limpiarError(inputNumDoc);
+        }
+
+        // 5. Validar Teléfono
+        if (!telefono) {
+            mostrarError(inputTelefono, 'El teléfono de contacto es obligatorio.');
+            esValido = false;
+        } else if (!telefonoRegex.test(telefono)) {
+            mostrarError(inputTelefono, 'Número de teléfono inválido (mínimo 7 dígitos).');
+            esValido = false;
+        } else {
+            limpiarError(inputTelefono);
+        }
+
+        // 6. Validar Correo
+        if (!correo) {
+            mostrarError(inputCorreo, 'El correo electrónico es obligatorio.');
+            esValido = false;
+        } else if (!emailRegex.test(correo)) {
+            mostrarError(inputCorreo, 'Formato de correo no válido (ej. usuario@empresa.com).');
+            esValido = false;
+        } else {
+            limpiarError(inputCorreo);
+        }
+
+        // 7. Validar Contraseña
+        if (!contrasena) {
+            mostrarError(inputContra, 'La contraseña es obligatoria.');
+            esValido = false;
+        } else if (contrasena.length < 6) {
+            mostrarError(inputContra, 'La contraseña debe tener al menos 6 caracteres.');
+            esValido = false;
+        } else {
+            limpiarError(inputContra);
+        }
+
+        // 8. Validar Confirmación de Contraseña
+        if (!confirmarContrasena) {
+            mostrarError(inputContraConf, 'Confirma tu contraseña.');
+            esValido = false;
+        } else if (contrasena !== confirmarContrasena) {
+            mostrarError(inputContraConf, 'Las contraseñas no coinciden.');
+            esValido = false;
+        } else {
+            limpiarError(inputContraConf);
+        }
+
+        // 9. Validar Términos
+        if (!aceptoTerminos) {
+            mostrarError(checkTerminos, 'Debes aceptar los Términos y Condiciones para continuar.');
+            esValido = false;
+        } else {
+            limpiarError(checkTerminos);
+        }
+
+        if (!esValido) {
+            const primerError = form.querySelector('.error-validacion-msg');
+            if (primerError) {
+                primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            return;
+        }
+
+        const textoOriginalBtn = btnSubmit ? btnSubmit.innerHTML : 'Crear Cuenta';
+
+        try {
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                btnSubmit.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Registrando usuario...';
+            }
+
+            const nombreCompleto = `${nombres} ${apellidos}`.trim();
+            const nit = numDoc ? `${tipoDoc.toUpperCase()}: ${numDoc}` : null;
+
+            await API.registro({
+                nombre: nombreCompleto,
+                email: correo,
+                password: contrasena,
+                telefono,
+                nit
+            });
+
+            // Notificación visual de éxito en el botón antes de redirigir
+            if (btnSubmit) {
+                btnSubmit.style.background = '#10b981';
+                btnSubmit.innerHTML = '✓ ¡Registro Exitoso!';
+            }
+
+            setTimeout(() => {
+                window.location.href = '../perfil/perfil.html';
+            }, 1200);
+
+        } catch (error) {
+            mostrarError(inputCorreo, error.message || 'Error al registrar usuario.');
+            if (btnSubmit) {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = textoOriginalBtn;
+                btnSubmit.style.background = '';
+            }
+        }
+    });
 });

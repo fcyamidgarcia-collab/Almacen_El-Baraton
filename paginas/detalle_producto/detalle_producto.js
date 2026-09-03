@@ -44,11 +44,57 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (breadCat) breadCat.textContent = p.nombre_categoria || 'Productos';
         if (breadProd) breadProd.textContent = p.nombre_producto;
 
-        // Imagen principal
+        // Imagen principal y galería interactiva
         const mainImg = document.getElementById('mainImage');
+        const imagenPrincipal = p.imagen || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='400' fill='%23f1f5f9'%3E%3Crect width='600' height='400'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='24' fill='%2394a3b8'%3E${encodeURIComponent(p.nombre_producto)}%3C/text%3E%3C/svg%3E`;
         if (mainImg) {
-            mainImg.src = p.imagen || `https://via.placeholder.com/600x400?text=${encodeURIComponent(p.nombre_producto)}`;
+            mainImg.src = imagenPrincipal;
             mainImg.alt = p.nombre_producto;
+        }
+
+        // Galería de miniaturas (Principal + Secundarias)
+        const listaMiniaturas = document.querySelector('.miniaturanail-list');
+        if (listaMiniaturas) {
+            listaMiniaturas.innerHTML = '';
+
+            // 1. Miniatura Principal
+            const miniaturaPrincipal = document.createElement('div');
+            miniaturaPrincipal.className = 'miniaturanail activo';
+            miniaturaPrincipal.title = 'Vista principal';
+            miniaturaPrincipal.innerHTML = `<img src="${imagenPrincipal}" alt="${p.nombre_producto} - Principal">`;
+            miniaturaPrincipal.addEventListener('click', function() {
+                window.changeImage(this, imagenPrincipal);
+            });
+            listaMiniaturas.appendChild(miniaturaPrincipal);
+
+            // 2. Parsear y agregar imágenes secundarias
+            let secList = [];
+            try {
+                if (p.imagenes_secundarias) {
+                    secList = typeof p.imagenes_secundarias === 'string'
+                        ? JSON.parse(p.imagenes_secundarias)
+                        : p.imagenes_secundarias;
+                }
+            } catch (_) {
+                if (typeof p.imagenes_secundarias === 'string') {
+                    secList = p.imagenes_secundarias.split(',').map(s => s.trim()).filter(Boolean);
+                }
+            }
+
+            if (Array.isArray(secList)) {
+                secList.forEach((url, idx) => {
+                    if (!url || !url.trim()) return;
+                    const cleanUrl = url.trim();
+                    const miniaturaSec = document.createElement('div');
+                    miniaturaSec.className = 'miniaturanail';
+                    miniaturaSec.title = `Vista adicional ${idx + 1}`;
+                    miniaturaSec.innerHTML = `<img src="${cleanUrl}" alt="${p.nombre_producto} - Vista ${idx + 1}">`;
+                    miniaturaSec.addEventListener('click', function() {
+                        window.changeImage(this, cleanUrl);
+                    });
+                    listaMiniaturas.appendChild(miniaturaSec);
+                });
+            }
         }
 
         // Marca / Proveedor
@@ -104,10 +150,57 @@ document.addEventListener('DOMContentLoaded', async () => {
             btnCarrito.style.cursor = 'not-allowed';
         }
 
-        // ---- AGREGAR AL CARRITO ----
+        // ---- AGREGAR AL CARRITO CON VALIDACIÓN DIRECTA ----
         if (btnCarrito && !agotado) {
+            const contenedorQty = qtyInput?.parentElement;
+
+            function mostrarErrorQty(msg) {
+                limpiarErrorQty();
+                if (qtyInput) {
+                    qtyInput.style.borderColor = '#ef4444';
+                    qtyInput.style.boxShadow = '0 0 0 2px rgba(239, 68, 68, 0.2)';
+                }
+                const span = document.createElement('span');
+                span.className = 'error-qty-msg';
+                span.style.cssText = 'color:#ef4444;font-size:0.78rem;display:block;margin-top:4px;font-weight:600;';
+                span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+                contenedorQty?.insertAdjacentElement('afterend', span);
+            }
+
+            function limpiarErrorQty() {
+                if (qtyInput) {
+                    qtyInput.style.borderColor = '';
+                    qtyInput.style.boxShadow = '';
+                }
+                const msg = contenedorQty?.parentElement?.querySelector('.error-qty-msg');
+                if (msg) msg.remove();
+            }
+
+            if (qtyInput) {
+                qtyInput.addEventListener('input', () => {
+                    limpiarErrorQty();
+                    let val = parseInt(qtyInput.value);
+                    if (val > stock) {
+                        mostrarErrorQty(`Máximo disponible: ${stock} unidades.`);
+                    }
+                });
+            }
+
             btnCarrito.addEventListener('click', async () => {
-                const cantidad = parseInt(qtyInput?.value) || 1;
+                limpiarErrorQty();
+                const cantidad = parseInt(qtyInput?.value);
+
+                if (isNaN(cantidad) || cantidad < 1) {
+                    mostrarErrorQty('La cantidad mínima a agregar es 1.');
+                    if (qtyInput) qtyInput.value = 1;
+                    return;
+                }
+
+                if (cantidad > stock) {
+                    mostrarErrorQty(`Solo hay ${stock} unidades disponibles en stock.`);
+                    return;
+                }
+
                 const originalHTML = btnCarrito.innerHTML;
                 btnCarrito.disabled = true;
                 btnCarrito.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Agregando...';

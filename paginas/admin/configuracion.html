@@ -115,12 +115,12 @@
 
                     <form id="formularioConfiguracion">
                         <div class="rejilla-formulario" style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
-                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Nombre de la Empresa</label><input type="text" value="Industrial Supply Co. S.A.S." class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
-                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">NIT / Identificación Fiscal</label><input type="text" value="901.442.880-4" class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
-                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Correo de Contacto Institucional</label><input type="email" value="contacto@industrialsupply.com.co" class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
-                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Teléfono PBX</label><input type="text" value="+57 (601) 745-9000" class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
-                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Tasa IVA Predeterminada (%)</label><input type="number" value="19" class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
-                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Moneda de Operación</label><input type="text" value="COP ($) - Peso Colombiano" readonly class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc;"></div>
+                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Nombre de la Empresa</label><input type="text" id="confEmpresa" value="Industrial Supply Co. S.A.S." class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
+                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">NIT / Identificación Fiscal</label><input type="text" id="confNit" value="901.442.880-4" class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
+                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Correo de Contacto Institucional</label><input type="email" id="confEmail" value="contacto@industrialsupply.com.co" class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
+                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Teléfono PBX</label><input type="text" id="confPbx" value="+57 (601) 745-9000" class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
+                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Tasa IVA Predeterminada (%)</label><input type="number" id="confIva" value="19" class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px;"></div>
+                            <div class="grupo-formulario"><label style="font-weight: 600; margin-bottom: 6px; display: block;">Moneda de Operación</label><input type="text" id="confMoneda" value="COP ($) - Peso Colombiano" readonly class="entrada-filtro" style="width: 100%; padding: 10px; border: 1px solid #e2e8f0; border-radius: 8px; background: #f8fafc;"></div>
                         </div>
 
                         <div style="margin-top: 28px; display: flex; justify-content: flex-end;">
@@ -179,6 +179,9 @@
         </div>
     </footer>
 
+    <script src="../js/api.js"></script>
+    <script src="../js/sesion.js"></script>
+    <script src="../js/buscador.js"></script>
     <script src="configuracion.js"></script>
 </body>
 </html>

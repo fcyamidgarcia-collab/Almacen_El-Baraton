@@ -90,11 +90,42 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnCerrar?.addEventListener('click', () => modal.classList.remove('activo'));
     btnCancelar?.addEventListener('click', () => modal.classList.remove('activo'));
 
+    // Helper de error en modal categoría
+    function mostrarErrorCat(input, msg) {
+        limpiarErrorCat(input);
+        input.style.borderColor = '#ef4444';
+        const span = document.createElement('span');
+        span.className = 'error-cat-msg';
+        span.style.cssText = 'color:#ef4444;font-size:0.75rem;margin-top:3px;display:block;font-weight:500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+        input.insertAdjacentElement('afterend', span);
+    }
+
+    function limpiarErrorCat(input) {
+        input.style.borderColor = '';
+        const sig = input.nextElementSibling;
+        if (sig && sig.classList.contains('error-cat-msg')) sig.remove();
+    }
+
+    const inputCatNombre = document.getElementById('catNombre');
+    if (inputCatNombre) inputCatNombre.addEventListener('input', () => limpiarErrorCat(inputCatNombre));
+
     form?.addEventListener('submit', async e => {
         e.preventDefault();
+
+        const nombre_categoria = inputCatNombre ? inputCatNombre.value.trim() : '';
+        const descripcion = document.getElementById('catDesc')?.value.trim() || 'Sin descripción';
+
+        if (!nombre_categoria || nombre_categoria.length < 2) {
+            mostrarErrorCat(inputCatNombre, 'El nombre de la categoría debe tener al menos 2 caracteres.');
+            return;
+        } else {
+            limpiarErrorCat(inputCatNombre);
+        }
+
         const payload = {
-            nombre_categoria: document.getElementById('catNombre').value.trim(),
-            descripcion: document.getElementById('catDesc').value.trim() || 'Sin descripción'
+            nombre_categoria,
+            descripcion
         };
         try {
             if (modoEdicion) {

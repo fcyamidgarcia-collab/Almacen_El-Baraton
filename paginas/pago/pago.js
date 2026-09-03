@@ -1,5 +1,5 @@
 /**
- * Página de Pago / Checkout - Conectado a MySQL
+ * Página de Pago / Checkout - Conectado a MySQL (VALIDACIONES INTEGRADAS)
  * Crea pedido transaccional y vacía el carrito tras el pago
  */
 
@@ -26,6 +26,34 @@ document.addEventListener('DOMContentLoaded', async () => {
         ciudad: document.getElementById('ciudad')
     };
 
+    // --- Funciones de error visual directo en checkout ---
+    function mostrarErrorCheckout(input, mensaje) {
+        limpiarErrorCheckout(input);
+        const grupo = input.closest('.grupo-input') || input.parentElement;
+        input.style.borderColor = '#ef4444';
+        input.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.15)';
+
+        const span = document.createElement('span');
+        span.className = 'error-checkout-msg';
+        span.style.cssText = 'color: #ef4444; font-size: 0.78rem; margin-top: 4px; display: flex; align-items: center; gap: 4px; font-weight: 500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${mensaje}`;
+        grupo.appendChild(span);
+    }
+
+    function limpiarErrorCheckout(input) {
+        const grupo = input.closest('.grupo-input') || input.parentElement;
+        input.style.borderColor = '';
+        input.style.boxShadow = '';
+        const msg = grupo.querySelector('.error-checkout-msg');
+        if (msg) msg.remove();
+    }
+
+    Object.values(campos).forEach(campo => {
+        if (campo) {
+            campo.addEventListener('input', () => limpiarErrorCheckout(campo));
+        }
+    });
+
     if (campos.nombre) campos.nombre.value = user.nombre || '';
     if (campos.email) campos.email.value = user.email || user.correo || '';
 
@@ -45,7 +73,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     let itemsParaPedido = [];
 
     try {
-        // Primero intentar desde localStorage (guardado por carrito.js)
         const cached = localStorage.getItem('carrito_checkout');
         if (cached) {
             carritoData = JSON.parse(cached);
@@ -61,7 +88,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         itemsParaPedido = carritoData.items;
 
-        // Mostrar resumen en la página de pago
         const subtotalElem = document.getElementById('resumen-subtotal');
         const ivaElem = document.getElementById('resumen-iva');
         const totalElem = document.querySelector('.total-valor');
@@ -71,7 +97,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (ivaElem) ivaElem.textContent = fmt(carritoData.iva);
         if (totalElem) totalElem.textContent = fmt(carritoData.total);
 
-        // Lista de productos en el resumen
         if (itemsListEl) {
             itemsListEl.innerHTML = carritoData.items.map(i => `
                 <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid #f1f5f9;font-size:0.88rem">
@@ -85,8 +110,40 @@ document.addEventListener('DOMContentLoaded', async () => {
         console.error('Error cargando carrito para checkout:', e.message);
     }
 
+    // ---- Manejo de archivos de comprobante ----
+    const fileComprobante = document.getElementById('comprobante');
+    const labelNombreArchivo = document.getElementById('nombre-archivo');
+    const fileBilletera = document.getElementById('comprobante-billetera');
+    const labelNombreBilletera = document.getElementById('nombre-archivo-billetera');
+
+    if (fileComprobante && labelNombreArchivo) {
+        fileComprobante.addEventListener('change', () => {
+            if (fileComprobante.files.length > 0) {
+                labelNombreArchivo.textContent = fileComprobante.files[0].name;
+                labelNombreArchivo.style.color = '#10b981';
+                limpiarErrorCheckout(fileComprobante);
+            } else {
+                labelNombreArchivo.textContent = 'No se ha seleccionado ningún archivo.';
+                labelNombreArchivo.style.color = '';
+            }
+        });
+    }
+
+    if (fileBilletera && labelNombreBilletera) {
+        fileBilletera.addEventListener('change', () => {
+            if (fileBilletera.files.length > 0) {
+                labelNombreBilletera.textContent = fileBilletera.files[0].name;
+                labelNombreBilletera.style.color = '#10b981';
+                limpiarErrorCheckout(fileBilletera);
+            } else {
+                labelNombreBilletera.textContent = 'No se ha seleccionado ningún archivo.';
+                labelNombreBilletera.style.color = '';
+            }
+        });
+    }
+
     // ---- Selección de método de pago ----
-    let metodoPago = 'Contraentrega';
+    let metodoPago = 'Transferencia Bancaria';
     const radiosPago = document.querySelectorAll('input[name="metodo_pago"]');
     const panelTransferencia = document.getElementById('panel-transferencia');
     const panelBilletera = document.getElementById('panel-billetera');
@@ -107,27 +164,119 @@ document.addEventListener('DOMContentLoaded', async () => {
             } else if (e.target.value === 'tarjeta') {
                 metodoPago = 'Tarjeta de Crédito / Débito';
             } else {
-                metodoPago = e.target.value || 'Contraentrega';
+                metodoPago = 'Contraentrega';
             }
         });
     });
 
-    // ---- Procesar Pedido ----
+    // ---- Procesar Pedido y Validaciones Directas ----
     const btnCheckout = document.getElementById('btn-procesar-checkout');
     if (!btnCheckout) return;
 
     btnCheckout.addEventListener('click', async (e) => {
         e.preventDefault();
 
-        const nombre = campos.nombre?.value.trim();
-        const email = campos.email?.value.trim();
+        const nombre = campos.nombre?.value.trim() || '';
+        const email = campos.email?.value.trim() || '';
+        const documento = campos.documento?.value.trim() || '';
         const telefono = campos.telefono?.value.trim() || '';
-        const direccion = campos.direccion?.value.trim();
-        const ciudad = campos.ciudad?.value.trim() || 'Bogotá D.C.';
+        const direccion = campos.direccion?.value.trim() || '';
+        const ciudad = campos.ciudad?.value.trim() || '';
 
-        // Validaciones básicas
-        if (!nombre || !email || !direccion) {
-            alert('Por favor completa los campos: Nombre, Correo y Dirección de entrega.');
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
+
+        let esValido = true;
+
+        // 1. Validar Nombre
+        if (!nombre) {
+            mostrarErrorCheckout(campos.nombre, 'Ingresa tu nombre completo.');
+            esValido = false;
+        } else if (nombre.length < 3) {
+            mostrarErrorCheckout(campos.nombre, 'El nombre debe tener al menos 3 caracteres.');
+            esValido = false;
+        } else {
+            limpiarErrorCheckout(campos.nombre);
+        }
+
+        // 2. Validar Correo
+        if (!email) {
+            mostrarErrorCheckout(campos.email, 'Ingresa tu correo electrónico.');
+            esValido = false;
+        } else if (!emailRegex.test(email)) {
+            mostrarErrorCheckout(campos.email, 'Formato de correo no válido.');
+            esValido = false;
+        } else {
+            limpiarErrorCheckout(campos.email);
+        }
+
+        // 3. Validar Documento
+        if (!documento) {
+            mostrarErrorCheckout(campos.documento, 'Ingresa tu Documento de Identidad o NIT.');
+            esValido = false;
+        } else if (documento.length < 5) {
+            mostrarErrorCheckout(campos.documento, 'El documento debe tener al menos 5 caracteres.');
+            esValido = false;
+        } else {
+            limpiarErrorCheckout(campos.documento);
+        }
+
+        // 4. Validar Teléfono
+        if (!telefono) {
+            mostrarErrorCheckout(campos.telefono, 'Ingresa un teléfono o celular de contacto.');
+            esValido = false;
+        } else if (!telefonoRegex.test(telefono)) {
+            mostrarErrorCheckout(campos.telefono, 'Teléfono inválido (mínimo 7 dígitos).');
+            esValido = false;
+        } else {
+            limpiarErrorCheckout(campos.telefono);
+        }
+
+        // 5. Validar Dirección
+        if (!direccion) {
+            mostrarErrorCheckout(campos.direccion, 'Ingresa la dirección completa de entrega.');
+            esValido = false;
+        } else if (direccion.length < 6) {
+            mostrarErrorCheckout(campos.direccion, 'La dirección debe ser detallada (ej. Calle 10 # 20-30).');
+            esValido = false;
+        } else {
+            limpiarErrorCheckout(campos.direccion);
+        }
+
+        // 6. Validar Ciudad
+        if (!ciudad) {
+            mostrarErrorCheckout(campos.ciudad, 'Ingresa la ciudad o municipio de entrega.');
+            esValido = false;
+        } else if (ciudad.length < 3) {
+            mostrarErrorCheckout(campos.ciudad, 'Nombre de ciudad inválido.');
+            esValido = false;
+        } else {
+            limpiarErrorCheckout(campos.ciudad);
+        }
+
+        // 7. Validar Comprobante de Pago obligatorio según método
+        const metodoSeleccionado = document.querySelector('input[name="metodo_pago"]:checked')?.value;
+        if (metodoSeleccionado === 'transferencia') {
+            if (!fileComprobante || fileComprobante.files.length === 0) {
+                mostrarErrorCheckout(fileComprobante, 'Debes adjuntar el comprobante de la transferencia (JPG, PNG o PDF).');
+                esValido = false;
+            } else {
+                limpiarErrorCheckout(fileComprobante);
+            }
+        } else if (metodoSeleccionado === 'billetera') {
+            if (!fileBilletera || fileBilletera.files.length === 0) {
+                mostrarErrorCheckout(fileBilletera, 'Debes adjuntar la captura del pago por Nequi/Daviplata.');
+                esValido = false;
+            } else {
+                limpiarErrorCheckout(fileBilletera);
+            }
+        }
+
+        if (!esValido) {
+            const primerError = document.querySelector('.error-checkout-msg');
+            if (primerError) {
+                primerError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
             return;
         }
 
@@ -137,24 +286,24 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
 
         btnCheckout.disabled = true;
-        btnCheckout.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando pedido...';
+        btnCheckout.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando y confirmando orden...';
 
         try {
-            // Obtener o crear el cliente asociado al usuario
             let id_cliente = null;
             try {
                 const cli = await API.getClientePorUsuario(user.id_usuario);
                 id_cliente = cli?.id_cliente || null;
             } catch (_) {}
 
-            // Construir items del pedido
             const items = itemsParaPedido.map(i => ({
                 id_producto: i.id_producto,
                 cantidad: i.cantidad,
                 precio_unitario: i.precio_unitario || i.precio
             }));
 
-            const documento = campos.documento?.value.trim() || '';
+            const nombreArchivoComprobante = (metodoSeleccionado === 'transferencia' && fileComprobante?.files[0])
+                ? fileComprobante.files[0].name
+                : (metodoSeleccionado === 'billetera' && fileBilletera?.files[0] ? fileBilletera.files[0].name : null);
 
             const datosPedido = {
                 id_usuario: user.id_usuario,
@@ -163,7 +312,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 items,
                 direccion_entrega: `${direccion}, ${ciudad}`,
                 metodo_pago: metodoPago,
-                observaciones: `Pedido web | Cliente: ${nombre} | Tel: ${telefono}`
+                observaciones: `Pedido web | Cliente: ${nombre} | Tel: ${telefono}${nombreArchivoComprobante ? ` | Comprobante: ${nombreArchivoComprobante}` : ''}`
             };
 
             const resultado = await API.crearPedido(datosPedido);

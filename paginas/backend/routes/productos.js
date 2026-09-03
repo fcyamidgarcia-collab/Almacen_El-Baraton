@@ -7,7 +7,7 @@ router.get('/', async (req, res) => {
     try {
         const { categoria, buscar, estado } = req.query;
         let query = `
-            SELECT p.id_producto, p.nombre_producto, p.descripcion, p.precio, p.imagen, p.estado,
+            SELECT p.id_producto, p.nombre_producto, p.descripcion, p.precio, p.imagen, p.imagenes_secundarias, p.estado,
                    p.id_categoria, p.id_proveedor,
                    c.nombre_categoria,
                    pr.nombre_proveedor,
@@ -70,11 +70,19 @@ router.get('/:id', async (req, res) => {
 // POST /api/productos
 router.post('/', async (req, res) => {
     try {
-        const { nombre_producto, descripcion, precio, imagen, estado, id_categoria, id_proveedor, stock_inicial } = req.body;
+        const { nombre_producto, descripcion, precio, imagen, imagenes_secundarias, estado, id_categoria, id_proveedor, stock_inicial } = req.body;
+        
+        let secStr = null;
+        if (Array.isArray(imagenes_secundarias)) {
+            secStr = JSON.stringify(imagenes_secundarias.filter(url => Boolean(url && url.trim())));
+        } else if (typeof imagenes_secundarias === 'string' && imagenes_secundarias.trim()) {
+            secStr = imagenes_secundarias.trim();
+        }
+
         const [result] = await pool.query(
-            `INSERT INTO producto (id_categoria, id_proveedor, nombre_producto, descripcion, precio, imagen, estado)
-             VALUES (?, ?, ?, ?, ?, ?, ?)`,
-            [id_categoria, id_proveedor || null, nombre_producto, descripcion || null, precio, imagen || null, estado || 'activo']
+            `INSERT INTO producto (id_categoria, id_proveedor, nombre_producto, descripcion, precio, imagen, imagenes_secundarias, estado)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)`,
+            [id_categoria, id_proveedor || null, nombre_producto, descripcion || null, precio, imagen || null, secStr, estado || 'activo']
         );
         const id_producto = result.insertId;
 
@@ -94,11 +102,19 @@ router.post('/', async (req, res) => {
 // PUT /api/productos/:id
 router.put('/:id', async (req, res) => {
     try {
-        const { nombre_producto, descripcion, precio, imagen, estado, id_categoria, id_proveedor, stock } = req.body;
+        const { nombre_producto, descripcion, precio, imagen, imagenes_secundarias, estado, id_categoria, id_proveedor, stock } = req.body;
+
+        let secStr = null;
+        if (Array.isArray(imagenes_secundarias)) {
+            secStr = JSON.stringify(imagenes_secundarias.filter(url => Boolean(url && url.trim())));
+        } else if (typeof imagenes_secundarias === 'string' && imagenes_secundarias.trim()) {
+            secStr = imagenes_secundarias.trim();
+        }
+
         await pool.query(
-            `UPDATE producto SET id_categoria=?, id_proveedor=?, nombre_producto=?, descripcion=?, precio=?, imagen=?, estado=?
+            `UPDATE producto SET id_categoria=?, id_proveedor=?, nombre_producto=?, descripcion=?, precio=?, imagen=?, imagenes_secundarias=?, estado=?
              WHERE id_producto=?`,
-            [id_categoria, id_proveedor || null, nombre_producto, descripcion || null, precio, imagen || null, estado || 'activo', req.params.id]
+            [id_categoria, id_proveedor || null, nombre_producto, descripcion || null, precio, imagen || null, secStr, estado || 'activo', req.params.id]
         );
 
         if (stock !== undefined) {

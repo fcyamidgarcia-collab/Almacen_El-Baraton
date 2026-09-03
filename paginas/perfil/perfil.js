@@ -133,6 +133,9 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (e.includes('proces')) {
                     return `<span class="tag tag-pendiente" style="background:#eff6ff;color:#2563eb"><i class="fas fa-cog fa-spin"></i> En Proceso</span>`;
                 }
+                if (e.includes('cancel')) {
+                    return `<span class="tag tag-pendiente" style="background:#fee2e2;color:#ef4444"><i class="fas fa-times-circle"></i> Cancelado</span>`;
+                }
                 return `<span class="tag tag-pendiente"><i class="fas fa-clock"></i> Pendiente</span>`;
             }
 
@@ -235,19 +238,108 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnCerrarPerfil) btnCerrarPerfil.addEventListener('click', cerrarModalPerfil);
     if (btnCancelarPerfil) btnCancelarPerfil.addEventListener('click', cerrarModalPerfil);
 
+    // Helpers de error para modales de perfil
+    function mostrarErrorModal(input, mensaje) {
+        limpiarErrorModal(input);
+        input.style.borderColor = '#ef4444';
+        input.style.boxShadow = '0 0 0 3px rgba(239, 68, 68, 0.15)';
+        const span = document.createElement('span');
+        span.className = 'error-modal-msg';
+        span.style.cssText = 'color:#ef4444;font-size:0.75rem;margin-top:3px;display:flex;align-items:center;gap:4px;font-weight:500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${mensaje}`;
+        input.insertAdjacentElement('afterend', span);
+    }
+
+    function limpiarErrorModal(input) {
+        input.style.borderColor = '';
+        input.style.boxShadow = '';
+        const siguiente = input.nextElementSibling;
+        if (siguiente && siguiente.classList.contains('error-modal-msg')) {
+            siguiente.remove();
+        }
+    }
+
+    // Limpieza al escribir en los inputs de perfil
+    ['edit-nombre', 'edit-apellido', 'edit-documento', 'edit-telefono', 'edit-direccion', 'edit-ciudad', 'pass-actual', 'pass-nueva', 'pass-confirmar'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => limpiarErrorModal(el));
+    });
+
     if (formPerfil) {
         formPerfil.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const inputNombre = document.getElementById('edit-nombre');
+            const inputApellido = document.getElementById('edit-apellido');
+            const inputDocumento = document.getElementById('edit-documento');
+            const inputTelefono = document.getElementById('edit-telefono');
+            const inputDireccion = document.getElementById('edit-direccion');
+            const inputCiudad = document.getElementById('edit-ciudad');
+
+            const nombre = inputNombre?.value.trim() || '';
+            const apellido = inputApellido?.value.trim() || '';
+            const doc = inputDocumento?.value.trim() || '';
+            const tel = inputTelefono?.value.trim() || '';
+            const dir = inputDireccion?.value.trim() || '';
+            const ciu = inputCiudad?.value.trim() || '';
+
+            const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
+            let esValido = true;
+
+            if (!nombre || nombre.length < 2) {
+                mostrarErrorModal(inputNombre, 'El nombre debe tener al menos 2 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorModal(inputNombre);
+            }
+
+            if (!apellido || apellido.length < 2) {
+                mostrarErrorModal(inputApellido, 'El apellido debe tener al menos 2 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorModal(inputApellido);
+            }
+
+            if (doc && doc.length < 5) {
+                mostrarErrorModal(inputDocumento, 'El documento debe tener al menos 5 caracteres.');
+                esValido = false;
+            } else if (inputDocumento) {
+                limpiarErrorModal(inputDocumento);
+            }
+
+            if (tel && !telefonoRegex.test(tel)) {
+                mostrarErrorModal(inputTelefono, 'Número de teléfono inválido (mínimo 7 dígitos).');
+                esValido = false;
+            } else if (inputTelefono) {
+                limpiarErrorModal(inputTelefono);
+            }
+
+            if (dir && dir.length < 5) {
+                mostrarErrorModal(inputDireccion, 'La dirección debe ser más descriptiva.');
+                esValido = false;
+            } else if (inputDireccion) {
+                limpiarErrorModal(inputDireccion);
+            }
+
+            if (ciu && ciu.length < 3) {
+                mostrarErrorModal(inputCiudad, 'Nombre de ciudad inválido.');
+                esValido = false;
+            } else if (inputCiudad) {
+                limpiarErrorModal(inputCiudad);
+            }
+
+            if (!esValido) return;
+
             const btnGuardar = document.getElementById('btn-guardar-perfil');
             const originalHTML = btnGuardar.innerHTML;
 
             const datos = {
-                nombre: document.getElementById('edit-nombre').value.trim(),
-                apellido: document.getElementById('edit-apellido').value.trim(),
-                documento_identidad: document.getElementById('edit-documento').value.trim(),
-                telefono: document.getElementById('edit-telefono').value.trim(),
-                direccion: document.getElementById('edit-direccion').value.trim(),
-                ciudad: document.getElementById('edit-ciudad').value.trim()
+                nombre,
+                apellido,
+                documento_identidad: doc,
+                telefono: tel,
+                direccion: dir,
+                ciudad: ciu
             };
 
             try {
@@ -292,14 +384,47 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (formPassword) {
         formPassword.addEventListener('submit', async (e) => {
             e.preventDefault();
-            const actualPassword = document.getElementById('pass-actual').value;
-            const nuevaPassword = document.getElementById('pass-nueva').value;
-            const confirmarPassword = document.getElementById('pass-confirmar').value;
+            const inputActual = document.getElementById('pass-actual');
+            const inputNueva = document.getElementById('pass-nueva');
+            const inputConfirmar = document.getElementById('pass-confirmar');
 
-            if (nuevaPassword !== confirmarPassword) {
-                alert('La nueva contraseña y su confirmación no coinciden.');
-                return;
+            const actualPassword = inputActual ? inputActual.value : '';
+            const nuevaPassword = inputNueva ? inputNueva.value : '';
+            const confirmarPassword = inputConfirmar ? inputConfirmar.value : '';
+
+            let passValido = true;
+
+            if (!actualPassword) {
+                mostrarErrorModal(inputActual, 'Ingresa tu contraseña actual.');
+                passValido = false;
+            } else {
+                limpiarErrorModal(inputActual);
             }
+
+            if (!nuevaPassword) {
+                mostrarErrorModal(inputNueva, 'Ingresa la nueva contraseña.');
+                passValido = false;
+            } else if (nuevaPassword.length < 6) {
+                mostrarErrorModal(inputNueva, 'La nueva contraseña debe tener al menos 6 caracteres.');
+                passValido = false;
+            } else if (actualPassword && nuevaPassword === actualPassword) {
+                mostrarErrorModal(inputNueva, 'La nueva contraseña no puede ser idéntica a la actual.');
+                passValido = false;
+            } else {
+                limpiarErrorModal(inputNueva);
+            }
+
+            if (!confirmarPassword) {
+                mostrarErrorModal(inputConfirmar, 'Confirma tu nueva contraseña.');
+                passValido = false;
+            } else if (nuevaPassword !== confirmarPassword) {
+                mostrarErrorModal(inputConfirmar, 'Las contraseñas no coinciden.');
+                passValido = false;
+            } else {
+                limpiarErrorModal(inputConfirmar);
+            }
+
+            if (!passValido) return;
 
             const btnSubmit = document.getElementById('btn-guardar-password');
             const originalHTML = btnSubmit.innerHTML;

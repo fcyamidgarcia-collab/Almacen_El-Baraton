@@ -73,20 +73,87 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    // Helper de error en modal proveedor
+    function mostrarErrorProv(input, msg) {
+        limpiarErrorProv(input);
+        input.style.borderColor = '#ef4444';
+        const span = document.createElement('span');
+        span.className = 'error-prov-msg';
+        span.style.cssText = 'color:#ef4444;font-size:0.75rem;margin-top:3px;display:block;font-weight:500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+        input.insertAdjacentElement('afterend', span);
+    }
+
+    function limpiarErrorProv(input) {
+        input.style.borderColor = '';
+        const sig = input.nextElementSibling;
+        if (sig && sig.classList.contains('error-prov-msg')) sig.remove();
+    }
+
+    ['provNombre', 'provContacto', 'provTelefono', 'provEmail', 'provCat', 'provDireccion'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => limpiarErrorProv(el));
+    });
+
     btnNuevo?.addEventListener('click', () => { modoEdicion = null; form.reset(); modal.classList.add('activo'); });
     btnCerrar?.addEventListener('click', () => modal.classList.remove('activo'));
     btnCancelar?.addEventListener('click', () => modal.classList.remove('activo'));
 
     form?.addEventListener('submit', async e => {
         e.preventDefault();
+
+        const elNombre = document.getElementById('provNombre');
+        const elContacto = document.getElementById('provContacto');
+        const elTelefono = document.getElementById('provTelefono');
         const emailEl = document.getElementById('provEmail') || document.getElementById('provCat');
         const dirEl = document.getElementById('provDireccion');
+
+        const nombre_proveedor = elNombre.value.trim();
+        const contacto = elContacto.value.trim();
+        const telefono = elTelefono.value.trim();
+        const correo = emailEl?.value.trim() || '';
+        const direccion = dirEl?.value.trim() || '';
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
+        let esValido = true;
+
+        if (!nombre_proveedor || nombre_proveedor.length < 3) {
+            mostrarErrorProv(elNombre, 'El nombre del proveedor/empresa debe tener al menos 3 caracteres.');
+            esValido = false;
+        } else {
+            limpiarErrorProv(elNombre);
+        }
+
+        if (!contacto || contacto.length < 2) {
+            mostrarErrorProv(elContacto, 'El nombre de contacto debe tener al menos 2 caracteres.');
+            esValido = false;
+        } else {
+            limpiarErrorProv(elContacto);
+        }
+
+        if (telefono && !telefonoRegex.test(telefono)) {
+            mostrarErrorProv(elTelefono, 'Teléfono inválido (mínimo 7 dígitos).');
+            esValido = false;
+        } else {
+            limpiarErrorProv(elTelefono);
+        }
+
+        if (correo && !emailRegex.test(correo)) {
+            mostrarErrorProv(emailEl, 'Formato de correo electrónico inválido.');
+            esValido = false;
+        } else if (emailEl) {
+            limpiarErrorProv(emailEl);
+        }
+
+        if (!esValido) return;
+
         const payload = {
-            nombre_proveedor: document.getElementById('provNombre').value.trim(),
-            contacto: document.getElementById('provContacto').value.trim(),
-            telefono: document.getElementById('provTelefono').value.trim(),
-            correo: emailEl?.value.trim() || '',
-            direccion: dirEl?.value.trim() || ''
+            nombre_proveedor,
+            contacto,
+            telefono,
+            correo,
+            direccion
         };
         try {
             if (modoEdicion) {

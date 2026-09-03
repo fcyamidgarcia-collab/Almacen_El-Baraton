@@ -7,6 +7,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const contenedorGrid = document.querySelector('.cuadricula-productos');
     const conteoEl = document.querySelector('.conteo-resultados');
     const opcionesCategorias = document.getElementById('filtros-categorias');
+    const opcionesMarcas = document.getElementById('filtros-marcas');
+    const contenedorRecientes = document.getElementById('cuadricula-recientes');
+    const btnVerTodosRecientes = document.getElementById('btn-ver-todos-recientes');
     const selectOrden = document.getElementById('select-orden');
     const busquedaInput = document.querySelector('.barra-busqueda input');
     const btnLimpiar = document.querySelector('.btn-limpiar');
@@ -14,12 +17,21 @@ document.addEventListener('DOMContentLoaded', async () => {
     let todosLosProductos = [];
     let filtros = {
         categorias: [],
+        marcas: [],
         busqueda: '',
         precioMin: 0,
         precioMax: Infinity,
         orden: 'destacados',
         soloDisponibles: false
     };
+
+    // Leer parámetro de búsqueda inicial desde la URL (?buscar= o ?q=)
+    const urlParams = new URLSearchParams(window.location.search);
+    const busquedaInicial = urlParams.get('buscar') || urlParams.get('q') || '';
+    if (busquedaInicial) {
+        filtros.busqueda = busquedaInicial.toLowerCase().trim();
+        if (busquedaInput) busquedaInput.value = busquedaInicial;
+    }
 
     function fmt(val) {
         return '$ ' + Number(val || 0).toLocaleString('es-CO');
@@ -84,6 +96,101 @@ document.addEventListener('DOMContentLoaded', async () => {
         } catch (e) { console.warn('Error cargando categorías:', e.message); }
     }
 
+    // ---- Cargar marcas/proveedores desde los productos de la BD ----
+    function cargarMarcas() {
+        if (!opcionesMarcas) return;
+        opcionesMarcas.innerHTML = '';
+
+        const marcasMap = {};
+        todosLosProductos.forEach(p => {
+            const marca = (p.nombre_proveedor || 'Sin Marca').trim();
+            marcasMap[marca] = (marcasMap[marca] || 0) + 1;
+        });
+
+        const marcas = Object.keys(marcasMap).sort();
+
+        if (marcas.length === 0) {
+            opcionesMarcas.innerHTML = '<div style="color:#94a3b8;font-size:0.85rem">No hay marcas disponibles</div>';
+            return;
+        }
+
+        marcas.forEach(m => {
+            const label = document.createElement('label');
+            label.className = 'etiqueta-checkbox';
+            label.innerHTML = `
+                <input type="checkbox" value="${m}" class="check-marca">
+                <span class="marca-verificacion"></span>
+                <i class="fas fa-tag" style="margin-right:5px;color:#94a3b8"></i>
+                ${m}
+                <span style="margin-left:auto;font-size:11px;color:#94a3b8">${marcasMap[m]}</span>
+            `;
+            opcionesMarcas.appendChild(label);
+        });
+
+        document.querySelectorAll('.check-marca').forEach(chk => {
+            chk.addEventListener('change', () => {
+                filtros.marcas = [...document.querySelectorAll('.check-marca:checked')].map(c => c.value);
+                renderizar();
+            });
+        });
+    }
+
+    // ---- Renderizar recomendaciones dinámicas desde la BD ----
+    function renderizarRecomendaciones() {
+        if (!contenedorRecientes) return;
+        contenedorRecientes.innerHTML = '';
+
+        if (!todosLosProductos || todosLosProductos.length === 0) {
+            contenedorRecientes.innerHTML = `
+                <div style="grid-column:1/-1;text-align:center;padding:20px;color:#64748b">
+                    No hay recomendaciones disponibles en este momento.
+                </div>`;
+            return;
+        }
+
+        // Seleccionar hasta 5 productos destacados o con mayor stock
+        const recomendados = [...todosLosProductos]
+            .sort((a, b) => (b.stock || 0) - (a.stock || 0))
+            .slice(0, 5);
+
+        recomendados.forEach(p => {
+            const tarjeta = document.createElement('div');
+            tarjeta.className = 'tarjeta-reciente';
+            tarjeta.style.cursor = 'pointer';
+
+            const imagenContent = p.imagen
+                ? `<img src="${p.imagen}" alt="${p.nombre_producto}" style="width:100%;height:100%;object-fit:cover" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+                   <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;font-size:2rem;color:#cbd5e1;background:#f8fafc">
+                    <i class="fas ${iconoCategoria(p.nombre_categoria)}"></i>
+                   </div>`
+                : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;font-size:2rem;color:#cbd5e1;background:#f8fafc">
+                    <i class="fas ${iconoCategoria(p.nombre_categoria)}"></i>
+                   </div>`;
+
+            tarjeta.innerHTML = `
+                <div class="recent-image-contenedor-principal">
+                    ${imagenContent}
+                </div>
+                <div class="info-reciente">
+                    <p class="titulo-reciente" title="${p.nombre_producto}">${p.nombre_producto}</p>
+                    <p class="precio-reciente">${fmt(p.precio)}</p>
+                </div>
+            `;
+
+            tarjeta.addEventListener('click', () => {
+                window.location.href = `../detalle_producto/detalle_producto.html?id=${p.id_producto}`;
+            });
+
+            contenedorRecientes.appendChild(tarjeta);
+        });
+    }
+
+    if (btnVerTodosRecientes) {
+        btnVerTodosRecientes.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+    }
+
     // ---- Cargar todos los productos ----
     async function cargarProductos() {
         if (!contenedorGrid) return;
@@ -94,6 +201,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                     <p style="margin-top:12px;font-size:0.95rem">Cargando catálogo desde la base de datos...</p>
                 </div>`;
             todosLosProductos = await API.getProductos();
+            cargarMarcas();
+            renderizarRecomendaciones();
             renderizar();
         } catch (err) {
             contenedorGrid.innerHTML = `
@@ -113,15 +222,19 @@ document.addEventListener('DOMContentLoaded', async () => {
             const categoriaOk = filtros.categorias.length === 0 ||
                 filtros.categorias.includes(p.id_categoria);
 
+            const marcaOk = filtros.marcas.length === 0 ||
+                filtros.marcas.includes((p.nombre_proveedor || 'Sin Marca').trim());
+
             const busquedaOk = !filtros.busqueda ||
                 (p.nombre_producto || '').toLowerCase().includes(filtros.busqueda) ||
                 (p.descripcion || '').toLowerCase().includes(filtros.busqueda) ||
-                (p.nombre_categoria || '').toLowerCase().includes(filtros.busqueda);
+                (p.nombre_categoria || '').toLowerCase().includes(filtros.busqueda) ||
+                (p.nombre_proveedor || '').toLowerCase().includes(filtros.busqueda);
 
             const precioOk = precio >= filtros.precioMin && precio <= filtros.precioMax;
             const dispOk = !filtros.soloDisponibles || stock > 0;
 
-            return categoriaOk && busquedaOk && precioOk && dispOk;
+            return categoriaOk && marcaOk && busquedaOk && precioOk && dispOk;
         });
 
         // Ordenar
@@ -142,8 +255,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <div style="grid-column:1/-1;text-align:center;padding:60px;color:#64748b">
                     <i class="fas fa-search fa-2x" style="opacity:0.4"></i>
                     <p style="margin-top:12px">No se encontraron productos con los filtros seleccionados.</p>
-                    <button onclick="location.reload()" style="margin-top:12px;padding:8px 18px;background:#f97316;color:#fff;border:none;border-radius:8px;cursor:pointer">Ver todos</button>
+                    <button id="btn-reset-filtros" style="margin-top:12px;padding:8px 18px;background:#f97316;color:#fff;border:none;border-radius:8px;cursor:pointer">Ver todos</button>
                 </div>`;
+            const btnReset = document.getElementById('btn-reset-filtros');
+            if (btnReset) {
+                btnReset.addEventListener('click', () => {
+                    if (btnLimpiar) btnLimpiar.click();
+                });
+            }
             return;
         }
 
@@ -258,6 +377,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (busquedaInput) {
         busquedaInput.addEventListener('input', e => {
             filtros.busqueda = e.target.value.toLowerCase().trim();
+            const url = new URL(window.location);
+            if (filtros.busqueda) {
+                url.searchParams.set('buscar', e.target.value.trim());
+            } else {
+                url.searchParams.delete('buscar');
+                url.searchParams.delete('q');
+            }
+            window.history.replaceState({}, '', url);
             renderizar();
         });
     }
@@ -279,33 +406,70 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    // ---- Filtro de precio ----
+    // ---- Filtro de precio con validación directa ----
     const precioMin = document.getElementById('precio-min');
     const precioMax = document.getElementById('precio-max');
+
+    function validarRangoPrecios() {
+        let min = parseFloat(precioMin?.value) || 0;
+        let max = parseFloat(precioMax?.value) || Infinity;
+
+        if (min < 0) {
+            min = 0;
+            if (precioMin) precioMin.value = 0;
+        }
+
+        if (max < 0) {
+            max = 0;
+            if (precioMax) precioMax.value = 0;
+        }
+
+        if (precioMax && precioMax.value !== '' && min > max) {
+            if (precioMin) precioMin.style.borderColor = '#ef4444';
+            if (precioMax) precioMax.style.borderColor = '#ef4444';
+            return;
+        } else {
+            if (precioMin) precioMin.style.borderColor = '';
+            if (precioMax) precioMax.style.borderColor = '';
+        }
+
+        filtros.precioMin = min;
+        filtros.precioMax = max;
+        renderizar();
+    }
+
     if (precioMin) {
-        precioMin.addEventListener('input', () => {
-            filtros.precioMin = Number(precioMin.value) || 0;
-            renderizar();
-        });
+        precioMin.addEventListener('input', validarRangoPrecios);
     }
     if (precioMax) {
-        precioMax.addEventListener('input', () => {
-            filtros.precioMax = Number(precioMax.value) || Infinity;
-            renderizar();
-        });
+        precioMax.addEventListener('input', validarRangoPrecios);
     }
 
     // ---- Limpiar filtros ----
     if (btnLimpiar) {
         btnLimpiar.addEventListener('click', () => {
-            filtros = { categorias: [], busqueda: '', precioMin: 0, precioMax: Infinity, orden: 'destacados', soloDisponibles: false };
+            filtros = {
+                categorias: [],
+                marcas: [],
+                busqueda: '',
+                precioMin: 0,
+                precioMax: Infinity,
+                orden: 'destacados',
+                soloDisponibles: false
+            };
             if (busquedaInput) busquedaInput.value = '';
             if (selectOrden) selectOrden.value = 'destacados';
-            if (precioMin) precioMin.value = 0;
-            if (precioMax) precioMax.value = '';
+            if (precioMin) { precioMin.value = 0; precioMin.style.borderColor = ''; }
+            if (precioMax) { precioMax.value = ''; precioMax.style.borderColor = ''; }
+            if (checkDisponible) checkDisponible.checked = false;
             document.querySelectorAll('.check-categoria').forEach(c => c.checked = false);
+            document.querySelectorAll('.check-marca').forEach(c => c.checked = false);
             const catAll = document.getElementById('cat-all');
             if (catAll) catAll.checked = true;
+            const url = new URL(window.location);
+            url.searchParams.delete('buscar');
+            url.searchParams.delete('q');
+            window.history.replaceState({}, '', url);
             renderizar();
         });
     }
@@ -316,9 +480,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         titulo.addEventListener('click', () => {
             const icon = titulo.querySelector('.icon');
             const opciones = titulo.nextElementSibling;
-            if (opciones && opciones.classList.contains('opciones-filtro') ||
-                opciones && opciones.id && opciones.id.startsWith('filtros')) {
-                const visible = opciones.style.display !== 'none';
+            if (opciones) {
+                const visible = window.getComputedStyle(opciones).display !== 'none';
                 opciones.style.display = visible ? 'none' : 'flex';
                 if (icon) icon.textContent = visible ? 'v' : '^';
             }
@@ -329,3 +492,4 @@ document.addEventListener('DOMContentLoaded', async () => {
     await cargarCategorias();
     await cargarProductos();
 });
+

@@ -192,12 +192,27 @@ router.post('/', async (req, res) => {
 router.put('/:id', async (req, res) => {
     try {
         let { estado_pedido, observaciones, direccion_entrega, total } = req.body;
-        if (estado_pedido === 'en proceso') estado_pedido = 'en_proceso';
 
         const params = [];
         let updates = [];
 
-        if (estado_pedido !== undefined) { updates.push('estado_pedido = ?'); params.push(estado_pedido); }
+        if (estado_pedido !== undefined) {
+            const e = String(estado_pedido).toLowerCase().trim();
+            if (e.includes('proces') || e === 'en proceso' || e === 'procesando') {
+                estado_pedido = 'en_proceso';
+            } else if (e.includes('envi')) {
+                estado_pedido = 'enviado';
+            } else if (e.includes('entreg') || e.includes('complet')) {
+                estado_pedido = 'entregado';
+            } else if (e.includes('cancel')) {
+                estado_pedido = 'cancelado';
+            } else {
+                estado_pedido = 'pendiente';
+            }
+            updates.push('estado_pedido = ?');
+            params.push(estado_pedido);
+        }
+
         if (observaciones !== undefined) { updates.push('observaciones = ?'); params.push(observaciones); }
         if (direccion_entrega !== undefined) { updates.push('direccion_entrega = ?'); params.push(direccion_entrega); }
         if (total !== undefined) { updates.push('total = ?'); params.push(total); }
@@ -207,17 +222,24 @@ router.put('/:id', async (req, res) => {
             await pool.query(`UPDATE pedido SET ${updates.join(', ')} WHERE id_pedido = ?`, params);
         }
 
-        // Sincronizar estado de venta si cambia a completada
+        // Sincronizar estado de venta
         if (estado_pedido === 'entregado') {
             await pool.query(
                 `UPDATE venta v INNER JOIN pedido pe ON v.id_venta = pe.id_venta
                  SET v.estado = 'completada' WHERE pe.id_pedido = ?`,
                 [req.params.id]
             );
+        } else if (estado_pedido === 'cancelado') {
+            await pool.query(
+                `UPDATE venta v INNER JOIN pedido pe ON v.id_venta = pe.id_venta
+                 SET v.estado = 'cancelada' WHERE pe.id_pedido = ?`,
+                [req.params.id]
+            );
         }
 
-        res.json({ mensaje: 'Pedido actualizado exitosamente' });
+        res.json({ mensaje: 'Pedido actualizado exitosamente', estado_pedido });
     } catch (error) {
+        console.error('Error al actualizar pedido:', error);
         res.status(500).json({ error: error.message });
     }
 });

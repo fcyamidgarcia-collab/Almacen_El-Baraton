@@ -138,19 +138,103 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (btnCerrar) btnCerrar.addEventListener('click', () => modal.classList.remove('activo'));
     if (btnCancelar) btnCancelar.addEventListener('click', () => modal.classList.remove('activo'));
 
+    // Helper de error en modal cliente
+    function mostrarErrorCli(input, msg) {
+        limpiarErrorCli(input);
+        input.style.borderColor = '#ef4444';
+        const span = document.createElement('span');
+        span.className = 'error-cli-msg';
+        span.style.cssText = 'color:#ef4444;font-size:0.75rem;margin-top:3px;display:block;font-weight:500;';
+        span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
+        input.insertAdjacentElement('afterend', span);
+    }
+
+    function limpiarErrorCli(input) {
+        input.style.borderColor = '';
+        const sig = input.nextElementSibling;
+        if (sig && sig.classList.contains('error-cli-msg')) sig.remove();
+    }
+
+    ['cliNombre', 'cliApellido', 'cliNit', 'cliContacto', 'cliDireccion', 'cliCiudad'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('input', () => limpiarErrorCli(el));
+    });
+
     if (form) {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
+
+            const elNombre = document.getElementById('cliNombre');
+            const elApellido = document.getElementById('cliApellido');
+            const elNit = document.getElementById('cliNit');
+            const elContacto = document.getElementById('cliContacto');
+            const elDireccion = document.getElementById('cliDireccion');
+            const elCiudad = document.getElementById('cliCiudad');
+
+            const nombre = elNombre.value.trim();
+            const apellido = elApellido.value.trim();
+            const documento_identidad = elNit.value.trim();
+            const telefono = elContacto.value.trim();
+            const direccion = elDireccion.value.trim();
+            const ciudad = elCiudad.value.trim();
+
+            const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
+            let esValido = true;
+
+            if (!nombre || nombre.length < 2) {
+                mostrarErrorCli(elNombre, 'El nombre debe tener al menos 2 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorCli(elNombre);
+            }
+
+            if (!apellido || apellido.length < 2) {
+                mostrarErrorCli(elApellido, 'El apellido debe tener al menos 2 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorCli(elApellido);
+            }
+
+            if (!documento_identidad || documento_identidad.length < 5) {
+                mostrarErrorCli(elNit, 'El documento o NIT debe tener al menos 5 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorCli(elNit);
+            }
+
+            if (telefono && !telefonoRegex.test(telefono)) {
+                mostrarErrorCli(elContacto, 'Teléfono inválido (mínimo 7 dígitos).');
+                esValido = false;
+            } else {
+                limpiarErrorCli(elContacto);
+            }
+
+            if (!direccion || direccion.length < 5) {
+                mostrarErrorCli(elDireccion, 'La dirección debe tener al menos 5 caracteres.');
+                esValido = false;
+            } else {
+                limpiarErrorCli(elDireccion);
+            }
+
+            if (!ciudad || ciudad.length < 3) {
+                mostrarErrorCli(elCiudad, 'Ingresa una ciudad válida.');
+                esValido = false;
+            } else {
+                limpiarErrorCli(elCiudad);
+            }
+
+            if (!esValido) return;
+
             const btnSubmit = document.getElementById('btnGuardarCliente');
             const originalHTML = btnSubmit.innerHTML;
 
             const payload = {
-                nombre: document.getElementById('cliNombre').value.trim(),
-                apellido: document.getElementById('cliApellido').value.trim(),
-                documento_identidad: document.getElementById('cliNit').value.trim(),
-                telefono: document.getElementById('cliContacto').value.trim(),
-                direccion: document.getElementById('cliDireccion').value.trim(),
-                ciudad: document.getElementById('cliCiudad').value.trim(),
+                nombre,
+                apellido,
+                documento_identidad,
+                telefono,
+                direccion,
+                ciudad,
                 estado: 'activo'
             };
 

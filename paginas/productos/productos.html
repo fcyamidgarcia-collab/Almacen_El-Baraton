@@ -59,30 +59,11 @@
 
                 <div class="grupo-filtro">
                     <div class="titulo-filtro">
-                        <h3>Marca</h3>
+                        <h3>Marca / Proveedor</h3>
                         <span class="icon">^</span>
                     </div>
-                    <div class="opciones-filtro">
-                        <label class="etiqueta-checkbox">
-                            <input type="checkbox">
-                            <span class="marca-verificacion"></span>
-                            DeWalt
-                        </label>
-                        <label class="etiqueta-checkbox">
-                            <input type="checkbox">
-                            <span class="marca-verificacion"></span>
-                            FastenCo
-                        </label>
-                        <label class="etiqueta-checkbox">
-                            <input type="checkbox">
-                            <span class="marca-verificacion"></span>
-                            SafeGuard
-                        </label>
-                        <label class="etiqueta-checkbox">
-                            <input type="checkbox">
-                            <span class="marca-verificacion"></span>
-                            Ridgid
-                        </label>
+                    <div class="opciones-filtro" id="filtros-marcas">
+                        <div style="color:#64748b;font-size:0.85rem"><i class="fas fa-spinner fa-spin"></i> Cargando marcas...</div>
                     </div>
                 </div>
 
@@ -148,78 +129,25 @@
                 <div class="paginacion">
                     <button class="btn-pagina">
                         < Anterior</button>
-                            <button class="btn-pagina activo">1</button>
-                            <button class="btn-pagina">2</button>
-                            <button class="btn-pagina">3</button>
-                            <span class="puntos-pagina">...</span>
-                            <button class="btn-pagina">51</button>
-                            <button class="btn-pagina">Siguiente ></button>
+                             <button class="btn-pagina activo">1</button>
+                             <button class="btn-pagina">2</button>
+                             <button class="btn-pagina">3</button>
+                             <span class="puntos-pagina">...</span>
+                             <button class="btn-pagina">51</button>
+                             <button class="btn-pagina">Siguiente ></button>
                 </div>
             </section>
         </main>
 
-        <!-- Visto Recientemente -->
+        <!-- Recomendaciones -->
         <section class="recently-viewed-contenedor-principal">
             <div class="cabecera-vistos-recientemente">
-                <h2>Visto Recientemente</h2>
-                <a href="#" class="ver-todos">Ver Todos →</a>
+                <h2>Recomendaciones</h2>
+                <a href="javascript:void(0)" id="btn-ver-todos-recientes" class="ver-todos">Ver Todos →</a>
             </div>
 
-            <div class="cuadricula-recientes">
-                <!-- Recent 1 -->
-                <div class="tarjeta-reciente" onclick="window.location.href='../detalle_producto/detalle_producto.html'" style="cursor: pointer;">
-                    <div class="recent-image-contenedor-principal">
-                        <img src="https://via.placeholder.com/100" alt="Taladro">
-                    </div>
-                    <div class="info-reciente">
-                        <p class="titulo-reciente">Kit de Taladro 20V</p>
-                        <p class="precio-reciente">$129.00</p>
-                    </div>
-                </div>
-
-                <!-- Recent 2 -->
-                <div class="tarjeta-reciente" onclick="window.location.href='../detalle_producto/detalle_producto.html'" style="cursor: pointer;">
-                    <div class="recent-image-contenedor-principal">
-                        <img src="https://via.placeholder.com/100" alt="Casco">
-                    </div>
-                    <div class="info-reciente">
-                        <p class="titulo-reciente">Casco de Seguridad</p>
-                        <p class="precio-reciente">$24.99</p>
-                    </div>
-                </div>
-
-                <!-- Recent 3 -->
-                <div class="tarjeta-reciente" onclick="window.location.href='../detalle_producto/detalle_producto.html'" style="cursor: pointer;">
-                    <div class="recent-image-contenedor-principal fondo-marcador">
-                        <span class="icono-herramientas">⚒</span>
-                    </div>
-                    <div class="info-reciente">
-                        <p class="titulo-reciente">Set de Herramientas Manuales 150pzs</p>
-                        <p class="precio-reciente">$85.00</p>
-                    </div>
-                </div>
-
-                <!-- Recent 4 -->
-                <div class="tarjeta-reciente" onclick="window.location.href='../detalle_producto/detalle_producto.html'" style="cursor: pointer;">
-                    <div class="recent-image-contenedor-principal fondo-marcador">
-                        <span class="icono-herramientas">🔧</span>
-                    </div>
-                    <div class="info-reciente">
-                        <p class="titulo-reciente">Llave Ajustable de 10"</p>
-                        <p class="precio-reciente">$18.50</p>
-                    </div>
-                </div>
-
-                <!-- Recent 5 -->
-                <div class="tarjeta-reciente" onclick="window.location.href='../detalle_producto/detalle_producto.html'" style="cursor: pointer;">
-                    <div class="recent-image-contenedor-principal fondo-marcador">
-                        <span class="icono-herramientas">⚒</span>
-                    </div>
-                    <div class="info-reciente">
-                        <p class="titulo-reciente">Martillo de Garra 16oz</p>
-                        <p class="precio-reciente">$22.00</p>
-                    </div>
-                </div>
+            <div class="cuadricula-recientes" id="cuadricula-recientes">
+                <!-- Se cargan dinámicamente desde la base de datos MySQL -->
             </div>
         </section>
     </div>
@@ -276,6 +204,7 @@
 
     <script src="../js/api.js"></script>
     <script src="../js/sesion.js"></script>
+    <script src="../js/buscador.js"></script>
     <script src="../inicio/inicio.js"></script>
     <script src="productos.js"></script>
 </body>

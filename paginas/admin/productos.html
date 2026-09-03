@@ -292,6 +292,39 @@
                             <label>Descripción</label>
                             <input type="text" id="prodDescripcion" placeholder="Descripción breve del producto" class="entrada-filtro">
                         </div>
+                        <!-- Imagen Principal -->
+                        <div class="grupo-formulario" style="grid-column:1/-1">
+                            <label style="font-weight:600;display:flex;align-items:center;gap:6px">
+                                <i class="fas fa-image" style="color:var(--naranja)"></i> Imagen Principal (Portada / Catálogo)
+                            </label>
+                            <div style="display:flex;gap:10px;align-items:center;margin-top:4px">
+                                <input type="text" id="prodImagen" placeholder="URL de la imagen (ej: https://... o ../../img/producto1.jpg)" class="entrada-filtro" style="flex:1;">
+                                <label for="prodImagenFile" class="boton boton-secundario" style="cursor:pointer;white-space:nowrap;padding:9px 14px;font-size:0.85rem;margin:0">
+                                    <i class="fas fa-folder-open"></i> Explorar
+                                </label>
+                                <input type="file" id="prodImagenFile" accept="image/*" style="display:none">
+                            </div>
+                            <div id="previewImagenPrincipalCont" style="display:none;margin-top:8px;align-items:center;gap:12px">
+                                <img id="previewImagenPrincipal" src="" alt="Vista previa principal" style="width:55px;height:55px;object-fit:contain;border:1px solid #cbd5e1;border-radius:6px;background:#fff;padding:2px">
+                                <span id="nombreImagenPrincipal" style="font-size:0.8rem;color:#64748b;max-width:250px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap"></span>
+                                <button type="button" id="btnQuitarImgPrincipal" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.85rem;font-weight:500" title="Quitar imagen"><i class="fas fa-times-circle"></i> Quitar</button>
+                            </div>
+                        </div>
+                        <!-- Imágenes Secundarias (Para Galería del Detalle) -->
+                        <div class="grupo-formulario" style="grid-column:1/-1;border-top:1px solid #f1f5f9;padding-top:14px">
+                            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+                                <label style="font-weight:600;display:flex;align-items:center;gap:6px">
+                                    <i class="fas fa-images" style="color:#3b82f6"></i> Imágenes Secundarias (Detalle del Producto)
+                                </label>
+                                <button type="button" id="btnAgregarImgSecundaria" class="boton boton-secundario" style="font-size:0.8rem;padding:5px 12px;cursor:pointer">
+                                    <i class="fas fa-plus"></i> + Agregar Imagen
+                                </button>
+                            </div>
+                            <span style="display:block;font-size:0.78rem;color:#64748b;margin-bottom:8px">Agrega fotos adicionales desde diferentes ángulos para la galería del detalle de producto.</span>
+                            <div id="contenedorImagenesSecundarias" style="display:flex;flex-direction:column;gap:8px">
+                                <!-- Renglones dinámicos de imágenes secundarias -->
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="pie-modal">
@@ -353,6 +386,7 @@
 
     <script src="../js/api.js"></script>
     <script src="../js/sesion.js"></script>
+    <script src="../js/buscador.js"></script>
     <script src="productos.js"></script>
 </body>
 </html>
