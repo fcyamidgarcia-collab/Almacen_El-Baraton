@@ -1,5 +1,5 @@
 /**
- * SISTEMA GLOBAL DE MODO OSCURO (DARK MODE)
+ * Configuración del modo oscuro para todo el sitio web
  * Industrial Supply Co. - El Baratón
  */
 
@@ -23,7 +23,7 @@
         } catch (e) {}
     }
 
-    // 1. Aplicación inmediata para prevenir parpadeo (FOUC)
+    // Aplicamos el tema de inmediato para evitar que la pantalla parpadee al cargar
     function aplicarTemaInicial() {
         const temaGuardado = leerPreferencia();
         const prefiereOscuro = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
@@ -37,7 +37,7 @@
 
     aplicarTemaInicial();
 
-    // 2. Sincronizar icono y accesibilidad de los botones
+    // Mantiene sincronizados los botones y su estado de accesibilidad
     function sincronizarBotones() {
         const esOscuro = document.documentElement.classList.contains(DARK_CLASS);
         const botones = document.querySelectorAll('.btn-modo-oscuro, #btn-modo-oscuro');
