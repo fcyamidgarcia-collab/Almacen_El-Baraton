@@ -108,6 +108,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     await API.actualizarItemCarrito(id, qty);
                     await cargarCarritoDB();
+                    if (window.actualizarInsigniaCarrito) window.actualizarInsigniaCarrito();
                 } catch (e) { console.error(e); }
             });
         });
@@ -129,6 +130,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     await API.eliminarItemCarrito(id);
                     await cargarCarritoDB();
+                    if (window.actualizarInsigniaCarrito) window.actualizarInsigniaCarrito();
                 } catch (e) { alert('Error: ' + e.message); }
             });
         });
@@ -194,6 +196,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         items[idx].cantidad = Math.max(1, items[idx].cantidad + delta);
         localStorage.setItem('carrito_invitado', JSON.stringify(items));
         cargarCarritoInvitado();
+        if (window.actualizarInsigniaCarrito) window.actualizarInsigniaCarrito();
     };
 
     window.eliminarInvitado = function(idx) {
@@ -201,6 +204,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         items.splice(idx, 1);
         localStorage.setItem('carrito_invitado', JSON.stringify(items));
         cargarCarritoInvitado();
+        if (window.actualizarInsigniaCarrito) window.actualizarInsigniaCarrito();
     };
 
     // ---- Botón proceder al pago ----
