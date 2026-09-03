@@ -25,12 +25,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         soloDisponibles: false
     };
 
-    // Leer parámetro de búsqueda inicial desde la URL (?buscar= o ?q=)
+    // Leer parámetro de búsqueda inicial y categoría desde la URL (?buscar= o ?q= o ?categoria=)
     const urlParams = new URLSearchParams(window.location.search);
     const busquedaInicial = urlParams.get('buscar') || urlParams.get('q') || '';
     if (busquedaInicial) {
         filtros.busqueda = busquedaInicial.toLowerCase().trim();
         if (busquedaInput) busquedaInput.value = busquedaInicial;
+    }
+    const catInicial = urlParams.get('categoria');
+    if (catInicial) {
+        const catIdNum = parseInt(catInicial);
+        if (!isNaN(catIdNum)) {
+            filtros.categorias = [catIdNum];
+        }
     }
 
     function fmt(val) {
@@ -54,21 +61,24 @@ document.addEventListener('DOMContentLoaded', async () => {
             const cats = await API.getCategorias();
             opcionesCategorias.innerHTML = '';
 
+            const tieneCatInicial = filtros.categorias.length > 0;
+
             // Opción "Todas"
             const labelTodas = document.createElement('label');
             labelTodas.className = 'etiqueta-checkbox';
             labelTodas.innerHTML = `
-                <input type="checkbox" value="all" checked id="cat-all">
+                <input type="checkbox" value="all" ${tieneCatInicial ? '' : 'checked'} id="cat-all">
                 <span class="marca-verificacion"></span>
                 <i class="fas fa-th-large" style="margin-right:5px;color:#f97316"></i> Todas las categorías
             `;
             opcionesCategorias.appendChild(labelTodas);
 
             cats.forEach(c => {
+                const isChecked = filtros.categorias.includes(c.id_categoria);
                 const label = document.createElement('label');
                 label.className = 'etiqueta-checkbox';
                 label.innerHTML = `
-                    <input type="checkbox" value="${c.id_categoria}" class="check-categoria">
+                    <input type="checkbox" value="${c.id_categoria}" class="check-categoria" ${isChecked ? 'checked' : ''}>
                     <span class="marca-verificacion"></span>
                     <i class="fas ${iconoCategoria(c.nombre_categoria)}" style="margin-right:5px;color:#64748b"></i>
                     ${c.nombre_categoria}
@@ -81,6 +91,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             document.getElementById('cat-all').addEventListener('change', function() {
                 document.querySelectorAll('.check-categoria').forEach(c => c.checked = false);
                 filtros.categorias = [];
+                const url = new URL(window.location);
+                url.searchParams.delete('categoria');
+                window.history.replaceState({}, '', url);
                 renderizar();
             });
 
@@ -89,6 +102,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                     document.getElementById('cat-all').checked = false;
                     filtros.categorias = [...document.querySelectorAll('.check-categoria:checked')]
                         .map(c => parseInt(c.value));
+                    const url = new URL(window.location);
+                    if (filtros.categorias.length === 1) {
+                        url.searchParams.set('categoria', filtros.categorias[0]);
+                    } else {
+                        url.searchParams.delete('categoria');
+                    }
+                    window.history.replaceState({}, '', url);
                     renderizar();
                 });
             });

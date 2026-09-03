@@ -302,19 +302,26 @@
                 <!-- VISTA: MENSAJES DE CONTACTO -->
                 <div id="vista-mensajes" class="vista-panel" style="display: none;">
                     <div class="tarjeta-datos">
-                        <div class="cabecera-tarjeta">
-                            <h2>Bandeja de Mensajes</h2>
-                            <span class="subtitulo-tarjeta">Consultas enviadas desde el formulario de contacto</span>
+                        <div class="cabecera-tarjeta cabecera-filtros">
+                            <div>
+                                <h2>Bandeja de Mensajes</h2>
+                                <span class="subtitulo-tarjeta">Consultas recibidas desde el formulario de contacto</span>
+                            </div>
+                            <div class="grupo-filtros">
+                                <input type="text" id="busqueda-mensajes" placeholder="Buscar por remitente, asunto, email..." class="entrada-filtro">
+                            </div>
                         </div>
                         <div class="tabla-responsiva">
                             <table class="tabla-datos">
                                 <thead>
                                     <tr>
                                         <th>FECHA</th>
-                                        <th>NOMBRE</th>
-                                        <th>EMAIL</th>
+                                        <th>REMITENTE</th>
+                                        <th>CORREO</th>
+                                        <th>TELÉFONO</th>
                                         <th>ASUNTO</th>
-                                        <th>MENSAJE</th>
+                                        <th>ESTADO</th>
+                                        <th>ACCIONES</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbody-mensajes">

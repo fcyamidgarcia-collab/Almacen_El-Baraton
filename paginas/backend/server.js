@@ -24,6 +24,7 @@ const pedidosRoutes = require('./routes/pedidos');
 const usuariosRoutes = require('./routes/usuarios');
 const reportesRoutes = require('./routes/reportes');
 const carritoRoutes = require('./routes/carrito');
+const contactoRoutes = require('./routes/contacto');
 
 // Registrar Rutas de la API
 app.use('/api/auth', authRoutes);
@@ -35,6 +36,7 @@ app.use('/api/pedidos', pedidosRoutes);
 app.use('/api/usuarios', usuariosRoutes);
 app.use('/api/reportes', reportesRoutes);
 app.use('/api/carrito', carritoRoutes);
+app.use('/api/contacto', contactoRoutes);
 
 // Ruta de estado / Ping
 app.get('/api/health', (req, res) => {
