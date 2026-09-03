@@ -214,6 +214,81 @@ const API = {
     },
     async vaciarCarrito(id_carrito) {
         return await this.request(`/carrito/vaciar/${id_carrito}`, { method: 'DELETE' });
+    },
+
+    // ---- 10. MENSAJES DE CONTACTO ----
+    async enviarMensajeContacto(datos) {
+        const nuevoMensaje = {
+            id_contacto: Date.now(),
+            nombre_completo: datos.nombre_completo || datos.nombre,
+            email: datos.email,
+            telefono: datos.telefono || '',
+            asunto: datos.asunto || 'Otro',
+            mensaje: datos.mensaje,
+            leido: 0,
+            fecha_envio: new Date().toISOString()
+        };
+
+        // Guardar respaldo en localStorage
+        try {
+            const guardados = JSON.parse(localStorage.getItem('baraton_mensajes_contacto') || '[]');
+            guardados.unshift(nuevoMensaje);
+            localStorage.setItem('baraton_mensajes_contacto', JSON.stringify(guardados));
+        } catch (e) {}
+
+        // Enviar a la base de datos a través del backend
+        try {
+            return await this.request('/contacto', {
+                method: 'POST',
+                body: JSON.stringify(datos)
+            });
+        } catch (err) {
+            console.warn('[API] Contacto guardado localmente (Backend offline):', err.message);
+            return { success: true, local: true, data: nuevoMensaje };
+        }
+    },
+
+    async getMensajesContacto() {
+        try {
+            return await this.request('/contacto');
+        } catch (err) {
+            console.warn('[API] Cargando mensajes desde localStorage:', err.message);
+            return JSON.parse(localStorage.getItem('baraton_mensajes_contacto') || '[]');
+        }
+    },
+
+    async marcarLeidoMensaje(id_contacto, leido = true) {
+        try {
+            const guardados = JSON.parse(localStorage.getItem('baraton_mensajes_contacto') || '[]');
+            const idx = guardados.findIndex(m => m.id_contacto == id_contacto || m.id == id_contacto);
+            if (idx !== -1) {
+                guardados[idx].leido = leido ? 1 : 0;
+                localStorage.setItem('baraton_mensajes_contacto', JSON.stringify(guardados));
+            }
+        } catch (e) {}
+
+        try {
+            return await this.request(`/contacto/${id_contacto}/leido`, {
+                method: 'PUT',
+                body: JSON.stringify({ leido })
+            });
+        } catch (err) {
+            return { success: true, local: true };
+        }
+    },
+
+    async eliminarMensajeContacto(id_contacto) {
+        try {
+            let guardados = JSON.parse(localStorage.getItem('baraton_mensajes_contacto') || '[]');
+            guardados = guardados.filter(m => m.id_contacto != id_contacto && m.id != id_contacto);
+            localStorage.setItem('baraton_mensajes_contacto', JSON.stringify(guardados));
+        } catch (e) {}
+
+        try {
+            return await this.request(`/contacto/${id_contacto}`, { method: 'DELETE' });
+        } catch (err) {
+            return { success: true, local: true };
+        }
     }
 };
 

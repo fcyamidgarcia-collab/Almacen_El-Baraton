@@ -361,39 +361,101 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnCerrar.addEventListener('click', (e) => { e.preventDefault(); API.cerrarSesion(); });
     }
 
-    // ---- Tabla de mensajes (Mock temporal para la BD) ----
-    async function cargarMensajes() {
+    // ---- Tabla de mensajes conectada a la base de datos ----
+    let listaMensajes = [];
+    async function cargarMensajes(busqueda = '') {
         const tbody = document.getElementById('tbody-mensajes');
         if (!tbody) return;
         try {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando mensajes...</td></tr>`;
+            if (listaMensajes.length === 0 || !busqueda) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando mensajes de contacto...</td></tr>`;
+                listaMensajes = await API.getMensajesContacto();
+            }
             
-            // Simulación de datos que vendrían de la BD
-            const mensajes = [
-                { id: 1, fecha: '2026-09-01', nombre: 'Juan Pérez', email: 'juan@empresa.com', asunto: 'Cotización taladros', mensaje: 'Me gustaría una cotización para 10 taladros percutores.' },
-                { id: 2, fecha: '2026-09-02', nombre: 'María Gómez', email: 'maria@construccion.com', asunto: 'Duda sobre envío', mensaje: '¿Hacen envíos a zonas rurales?' },
-                { id: 3, fecha: '2026-09-03', nombre: 'Carlos Ruiz', email: 'carlos.ruiz@taller.net', asunto: 'Garantía de productos', mensaje: 'Quisiera saber el tiempo de garantía de las pulidoras.' }
-            ];
+            const term = (busqueda || '').toLowerCase().trim();
+            const filtrados = listaMensajes.filter(m => {
+                if (!term) return true;
+                const nom = (m.nombre_completo || m.nombre || '').toLowerCase();
+                const em = (m.email || '').toLowerCase();
+                const asu = (m.asunto || '').toLowerCase();
+                const tel = (m.telefono || '').toLowerCase();
+                const msg = (m.mensaje || '').toLowerCase();
+                return nom.includes(term) || em.includes(term) || asu.includes(term) || tel.includes(term) || msg.includes(term);
+            });
 
             tbody.innerHTML = '';
-            if (mensajes.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b">No hay mensajes.</td></tr>`;
+            if (filtrados.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#64748b">No se encontraron mensajes de contacto.</td></tr>`;
                 return;
             }
-            mensajes.forEach(m => {
+
+            filtrados.forEach(m => {
+                const idMsg = m.id_contacto || m.id;
+                const nombre = m.nombre_completo || m.nombre || 'Sin nombre';
+                const email = m.email || 'Sin correo';
+                const telefono = m.telefono || 'N/A';
+                const asunto = m.asunto || 'General';
+                const mensaje = m.mensaje || '';
+                const leido = Number(m.leido) === 1;
+                const fecha = m.fecha_envio || m.fecha;
+                const fechaStr = fecha ? new Date(fecha).toLocaleDateString('es-CO', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' }) : 'Reciente';
+
                 const tr = document.createElement('tr');
+                if (!leido) {
+                    tr.style.backgroundColor = 'rgba(59, 130, 246, 0.04)';
+                }
+
                 tr.innerHTML = `
-                    <td>${m.fecha}</td>
-                    <td><strong>${m.nombre}</strong></td>
-                    <td><a href="mailto:${m.email}" style="color:var(--naranja)">${m.email}</a></td>
-                    <td>${m.asunto}</td>
-                    <td><button class="btn-accion" title="Ver mensaje" onclick="alert('Mensaje de ${m.nombre}:\\n\\n${m.mensaje}')" style="background: none; border: none; cursor: pointer; color: #3b82f6;"><i class="fas fa-eye"></i> Leer</button></td>
+                    <td><small style="color:var(--texto-secundario)">${fechaStr}</small></td>
+                    <td><strong>${nombre}</strong></td>
+                    <td><a href="mailto:${email}" style="color:var(--naranja);text-decoration:none;">${email}</a></td>
+                    <td>${telefono}</td>
+                    <td><span class="estado estado-procesando" style="font-size:0.75rem">${asunto}</span></td>
+                    <td>${leido ? '<span class="estado estado-entregado" style="font-size:0.75rem">Leído</span>' : '<span class="estado estado-pendiente" style="font-weight:600;font-size:0.75rem">Nuevo</span>'}</td>
+                    <td>
+                        <div style="display: flex; gap: 8px; align-items: center;">
+                            <button class="btn-accion btn-leer-mensaje" data-id="${idMsg}" title="Ver contenido completo" style="color: #3b82f6;">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <a href="mailto:${email}?subject=Respuesta a: ${encodeURIComponent(asunto)}" class="btn-accion" title="Responder por correo" style="color: #10b981; text-decoration: none; display: inline-flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-reply"></i>
+                            </a>
+                            <button class="btn-accion btn-borrar-mensaje" data-id="${idMsg}" title="Eliminar mensaje" style="color: #ef4444;">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
                 `;
+
+                // Evento para leer mensaje y marcar como leído
+                tr.querySelector('.btn-leer-mensaje').addEventListener('click', async () => {
+                    alert(`📬 Mensaje de: ${nombre}\n📧 Correo: ${email}\n📞 Teléfono: ${telefono}\n📌 Asunto: ${asunto}\n🗓 Fecha: ${fechaStr}\n\n📝 MENSAJE:\n${mensaje}`);
+                    if (!leido) {
+                        await API.marcarLeidoMensaje(idMsg, true);
+                        listaMensajes = [];
+                        await cargarMensajes(busqueda);
+                    }
+                });
+
+                // Evento para eliminar
+                tr.querySelector('.btn-borrar-mensaje').addEventListener('click', async () => {
+                    if (confirm(`¿Estás seguro de eliminar el mensaje de "${nombre}"?`)) {
+                        await API.eliminarMensajeContacto(idMsg);
+                        listaMensajes = [];
+                        await cargarMensajes(busqueda);
+                    }
+                });
+
                 tbody.appendChild(tr);
             });
         } catch (err) {
-            if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#ef4444">Error: ${err.message}</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error al cargar mensajes: ${err.message}</td></tr>`;
         }
+    }
+
+    const busquedaMsg = document.getElementById('busqueda-mensajes');
+    if (busquedaMsg) {
+        busquedaMsg.addEventListener('input', () => cargarMensajes(busquedaMsg.value));
     }
 
     // ---- Carga inicial ----

@@ -53,13 +53,60 @@ if (formContacto) {
         });
     }
 
-    formContacto.addEventListener('submit', (e) => {
+    // --- Autorrellenar datos del usuario logueado ---
+    async function autorrellenarPerfil() {
+        try {
+            let usuario = null;
+            if (window.API && API.getUsuarioActual) {
+                usuario = API.getUsuarioActual();
+            } else {
+                const data = localStorage.getItem('baraton_user');
+                usuario = data ? JSON.parse(data) : null;
+            }
+
+            if (!usuario) return;
+
+            // Rellenar Nombre
+            if (inputNombre && !inputNombre.value) {
+                const nombreCompleto = `${usuario.nombre || ''} ${usuario.apellido || ''}`.trim();
+                if (nombreCompleto) inputNombre.value = nombreCompleto;
+            }
+
+            // Rellenar Email
+            if (inputEmail && !inputEmail.value) {
+                const correo = usuario.correo || usuario.email || '';
+                if (correo) inputEmail.value = correo;
+            }
+
+            // Rellenar Teléfono (desde usuario o consultando el cliente)
+            if (inputTelefono && !inputTelefono.value) {
+                if (usuario.telefono) {
+                    inputTelefono.value = usuario.telefono;
+                } else if (usuario.id_usuario && window.API && API.getClientePorUsuario) {
+                    try {
+                        const cliente = await API.getClientePorUsuario(usuario.id_usuario);
+                        if (cliente && cliente.telefono) {
+                            inputTelefono.value = cliente.telefono;
+                        }
+                    } catch (_) {}
+                }
+            }
+        } catch (error) {
+            console.warn('No se pudo autorrellenar el perfil en contacto:', error);
+        }
+    }
+
+    autorrellenarPerfil();
+
+    formContacto.addEventListener('submit', async (e) => {
         e.preventDefault();
 
         const nombre = inputNombre ? inputNombre.value.trim() : '';
         const email = inputEmail ? inputEmail.value.trim() : '';
         const tel = inputTelefono ? inputTelefono.value.trim() : '';
-        const asunto = selectAsunto ? selectAsunto.value : '';
+        const asuntoTexto = selectAsunto && selectAsunto.selectedIndex >= 0
+            ? selectAsunto.options[selectAsunto.selectedIndex].text
+            : (selectAsunto ? selectAsunto.value : 'Otro');
         const mensaje = textareaMensaje ? textareaMensaje.value.trim() : '';
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -98,7 +145,7 @@ if (formContacto) {
         }
 
         // 4. Validar Asunto
-        if (!asunto) {
+        if (!asuntoTexto) {
             mostrarErrorContacto(selectAsunto, 'Selecciona un asunto para tu consulta.');
             esValido = false;
         } else {
@@ -124,15 +171,31 @@ if (formContacto) {
             return;
         }
 
-        // Animación del botón premium tras validación exitosa
         const btn = formContacto.querySelector('.btn-enviar');
         const textoOriginal = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>Enviando mensaje...</span>';
+        btn.disabled = true;
+
+        // Guardar mensaje en base de datos / API
+        try {
+            if (window.API && API.enviarMensajeContacto) {
+                await API.enviarMensajeContacto({
+                    nombre_completo: nombre,
+                    email: email,
+                    telefono: tel,
+                    asunto: asuntoTexto,
+                    mensaje: mensaje
+                });
+            }
+        } catch (error) {
+            console.warn('Error al guardar mensaje:', error.message);
+        }
+
+        // Animación del botón tras envío exitoso
         btn.innerHTML = '<i class="fas fa-check-circle"></i> <span>¡Consulta Enviada con Éxito!</span>';
         btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
         btn.style.boxShadow = '0 8px 24px rgba(16, 185, 129, 0.35)';
-        btn.disabled = true;
 
-        // Efecto de partículas / escala en el botón
         btn.style.transform = 'scale(1.03)';
         setTimeout(() => {
             btn.style.transform = 'scale(1)';
