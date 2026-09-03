@@ -44,9 +44,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function insigniaStock(stock) {
         const n = Number(stock) || 0;
-        if (n === 0) return '<span class="estado estado-agotado">● Agotado</span>';
-        if (n < 10) return '<span class="estado estado-bajo">● Stock Bajo</span>';
-        return '<span class="estado estado-normal">● En Stock</span>';
+        if (n === 0) return '<span class="estado estado-agotado">Agotado</span>';
+        if (n < 10) return '<span class="estado estado-bajo">Stock Bajo</span>';
+        return '<span class="estado estado-normal">En Stock</span>';
     }
 
     async function cargarCategorias() {

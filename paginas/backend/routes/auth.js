@@ -34,14 +34,21 @@ router.post('/login', async (req, res) => {
             return res.status(403).json({ error: 'Tu cuenta está inactiva o bloqueada. Contacta al administrador.' });
         }
 
-        // Validar contraseña (soporta texto plano o hashes)
+        // Validar contraseña con bcrypt
         const hashGuardado = usuario.contrasena || '';
         let esValida = false;
 
         if (hashGuardado.startsWith('$2a$') || hashGuardado.startsWith('$2b$')) {
+            // Contraseña hasheada correctamente
             esValida = await bcrypt.compare(password, hashGuardado);
         } else {
-            esValida = (password === hashGuardado || hashGuardado.includes(password) || password === '123456' || password === 'Admin123456');
+            // Contraseña en texto plano legada: comparar y migrar al hash
+            esValida = (password === hashGuardado);
+            if (esValida) {
+                // Migrar automáticamente a hash bcrypt
+                const nuevoHash = await bcrypt.hash(password, 12);
+                await pool.query('UPDATE usuario SET contrasena = ? WHERE id_usuario = ?', [nuevoHash, usuario.id_usuario]);
+            }
         }
 
         if (!esValida) {
@@ -97,8 +104,8 @@ router.post('/registro', async (req, res) => {
             return res.status(400).json({ error: 'Este correo electrónico ya está registrado' });
         }
 
-        // Guardar contraseña en texto plano según lo requerido
-        const contrasenaPlana = String(password).trim();
+        // Hashear contraseña con bcrypt antes de guardar
+        const contrasenaHash = await bcrypt.hash(String(password).trim(), 12);
         const partesNombre = nombre.trim().split(' ');
         const pNombre = partesNombre[0] || nombre;
         const pApellido = partesNombre.slice(1).join(' ') || '';
@@ -107,7 +114,7 @@ router.post('/registro', async (req, res) => {
         const [resultUser] = await pool.query(
             `INSERT INTO usuario (id_rol, nombre, apellido, correo, contrasena, fecha_registro, estado)
              VALUES (3, ?, ?, ?, ?, NOW(), 'activo')`,
-            [pNombre, pApellido, email.trim(), contrasenaPlana]
+            [pNombre, pApellido, email.trim(), contrasenaHash]
         );
 
         const id_usuario = resultUser.insertId;
@@ -240,8 +247,9 @@ router.put('/cambiar-contrasena', async (req, res) => {
             return res.status(400).json({ error: 'La contraseña actual no es correcta' });
         }
 
-        const contrasenaPlana = String(nuevaPassword).trim();
-        await pool.query('UPDATE usuario SET contrasena = ? WHERE id_usuario = ?', [contrasenaPlana, id_usuario]);
+        // Hashear la nueva contraseña antes de guardar
+        const contrasenaHash = await bcrypt.hash(String(nuevaPassword).trim(), 12);
+        await pool.query('UPDATE usuario SET contrasena = ? WHERE id_usuario = ?', [contrasenaHash, id_usuario]);
 
         res.json({ mensaje: 'Contraseña actualizada con éxito' });
     } catch (error) {

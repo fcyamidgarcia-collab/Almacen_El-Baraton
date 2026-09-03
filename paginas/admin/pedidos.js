@@ -167,13 +167,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- OBTENER BADGE HTML ---
     function obtenerInsigniaEstado(estado) {
         const mapa = {
-            'pendiente': { etiqueta: '● Pendiente', clase: 'estado-pendiente' },
-            'procesando': { etiqueta: '● Procesando', clase: 'estado-procesando' },
-            'enviado': { etiqueta: '● Enviado', clase: 'estado-enviado' },
-            'entregado': { etiqueta: '● Entregado', clase: 'estado-entregado' },
-            'cancelado': { etiqueta: '● Cancelado', clase: 'estado-cancelado' }
+            'pendiente': { etiqueta: 'Pendiente', clase: 'estado-pendiente' },
+            'procesando': { etiqueta: 'Procesando', clase: 'estado-procesando' },
+            'enviado': { etiqueta: 'Enviado', clase: 'estado-enviado' },
+            'entregado': { etiqueta: 'Entregado', clase: 'estado-entregado' },
+            'cancelado': { etiqueta: 'Cancelado', clase: 'estado-cancelado' }
         };
-        const s = mapa[estado] || { etiqueta: `● ${estado}`, clase: 'estado-pendiente' };
+        const s = mapa[estado] || { etiqueta: `${estado}`, clase: 'estado-pendiente' };
         return `<span class="estado ${s.clase}">${s.etiqueta}</span>`;
     }
 
