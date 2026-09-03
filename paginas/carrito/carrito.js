@@ -119,6 +119,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 try {
                     await API.actualizarItemCarrito(id, qty);
                     await cargarCarritoDB();
+                    if (window.actualizarInsigniaCarrito) window.actualizarInsigniaCarrito();
                 } catch (e) { console.error(e); }
             });
         });
