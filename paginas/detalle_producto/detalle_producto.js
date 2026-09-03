@@ -225,10 +225,12 @@ document.addEventListener('DOMContentLoaded', async () => {
                         localStorage.setItem('carrito_invitado', JSON.stringify(carrito));
                         btnCarrito.innerHTML = '✓ ¡Agregado!';
                         btnCarrito.style.background = '#10b981';
+                        if (window.actualizarInsigniaCarrito) window.actualizarInsigniaCarrito();
                     } else {
                         await API.agregarAlCarrito(parseInt(id), cantidad);
                         btnCarrito.innerHTML = '✓ ¡Agregado al carrito!';
                         btnCarrito.style.background = '#10b981';
+                        if (window.actualizarInsigniaCarrito) window.actualizarInsigniaCarrito();
                     }
 
                     setTimeout(() => {

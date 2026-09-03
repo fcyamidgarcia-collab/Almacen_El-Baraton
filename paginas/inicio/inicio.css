@@ -284,7 +284,7 @@ img {
 }
 
 .hero-descripcion {
-    color: var(--gris);
+    color: var(--blanco);
     font-size: 0.95rem;
     max-width: 480px;
     margin-bottom: 28px;
