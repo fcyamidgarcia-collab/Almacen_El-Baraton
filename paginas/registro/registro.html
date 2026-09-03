@@ -45,13 +45,13 @@
                     <div class="grupo-entrada">
                         <label for="nombres">Nombres</label>
                         <div class="envoltorio-entrada entrada-basica">
-                            <input type="text" id="nombres" placeholder="Ej. Juan Antonio" required>
+                            <input type="text" id="nombres" placeholder="Ej. Juan Antonio" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo se permiten letras y espacios">
                         </div>
                     </div>
                     <div class="grupo-entrada">
                         <label for="apellidos">Apellidos</label>
                         <div class="envoltorio-entrada entrada-basica">
-                            <input type="text" id="apellidos" placeholder="Ej. Pérez García" required>
+                            <input type="text" id="apellidos" placeholder="Ej. Pérez García" required pattern="[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+" title="Solo se permiten letras y espacios">
                         </div>
                     </div>
                 </div>
@@ -63,6 +63,7 @@
                             <select id="tipo_doc" required>
                                 <option value="" disabled selected>Seleccionar...</option>
                                 <option value="dni">CC</option>
+                                <option value="ti">TI</option>
                                 <option value="ce">Carné de Extranjería</option>
                                 <option value="pasaporte">Pasaporte</option>
                             </select>
@@ -71,7 +72,7 @@
                     <div class="grupo-entrada">
                         <label for="num_doc">Número de Documento</label>
                         <div class="envoltorio-entrada entrada-basica">
-                            <input type="text" id="num_doc" placeholder="12345678" required>
+                            <input type="text" id="num_doc" placeholder="12345678" required pattern="[0-9]+" title="Solo se permiten números">
                         </div>
                     </div>
                 </div>
@@ -79,7 +80,7 @@
                 <div class="grupo-entrada">
                     <label for="telefono">Número de Teléfono</label>
                     <div class="envoltorio-entrada entrada-basica">
-                        <input type="tel" id="telefono" placeholder="+57 300 123 4567" required>
+                        <input type="tel" id="telefono" placeholder="+57 300 123 4567" required pattern="[\+0-9\s]+" title="Solo se permiten números, espacios y el signo +">
                     </div>
                 </div>
 
