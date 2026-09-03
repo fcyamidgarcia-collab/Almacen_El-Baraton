@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Pedidos | Industrial Supply Co.</title>
+    <title>Gestión de Pedidos | Almacen El Baraton</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="pedidos.css">
@@ -11,10 +11,10 @@
     <script src="../modo-oscuro.js"></script>
 </head>
 <body>
-    <!-- Encabezado Global -->
+    
     <header>
         <div class="logo">
-            <a href="../inicio/inicio.html" style="color: inherit; text-decoration: none;">Industrial Supply Co.</a>
+            <a href="../inicio/inicio.html" style="color: inherit; text-decoration: none;">Almacen El Baraton</a>
         </div>
         <div class="barra-busqueda">
             <i class="fas fa-search"></i>
@@ -35,10 +35,10 @@
 
     <div class="diseno-panel">
         
-        <!-- BARRA LATERAL -->
+        
         <aside class="barra-lateral">
             <div class="encabezado-barra-lateral">
-                <h2 class="logo-marca">Industrial Supply Co.</h2>
+                <h2 class="logo-marca">Almacen El Baraton</h2>
             </div>
 
             <div class="menu-barra-lateral">
@@ -151,11 +151,11 @@
             </div>
         </aside>
 
-        <!-- CONTENIDO PRINCIPAL -->
+        
         <main class="contenido-principal">
             <div class="cuerpo-panel">
                 
-                <!-- Tarjetas KPI -->
+                
                 <div class="rejilla-kpi">
                     <div class="tarjeta-kpi">
                         <div class="icono-kpi fondo-verde-claro">
@@ -218,7 +218,7 @@
                     </div>
                 </div>
 
-                <!-- Sección de Tabla de Pedidos -->
+                
                 <div class="tarjeta-datos">
                     <div class="encabezado-tarjeta contenedor-encabezado-pedidos">
                         <div>
@@ -236,7 +236,7 @@
                         </div>
                     </div>
 
-                    <!-- Barra de herramientas y Filtros -->
+                    
                     <div class="barra-herramientas-pedidos">
                         <div class="pestanas-estado">
                             <button class="boton-pestana activo" data-status="all">Todos <span class="conteo-pestana" id="conteoTodos">12</span></button>
@@ -270,7 +270,7 @@
                         </div>
                     </div>
 
-                    <!-- Tabla de Datos -->
+                    
                     <div class="tabla-responsiva">
                         <table class="tabla-datos" id="tablaPedidos">
                             <thead>
@@ -287,12 +287,12 @@
                                 </tr>
                             </thead>
                             <tbody id="cuerpoTablaPedidos">
-                                <!-- Filas renderizadas dinámicamente con JS -->
+                                
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Estado Vacío -->
+                    
                     <div id="estadoVacio" class="estado-vacio" style="display: none;">
                         <i class="fas fa-inbox"></i>
                         <h3>No se encontraron pedidos</h3>
@@ -300,7 +300,7 @@
                         <button class="boton boton-secundario" id="btnLimpiarFiltros">Limpiar filtros</button>
                     </div>
 
-                    <!-- Pie de Tabla y Paginación -->
+                    
                     <div class="pie-tabla">
                         <div class="info-paginacion" id="infoPaginacion">
                             Mostrando 1 - 7 de 12 pedidos
@@ -325,7 +325,7 @@
         </main>
     </div>
 
-    <!-- MODAL: DETALLE DEL PEDIDO -->
+    
     <div class="superposicion-modal" id="modalDetallePedido">
         <div class="contenedor-modal">
             <div class="encabezado-modal">
@@ -448,7 +448,7 @@
         </div>
     </div>
 
-    <!-- MODAL: CREAR NUEVO PEDIDO -->
+    
     <div class="superposicion-modal" id="modalNuevoPedido">
         <div class="contenedor-modal modal-mediano">
             <div class="encabezado-modal">
@@ -512,11 +512,11 @@
         </div>
     </div>
 
-    <!-- Pie de página -->
+    
     <footer>
         <div class="pie-superior">
             <div class="columna-pie columna-nosotros">
-                <h3 class="logo-pie">Industrial Supply Co.</h3>
+                <h3 class="logo-pie">Almacen El Baraton</h3>
                 <p>Precisión y Confiabilidad para tu almacén. Únete a miles de profesionales que confían en nosotros.</p>
                 <div class="boletin">
                     <p>Suscríbete a nuestro boletín</p>
@@ -555,11 +555,11 @@
             </div>
         </div>
         <div class="pie-inferior">
-            <p>&copy; 2026 Industrial Supply Co. Todos los derechos reservados.</p>
+            <p>&copy; 2026 Almacen El Baraton Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <!-- CONTENEDOR DE NOTIFICACIONES TOAST -->
+    
     <div class="contenedor-notificaciones" id="contenedorNotificaciones"></div>
 
     <script src="../js/api.js"></script>

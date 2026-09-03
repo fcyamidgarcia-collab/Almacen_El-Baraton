@@ -2,11 +2,11 @@ const express = require('express');
 const router = express.Router();
 const pool = require('../db');
 
-// GET /api/categorias
+// GET /api/categorias - incluye campo imagen
 router.get('/', async (req, res) => {
     try {
         const [rows] = await pool.query(`
-            SELECT c.id_categoria, c.nombre_categoria, c.descripcion,
+            SELECT c.id_categoria, c.nombre_categoria, c.descripcion, c.imagen,
                    COUNT(p.id_producto) AS total_productos
             FROM categoria c
             LEFT JOIN producto p ON c.id_categoria = p.id_categoria AND p.estado = 'activo'
@@ -30,13 +30,13 @@ router.get('/:id', async (req, res) => {
     }
 });
 
-// POST /api/categorias
+// POST /api/categorias - guarda imagen
 router.post('/', async (req, res) => {
     try {
-        const { nombre_categoria, descripcion } = req.body;
+        const { nombre_categoria, descripcion, imagen } = req.body;
         const [result] = await pool.query(
-            'INSERT INTO categoria (nombre_categoria, descripcion) VALUES (?, ?)',
-            [nombre_categoria, descripcion || null]
+            'INSERT INTO categoria (nombre_categoria, descripcion, imagen) VALUES (?, ?, ?)',
+            [nombre_categoria, descripcion || null, imagen || null]
         );
         res.status(201).json({ mensaje: 'Categoría creada', id_categoria: result.insertId });
     } catch (error) {
@@ -44,13 +44,13 @@ router.post('/', async (req, res) => {
     }
 });
 
-// PUT /api/categorias/:id
+// PUT /api/categorias/:id - actualiza imagen
 router.put('/:id', async (req, res) => {
     try {
-        const { nombre_categoria, descripcion } = req.body;
+        const { nombre_categoria, descripcion, imagen } = req.body;
         await pool.query(
-            'UPDATE categoria SET nombre_categoria=?, descripcion=? WHERE id_categoria=?',
-            [nombre_categoria, descripcion || null, req.params.id]
+            'UPDATE categoria SET nombre_categoria=?, descripcion=?, imagen=? WHERE id_categoria=?',
+            [nombre_categoria, descripcion || null, imagen || null, req.params.id]
         );
         res.json({ mensaje: 'Categoría actualizada' });
     } catch (error) {

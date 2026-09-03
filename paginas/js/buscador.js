@@ -1,5 +1,5 @@
 /**
- * BUSCADOR GLOBAL DEL HEADER - Industrial Supply Co. / El Baratón
+ * BUSCADOR GLOBAL DEL HEADER - Almacen El Baraton / El Baratón
  * Funcionalidad de búsqueda predictiva y navegación en tiempo real para todas las páginas.
  */
 

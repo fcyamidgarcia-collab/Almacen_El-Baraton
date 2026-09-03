@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Productos | Industrial Supply Co.</title>
+    <title>Gestión de Productos | Almacen El Baraton</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="productos.css">
@@ -11,10 +11,10 @@
     <script src="../modo-oscuro.js"></script>
 </head>
 <body>
-    <!-- Encabezado Global -->
+    
     <header>
         <div class="logo">
-            <a href="../inicio/inicio.html" style="color: inherit; text-decoration: none;">Industrial Supply Co.</a>
+            <a href="../inicio/inicio.html" style="color: inherit; text-decoration: none;">Almacen El Baraton</a>
         </div>
         <div class="barra-busqueda">
             <i class="fas fa-search"></i>
@@ -35,10 +35,10 @@
 
     <div class="diseno-panel">
         
-        <!-- BARRA LATERAL -->
+        
         <aside class="barra-lateral">
             <div class="encabezado-barra-lateral">
-                <h2 class="logo-marca">Industrial Supply Co.</h2>
+                <h2 class="logo-marca">Almacen El Baraton</h2>
             </div>
 
             <div class="menu-barra-lateral">
@@ -106,11 +106,11 @@
             </div>
         </aside>
 
-        <!-- CONTENIDO PRINCIPAL -->
+        
         <main class="contenido-principal">
             <div class="cuerpo-panel">
                 
-                <!-- Tarjetas KPI -->
+                
                 <div class="rejilla-kpi">
                     <div class="tarjeta-kpi">
                         <div class="icono-kpi fondo-azul-claro">
@@ -169,7 +169,7 @@
                     </div>
                 </div>
 
-                <!-- Tabla de Productos -->
+                
                 <div class="tarjeta-datos">
                     <div class="encabezado-tarjeta contenedor-encabezado-pedidos">
                         <div>
@@ -186,7 +186,7 @@
                         </div>
                     </div>
 
-                    <!-- Barra de herramientas -->
+                    
                     <div class="barra-herramientas-pedidos">
                         <div class="pestanas-estado">
                             <button class="boton-pestana activo" data-stock="all">Todos <span class="conteo-pestana" id="conteoTodos">145</span></button>
@@ -203,11 +203,6 @@
                             
                             <select class="seleccion-filtro" id="selectFiltroCategoria">
                                 <option value="all">Todas las categorías</option>
-                                <option value="Herramientas Eléctricas">Herramientas Eléctricas</option>
-                                <option value="Ferretería Pesada">Ferretería Pesada</option>
-                                <option value="EPP & Seguridad">EPP & Seguridad</option>
-                                <option value="Maquinaria & Equipos">Maquinaria & Equipos</option>
-                                <option value="Eléctricos e Iluminación">Eléctricos e Iluminación</option>
                             </select>
 
                             <select class="seleccion-filtro" id="selectOrdenamiento">
@@ -219,7 +214,7 @@
                         </div>
                     </div>
 
-                    <!-- Tabla -->
+                    
                     <div class="tabla-responsiva">
                         <table class="tabla-datos">
                             <thead>
@@ -234,12 +229,12 @@
                                 </tr>
                             </thead>
                             <tbody id="cuerpoTablaProductos">
-                                <!-- Filas dinámicas -->
+                                
                             </tbody>
                         </table>
                     </div>
 
-                    <!-- Pie de Tabla -->
+                    
                     <div class="pie-tabla">
                         <div class="info-paginacion" id="infoPaginacion">Mostrando 1-10 de 145 productos</div>
                         <div class="controles-paginacion">
@@ -254,7 +249,7 @@
         </main>
     </div>
 
-    <!-- MODAL NUEVO/EDITAR PRODUCTO -->
+    
     <div class="superposicion-modal" id="modalProducto">
         <div class="contenedor-modal modal-mediano">
             <div class="encabezado-modal">
@@ -292,7 +287,7 @@
                             <label>Descripción</label>
                             <input type="text" id="prodDescripcion" placeholder="Descripción breve del producto" class="entrada-filtro">
                         </div>
-                        <!-- Imagen Principal -->
+                        
                         <div class="grupo-formulario" style="grid-column:1/-1">
                             <label style="font-weight:600;display:flex;align-items:center;gap:6px">
                                 <i class="fas fa-image" style="color:var(--naranja)"></i> Imagen Principal (Portada / Catálogo)
@@ -310,7 +305,7 @@
                                 <button type="button" id="btnQuitarImgPrincipal" style="background:none;border:none;color:#ef4444;cursor:pointer;font-size:0.85rem;font-weight:500" title="Quitar imagen"><i class="fas fa-times-circle"></i> Quitar</button>
                             </div>
                         </div>
-                        <!-- Imágenes Secundarias (Para Galería del Detalle) -->
+                        
                         <div class="grupo-formulario" style="grid-column:1/-1;border-top:1px solid #f1f5f9;padding-top:14px">
                             <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
                                 <label style="font-weight:600;display:flex;align-items:center;gap:6px">
@@ -322,7 +317,7 @@
                             </div>
                             <span style="display:block;font-size:0.78rem;color:#64748b;margin-bottom:8px">Agrega fotos adicionales desde diferentes ángulos para la galería del detalle de producto.</span>
                             <div id="contenedorImagenesSecundarias" style="display:flex;flex-direction:column;gap:8px">
-                                <!-- Renglones dinámicos de imágenes secundarias -->
+                                
                             </div>
                         </div>
                     </div>
@@ -335,11 +330,11 @@
         </div>
     </div>
 
-    <!-- Pie de página -->
+    
     <footer>
         <div class="pie-superior">
             <div class="columna-pie columna-nosotros">
-                <h3 class="logo-pie">Industrial Supply Co.</h3>
+                <h3 class="logo-pie">Almacen El Baraton</h3>
                 <p>Precisión y Confiabilidad para tu almacén. Únete a miles de profesionales que confían en nosotros.</p>
                 <div class="boletin">
                     <p>Suscríbete a nuestro boletín</p>
@@ -378,7 +373,7 @@
             </div>
         </div>
         <div class="pie-inferior">
-            <p>&copy; 2026 Industrial Supply Co. Todos los derechos reservados.</p>
+            <p>&copy; 2026 Almacen El Baraton Todos los derechos reservados.</p>
         </div>
     </footer>
 

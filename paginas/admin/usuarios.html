@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Usuarios y Permisos | Industrial Supply Co.</title>
+    <title>Usuarios y Permisos | Almacen El Baraton</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="usuarios.css">
@@ -11,10 +11,10 @@
     <script src="../modo-oscuro.js"></script>
 </head>
 <body>
-    <!-- Encabezado Global -->
+    
     <header>
         <div class="logo">
-            <a href="../inicio/inicio.html" style="color: inherit; text-decoration: none;">Industrial Supply Co.</a>
+            <a href="../inicio/inicio.html" style="color: inherit; text-decoration: none;">Almacen El Baraton</a>
         </div>
         <div class="barra-busqueda">
             <i class="fas fa-search"></i>
@@ -35,10 +35,10 @@
 
     <div class="diseno-panel">
         
-        <!-- BARRA LATERAL -->
+        
         <aside class="barra-lateral">
             <div class="encabezado-barra-lateral">
-                <h2 class="logo-marca">Industrial Supply Co.</h2>
+                <h2 class="logo-marca">Almacen El Baraton</h2>
             </div>
 
             <div class="menu-barra-lateral">
@@ -51,17 +51,17 @@
                     <a href="pedidos.html" class="item-menu">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path><polyline points="3.27 6.96 12 12.01 20.73 6.96"></polyline><line x1="12" y1="22.08" x2="12" y2="12"></line></svg>
                         Pedidos
-                        <span class="insignia insignia-oscura">12</span>
+                        <span class="insignia insignia-oscura" id="insigniaPedidosBarra">--</span>
                     </a>
                     <a href="productos.html" class="item-menu">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"></path><line x1="7" y1="7" x2="7.01" y2="7"></line></svg>
                         Productos
-                        <span class="insignia insignia-oscura">145</span>
+                        <span class="insignia insignia-oscura" id="insigniaProductosBarra">--</span>
                     </a>
                     <a href="clientes.html" class="item-menu">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                         Clientes
-                        <span class="insignia insignia-oscura">48</span>
+                        <span class="insignia insignia-oscura" id="insigniaClientesBarra">--</span>
                     </a>
                 </div>
 
@@ -106,7 +106,7 @@
             </div>
         </aside>
 
-        <!-- CONTENIDO PRINCIPAL -->
+        
         <main class="contenido-principal">
             <div class="cuerpo-panel">
                 <div class="tarjeta-datos">
@@ -139,7 +139,7 @@
         </main>
     </div>
 
-    <!-- MODAL USUARIO -->
+    
     <div class="superposicion-modal" id="modalUsuario">
         <div class="contenedor-modal modal-mediano">
             <div class="encabezado-modal">
@@ -188,11 +188,11 @@
         </div>
     </div>
 
-    <!-- Pie de página -->
+    
     <footer>
         <div class="pie-superior">
             <div class="columna-pie columna-nosotros">
-                <h3 class="logo-pie">Industrial Supply Co.</h3>
+                <h3 class="logo-pie">Almacen El Baraton</h3>
                 <p>Precisión y Confiabilidad para tu almacén. Únete a miles de profesionales que confían en nosotros.</p>
                 <div class="boletin">
                     <p>Suscríbete a nuestro boletín</p>
@@ -231,12 +231,13 @@
             </div>
         </div>
         <div class="pie-inferior">
-            <p>&copy; 2026 Industrial Supply Co. Todos los derechos reservados.</p>
+            <p>&copy; 2026 Almacen El Baraton Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <script src="../js/api.js"></script>
     <script src="../js/sesion.js"></script>
+    <script src="../js/sidebar-badges.js"></script>
     <script src="../js/buscador.js"></script>
     <script src="usuarios.js"></script>
 </body>

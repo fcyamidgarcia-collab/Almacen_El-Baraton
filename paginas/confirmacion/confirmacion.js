@@ -1,6 +1,6 @@
 /**
  * confirmacion.js
- * Logica de la pagina de Pedido Confirmado - Industrial Supply Co.
+ * Logica de la pagina de Pedido Confirmado - Almacen El Baraton
  * Conectado a MySQL: consulta el pedido real si viene ?pedido=X en la URL o en sessionStorage
  */
 

@@ -82,6 +82,66 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // ---- Cargar categorías del filtro desde la BD ----
+    async function cargarCategoriasDashboard() {
+        try {
+            const cats = await API.getCategorias();
+            const sel = document.getElementById('filtroCategoríaDashboard');
+            if (!sel) return;
+            sel.innerHTML = '<option value="all">Todas las categorías</option>';
+            cats.forEach(c => {
+                const opt = document.createElement('option');
+                opt.value = c.id_categoria;
+                opt.textContent = c.nombre_categoria.charAt(0).toUpperCase() + c.nombre_categoria.slice(1);
+                sel.appendChild(opt);
+            });
+            // Filtrar tabla al cambiar selección
+            sel.addEventListener('change', () => cargarProductosDestacados(sel.value));
+        } catch (e) { console.warn('Error cargando categorías dashboard:', e.message); }
+    }
+
+    // ---- Tabla de productos más vendidos desde la BD ----
+    async function cargarProductosDestacados(categoriaId = 'all') {
+        const tbody2 = document.getElementById('cuerpoTablaProductosDestacados');
+        if (!tbody2) return;
+        try {
+            tbody2.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando...</td></tr>`;
+            const params = categoriaId !== 'all' ? { id_categoria: categoriaId } : {};
+            const prods = await API.getProductos(params);
+            if (!prods || prods.length === 0) {
+                tbody2.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b">Sin productos registrados.</td></tr>`;
+                return;
+            }
+            tbody2.innerHTML = '';
+            prods.slice(0, 8).forEach((p, i) => {
+                const stock = Number(p.stock) || 0;
+                const estadoStock = stock === 0
+                    ? '<span class="estado estado-agotado">Agotado</span>'
+                    : stock < 10
+                    ? '<span class="estado estado-bajo">Stock Bajo</span>'
+                    : '<span class="estado estado-normal">En Stock</span>';
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong style="color:var(--naranja)">${i + 1}</strong></td>
+                    <td>
+                        <div style="display:flex;align-items:center;gap:10px">
+                            <img src="${p.imagen || '../Almacen/img/hero.jpg'}" alt="${p.nombre_producto}"
+                                style="width:36px;height:36px;border-radius:6px;object-fit:cover;"
+                                onerror="this.src='../Almacen/img/hero.jpg'">
+                            <span>${p.nombre_producto}</span>
+                        </div>
+                    </td>
+                    <td>${p.nombre_categoria || '—'}</td>
+                    <td><strong>$ ${Number(p.precio || 0).toLocaleString('es-CO')}</strong></td>
+                    <td>${estadoStock}</td>
+                `;
+                tbody2.appendChild(tr);
+            });
+        } catch (e) {
+            if (tbody2) tbody2.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#ef4444">Error: ${e.message}</td></tr>`;
+        }
+    }
+
     // Botón cerrar sesión en sidebar
     const btnCerrar = document.querySelector('[data-action="cerrar-sesion"]') ||
         document.querySelector('.texto-peligro');
@@ -90,4 +150,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     await cargarEstadisticas();
+    await cargarCategoriasDashboard();
+    await cargarProductosDestacados();
 });

@@ -1,22 +1,40 @@
-// ========== CATEGORÍAS ADMIN - CONECTADO A MYSQL ==========
+// ========== CATEGORÍAS ADMIN - CON SOPORTE DE IMAGEN ==========
 
 document.addEventListener('DOMContentLoaded', async () => {
     let datos = [];
     let modoEdicion = null;
 
     const rejilla = document.getElementById('rejillaCategorias');
-    const modal = document.getElementById('modalCategoria');
-    const btnNuevo = document.getElementById('btnNuevaCategoria');
-    const btnCerrar = document.getElementById('btnCerrarModalCategoria');
+    const modal   = document.getElementById('modalCategoria');
+    const btnNuevo   = document.getElementById('btnNuevaCategoria');
+    const btnCerrar  = document.getElementById('btnCerrarModalCategoria');
     const btnCancelar = document.getElementById('btnCancelarCategoria');
     const form = document.getElementById('formularioCategoria');
 
+    const inputCatNombre = document.getElementById('catNombre');
+    const inputCatDesc   = document.getElementById('catDesc');
+    const inputCatImagen = document.getElementById('catImagen');
+    const previewDiv     = document.getElementById('previewCatImagen');
+    const imgPreview     = document.getElementById('imgPreviewCat');
+    const tituloModal    = document.getElementById('tituloModalCategoria');
+
+    // ---- Vista previa de imagen en tiempo real ----
+    inputCatImagen?.addEventListener('input', () => {
+        const url = inputCatImagen.value.trim();
+        if (url) {
+            imgPreview.src = url;
+            previewDiv.style.display = 'flex';
+        } else {
+            previewDiv.style.display = 'none';
+        }
+    });
+
+    // ---- Obtener ícono fallback por nombre ----
     const iconosDisponibles = {
         'herramientas': 'fa-tools', 'ferreteria': 'fa-hammer', 'pintura': 'fa-paint-brush',
         'electricidad': 'fa-bolt', 'plomeria': 'fa-faucet', 'seguridad': 'fa-shield-alt',
         'general': 'fa-box', 'default': 'fa-folder'
     };
-
     function obtenerIcono(nombre) {
         const n = (nombre || '').toLowerCase();
         for (const [key, ico] of Object.entries(iconosDisponibles)) {
@@ -25,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         return iconosDisponibles.default;
     }
 
+    // ---- Cargar desde API ----
     async function cargar() {
         try {
             rejilla.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:30px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando...</div>`;
@@ -35,6 +54,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     }
 
+    // ---- Renderizar tarjetas ----
     function renderizar() {
         rejilla.innerHTML = '';
         if (datos.length === 0) {
@@ -45,8 +65,18 @@ document.addEventListener('DOMContentLoaded', async () => {
             const icono = obtenerIcono(c.nombre_categoria);
             const div = document.createElement('div');
             div.className = 'tarjeta-categoria';
+
+            // Mostrar imagen si existe, si no mostrar ícono
+            const imgHTML = c.imagen
+                ? `<div style="width:100%;height:90px;overflow:hidden;border-radius:8px;margin-bottom:10px;">
+                       <img src="${c.imagen}" alt="${c.nombre_categoria}" loading="lazy"
+                            style="width:100%;height:100%;object-fit:cover;"
+                            onerror="this.parentElement.innerHTML='<div style=\'height:90px;display:flex;align-items:center;justify-content:center;background:#f1f5f9;border-radius:8px\'><i class=\'fas ${icono}\' style=\'font-size:2rem;color:#94a3b8\'></i></div>'">
+                   </div>`
+                : `<div class="contenedor-icono-categoria"><i class="fas ${icono}"></i></div>`;
+
             div.innerHTML = `
-                <div class="contenedor-icono-categoria"><i class="fas ${icono}"></i></div>
+                ${imgHTML}
                 <div>
                     <h3 class="titulo-categoria">${c.nombre_categoria}</h3>
                     <p style="font-size:0.82rem;color:#64748b;margin-top:4px">${c.descripcion || 'Sin descripción'}</p>
@@ -62,18 +92,29 @@ document.addEventListener('DOMContentLoaded', async () => {
             rejilla.appendChild(div);
         });
 
+        // ---- Eventos editar ----
         document.querySelectorAll('.btn-editar-cat').forEach(btn => {
             btn.addEventListener('click', () => {
                 const id = parseInt(btn.getAttribute('data-id'));
                 const cat = datos.find(c => c.id_categoria === id);
                 if (!cat) return;
                 modoEdicion = id;
-                document.getElementById('catNombre').value = cat.nombre_categoria || '';
-                document.getElementById('catDesc').value = cat.descripcion || '';
+                if (tituloModal) tituloModal.textContent = 'Editar Categoría';
+                inputCatNombre.value = cat.nombre_categoria || '';
+                inputCatDesc.value   = cat.descripcion || '';
+                inputCatImagen.value = cat.imagen || '';
+                // Actualizar vista previa
+                if (cat.imagen) {
+                    imgPreview.src = cat.imagen;
+                    previewDiv.style.display = 'flex';
+                } else {
+                    previewDiv.style.display = 'none';
+                }
                 modal.classList.add('activo');
             });
         });
 
+        // ---- Eventos eliminar ----
         document.querySelectorAll('.btn-eliminar-cat').forEach(btn => {
             btn.addEventListener('click', async () => {
                 const id = btn.getAttribute('data-id');
@@ -86,11 +127,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
-    btnNuevo?.addEventListener('click', () => { modoEdicion = null; form.reset(); modal.classList.add('activo'); });
-    btnCerrar?.addEventListener('click', () => modal.classList.remove('activo'));
+    // ---- Abrir modal nueva ----
+    btnNuevo?.addEventListener('click', () => {
+        modoEdicion = null;
+        form.reset();
+        if (tituloModal) tituloModal.textContent = 'Crear Nueva Categoría';
+        previewDiv.style.display = 'none';
+        modal.classList.add('activo');
+    });
+
+    btnCerrar?.addEventListener('click', ()  => modal.classList.remove('activo'));
     btnCancelar?.addEventListener('click', () => modal.classList.remove('activo'));
 
-    // Helper de error en modal categoría
+    // ---- Validación visual ----
     function mostrarErrorCat(input, msg) {
         limpiarErrorCat(input);
         input.style.borderColor = '#ef4444';
@@ -100,43 +149,41 @@ document.addEventListener('DOMContentLoaded', async () => {
         span.innerHTML = `<i class="fas fa-exclamation-circle"></i> ${msg}`;
         input.insertAdjacentElement('afterend', span);
     }
-
     function limpiarErrorCat(input) {
         input.style.borderColor = '';
         const sig = input.nextElementSibling;
         if (sig && sig.classList.contains('error-cat-msg')) sig.remove();
     }
 
-    const inputCatNombre = document.getElementById('catNombre');
-    if (inputCatNombre) inputCatNombre.addEventListener('input', () => limpiarErrorCat(inputCatNombre));
+    inputCatNombre?.addEventListener('input', () => limpiarErrorCat(inputCatNombre));
 
+    // ---- Envío del formulario ----
     form?.addEventListener('submit', async e => {
         e.preventDefault();
 
-        const nombre_categoria = inputCatNombre ? inputCatNombre.value.trim() : '';
-        const descripcion = document.getElementById('catDesc')?.value.trim() || 'Sin descripción';
+        const nombre_categoria = inputCatNombre?.value.trim() || '';
+        const descripcion      = inputCatDesc?.value.trim()   || '';
+        const imagen           = inputCatImagen?.value.trim() || null;
 
         if (!nombre_categoria || nombre_categoria.length < 2) {
-            mostrarErrorCat(inputCatNombre, 'El nombre de la categoría debe tener al menos 2 caracteres.');
+            mostrarErrorCat(inputCatNombre, 'El nombre debe tener al menos 2 caracteres.');
             return;
-        } else {
-            limpiarErrorCat(inputCatNombre);
         }
+        limpiarErrorCat(inputCatNombre);
 
-        const payload = {
-            nombre_categoria,
-            descripcion
-        };
+        const payload = { nombre_categoria, descripcion, imagen };
+
         try {
             if (modoEdicion) {
                 await API.actualizarCategoria(modoEdicion, payload);
                 alert('¡Categoría actualizada!');
             } else {
                 await API.crearCategoria(payload);
-                alert('¡Categoría creada en MySQL!');
+                alert('¡Categoría creada!');
             }
             modal.classList.remove('activo');
             form.reset();
+            previewDiv.style.display = 'none';
             modoEdicion = null;
             await cargar();
         } catch (err) { alert('Error: ' + err.message); }

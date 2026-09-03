@@ -1,6 +1,6 @@
 /**
  * SISTEMA GLOBAL DE MODO OSCURO (DARK MODE)
- * Industrial Supply Co. - El Baratón
+ * Almacen El Baraton - El Baratón
  */
 
 (function () {

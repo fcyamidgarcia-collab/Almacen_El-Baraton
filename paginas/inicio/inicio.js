@@ -135,7 +135,8 @@ async function cargarCategoriasInicio() {
         categorias.forEach(cat => {
             const nombreMostrar = formatearNombreCategoria(cat.nombre_categoria);
             const totalProds = Number(cat.total_productos) || 0;
-            const imagenUrl = obtenerImagenCategoria(cat.nombre_categoria);
+            // Usa la imagen guardada en BD; si no hay, usa el helper por nombre
+            const imagenUrl = (cat.imagen && cat.imagen.trim()) ? cat.imagen.trim() : obtenerImagenCategoria(cat.nombre_categoria);
             const descripcion = cat.descripcion || 'Productos industriales certificados de alta calidad y precisión.';
 
             const tarjeta = document.createElement('div');
