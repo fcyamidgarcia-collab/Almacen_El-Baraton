@@ -40,6 +40,19 @@ if (formContacto) {
         }
     });
 
+    // Validar en tiempo real los caracteres permitidos
+    if (inputNombre) {
+        inputNombre.addEventListener('input', function() {
+            this.value = this.value.replace(/[^A-Za-záéíóúÁÉÍÓÚñÑ\s]/g, '');
+        });
+    }
+
+    if (inputTelefono) {
+        inputTelefono.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9\+\-\s\(\)]/g, '');
+        });
+    }
+
     formContacto.addEventListener('submit', (e) => {
         e.preventDefault();
 
