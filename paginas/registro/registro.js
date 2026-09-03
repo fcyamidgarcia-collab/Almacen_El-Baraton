@@ -52,7 +52,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (msgPrevio) msgPrevio.remove();
     }
 
-    // Limpieza en tiempo real al interactuar
+    // Limpieza en tiempo real al interactuar (quitar borde rojo)
     [inputNombres, inputApellidos, selectTipoDoc, inputNumDoc, inputTelefono, inputCorreo, inputContra, inputContraConf].forEach(el => {
         if (el) {
             el.addEventListener('input', () => limpiarError(el));
@@ -61,6 +61,28 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     if (checkTerminos) {
         checkTerminos.addEventListener('change', () => limpiarError(checkTerminos));
+    }
+
+    // --- Restringir caracteres permitidos en tiempo real (evitar que se escriban) ---
+    if (inputNombres) {
+        inputNombres.addEventListener('input', function() {
+            this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]/g, '');
+        });
+    }
+    if (inputApellidos) {
+        inputApellidos.addEventListener('input', function() {
+            this.value = this.value.replace(/[^a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]/g, '');
+        });
+    }
+    if (inputNumDoc) {
+        inputNumDoc.addEventListener('input', function() {
+            this.value = this.value.replace(/[^0-9]/g, '');
+        });
+    }
+    if (inputTelefono) {
+        inputTelefono.addEventListener('input', function() {
+            this.value = this.value.replace(/[^\d\s\-\+]/g, '');
+        });
     }
 
     form.addEventListener('submit', async function(e) {
@@ -79,6 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
         const soloLetrasRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/;
+
+        const soloNumerosRegex = /^[0-9]+$/;
 
         let esValido = true;
 
@@ -123,7 +147,10 @@ document.addEventListener('DOMContentLoaded', () => {
             mostrarError(inputNumDoc, 'El número de documento es obligatorio.');
             esValido = false;
         } else if (numDoc.length < 5) {
-            mostrarError(inputNumDoc, 'Debe tener al menos 5 dígitos o caracteres.');
+            mostrarError(inputNumDoc, 'Debe tener al menos 5 dígitos.');
+            esValido = false;
+        } else if (!soloNumerosRegex.test(numDoc)) {
+            mostrarError(inputNumDoc, 'Solo se permiten números.');
             esValido = false;
         } else {
             limpiarError(inputNumDoc);

@@ -656,3 +656,35 @@ html.dark-mode .pie-pagina {
     background-color: #060910 !important;
     border-top: 1px solid #1e293b !important;
 }
+
+/* ==========================================================================
+   13. FAQ EN MODO OSCURO
+   ========================================================================== */
+html.dark-mode .faq-bg-overlay {
+    background: rgba(15, 23, 42, 0.93) !important;
+}
+
+html.dark-mode .faq-item {
+    background: rgba(30, 41, 59, 0.85) !important;
+    border-color: rgba(38, 53, 74, 0.8) !important;
+}
+
+html.dark-mode .faq-item.abierto {
+    background: rgba(30, 41, 59, 0.95) !important;
+    border-color: var(--naranja) !important;
+}
+
+html.dark-mode .faq-item h4 {
+    color: #f8fafc !important;
+}
+
+html.dark-mode .faq-respuesta p {
+    color: #94a3b8 !important;
+}
+
+/* ==========================================================================
+   14. HERO WAVE EN MODO OSCURO
+   ========================================================================== */
+html.dark-mode .hero-wave svg path {
+    fill: var(--fondo-body) !important;
+}

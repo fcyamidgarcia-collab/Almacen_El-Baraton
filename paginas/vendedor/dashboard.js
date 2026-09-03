@@ -361,9 +361,45 @@ document.addEventListener('DOMContentLoaded', async () => {
         btnCerrar.addEventListener('click', (e) => { e.preventDefault(); API.cerrarSesion(); });
     }
 
+    // ---- Tabla de mensajes (Mock temporal para la BD) ----
+    async function cargarMensajes() {
+        const tbody = document.getElementById('tbody-mensajes');
+        if (!tbody) return;
+        try {
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando mensajes...</td></tr>`;
+            
+            // Simulación de datos que vendrían de la BD
+            const mensajes = [
+                { id: 1, fecha: '2026-09-01', nombre: 'Juan Pérez', email: 'juan@empresa.com', asunto: 'Cotización taladros', mensaje: 'Me gustaría una cotización para 10 taladros percutores.' },
+                { id: 2, fecha: '2026-09-02', nombre: 'María Gómez', email: 'maria@construccion.com', asunto: 'Duda sobre envío', mensaje: '¿Hacen envíos a zonas rurales?' },
+                { id: 3, fecha: '2026-09-03', nombre: 'Carlos Ruiz', email: 'carlos.ruiz@taller.net', asunto: 'Garantía de productos', mensaje: 'Quisiera saber el tiempo de garantía de las pulidoras.' }
+            ];
+
+            tbody.innerHTML = '';
+            if (mensajes.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b">No hay mensajes.</td></tr>`;
+                return;
+            }
+            mensajes.forEach(m => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${m.fecha}</td>
+                    <td><strong>${m.nombre}</strong></td>
+                    <td><a href="mailto:${m.email}" style="color:var(--naranja)">${m.email}</a></td>
+                    <td>${m.asunto}</td>
+                    <td><button class="btn-accion" title="Ver mensaje" onclick="alert('Mensaje de ${m.nombre}:\\n\\n${m.mensaje}')" style="background: none; border: none; cursor: pointer; color: #3b82f6;"><i class="fas fa-eye"></i> Leer</button></td>
+                `;
+                tbody.appendChild(tr);
+            });
+        } catch (err) {
+            if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#ef4444">Error: ${err.message}</td></tr>`;
+        }
+    }
+
     // ---- Carga inicial ----
     await cargarKPIs();
     await cargarPedidos();
     await cargarProveedores();
     await cargarStock();
+    await cargarMensajes();
 });

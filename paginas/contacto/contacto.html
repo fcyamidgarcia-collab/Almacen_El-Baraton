@@ -141,7 +141,7 @@
                             <div class="campo-grupo">
                                 <label for="nombreCompleto"><i class="fas fa-user"></i> Nombre Completo</label>
                                 <input type="text" id="nombreCompleto" name="nombre" placeholder="Tu nombre completo"
-                                    required>
+                                    pattern="[A-Za-záéíóúÁÉÍÓÚñÑ\s]+" title="Solo se permiten letras" required>
                             </div>
                             <div class="campo-grupo">
                                 <label for="emailCorporativo"><i class="fas fa-at"></i> Email Corporativo</label>
@@ -152,7 +152,7 @@
                         <div class="campos-fila">
                             <div class="campo-grupo">
                                 <label for="telefono"><i class="fas fa-phone"></i> Teléfono</label>
-                                <input type="tel" id="telefono" name="telefono" placeholder="+1 (555) 000-0000">
+                                <input type="tel" id="telefono" name="telefono" placeholder="+1 (555) 000-0000" pattern="[0-9\+\-\s\(\)]+" title="Solo se permiten números y símbolos telefónicos">
                             </div>
                             <div class="campo-grupo">
                                 <label for="asunto"><i class="fas fa-tag"></i> Asunto</label>
