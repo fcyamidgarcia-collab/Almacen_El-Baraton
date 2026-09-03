@@ -61,8 +61,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const tr = document.createElement('tr');
             const esActivo = (c.estado || 'activo') === 'activo';
             const badgeEstado = esActivo
-                ? '<span class="estado estado-enviado">● Activo</span>'
-                : '<span class="estado estado-cancelado">● Inactivo</span>';
+                ? '<span class="estado estado-enviado">Activo</span>'
+                : '<span class="estado estado-cancelado">Inactivo</span>';
 
             tr.innerHTML = `
                 <td>

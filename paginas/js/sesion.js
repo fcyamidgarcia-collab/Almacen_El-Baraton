@@ -268,6 +268,46 @@
         document.getElementById('btn-cerrar-sesion').addEventListener('click', cerrarSesion);
     }
 
+    // ---- Actualizar Insignia de Carrito ----
+    async function actualizarInsigniaCarrito() {
+        const enlaceCarrito = document.querySelector('.iconos-encabezado a[href*="carrito/carrito.html"]') || document.querySelector('a[title="Carrito"]');
+        if (!enlaceCarrito) return;
+        
+        let badge = enlaceCarrito.querySelector('.carrito-badge');
+        if (!badge) {
+            enlaceCarrito.style.position = 'relative';
+            badge = document.createElement('span');
+            badge.className = 'carrito-badge';
+            enlaceCarrito.appendChild(badge);
+        }
+
+        let totalItems = 0;
+        try {
+            const user = getUsuario();
+            if (user && getToken() && window.API && window.API.getCarrito) {
+                const data = await window.API.getCarrito();
+                if (data && data.items) {
+                    totalItems = data.items.reduce((sum, item) => sum + Number(item.cantidad), 0);
+                }
+            } else {
+                const items = JSON.parse(localStorage.getItem('carrito_invitado') || '[]');
+                totalItems = items.reduce((sum, item) => sum + Number(item.cantidad), 0);
+            }
+        } catch (e) {
+            console.warn('No se pudo cargar la cantidad del carrito', e);
+        }
+
+        if (totalItems > 0) {
+            badge.textContent = totalItems > 99 ? '99+' : totalItems;
+            badge.style.display = 'flex';
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+
+    // Exponer globalmente si se necesita actualizar desde otro script
+    window.actualizarInsigniaCarrito = actualizarInsigniaCarrito;
+
     // ---- Inicializar ----
     function init() {
         inyectarEstilos();
@@ -301,6 +341,8 @@
             s.src = '../js/buscador.js';
             document.head.appendChild(s);
         }
+
+        actualizarInsigniaCarrito();
     }
 
     // Ejecutar cuando el DOM esté listo

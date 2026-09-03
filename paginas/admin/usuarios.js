@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 <td>${u.correo}</td>
                 <td><span class="insignia-rol">${rolNombre}</span></td>
                 <td>${fecha}</td>
-                <td><span class="${esActivo ? 'texto-verde' : 'texto-rojo'}">● ${u.estado}</span></td>
+                <td><span class="${esActivo ? 'texto-verde' : 'texto-rojo'}">${u.estado}</span></td>
                 <td style="text-align:center;display:flex;gap:6px;justify-content:center">
                     <button class="boton-accion btn-editar-usr" data-id="${u.id_usuario}" title="Editar Usuario"><i class="fas fa-edit"></i></button>
                     <button class="boton-accion btn-toggle-usr" data-id="${u.id_usuario}" title="${esActivo ? 'Desactivar' : 'Activar'}" style="color:${esActivo ? '#f59e0b' : '#22c55e'}">

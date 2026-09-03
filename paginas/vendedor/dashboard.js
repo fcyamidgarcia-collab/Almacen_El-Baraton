@@ -4,20 +4,32 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function fmt(val) { return '$ ' + Number(val || 0).toLocaleString('es-CO'); }
 
-    function insigniaStock(stock) {
+    function insigniaStock(stock, min = 10) {
         const n = Number(stock) || 0;
-        if (n === 0) return '<span class="estado estado-pendiente">● agotado</span>';
-        if (n < 10) return '<span class="estado estado-procesando">● stock bajo</span>';
-        return '<span class="estado estado-enviado">● en stock</span>';
+        const minimo = Number(min) || 10;
+        if (n === 0) return '<span class="estado estado-agotado">Agotado</span>';
+        if (n <= minimo) return '<span class="estado estado-bajo">Stock bajo</span>';
+        return '<span class="estado estado-enviado">En stock</span>';
     }
 
     function insigniaEstadoPedido(estado) {
-        const e = (estado || '').toLowerCase();
-        if (e.includes('pend')) return `<span class="estado estado-pendiente">● ${estado}</span>`;
-        if (e.includes('proces') || e.includes('en proceso')) return `<span class="estado estado-procesando">● ${estado}</span>`;
-        if (e.includes('envi') || e.includes('complet')) return `<span class="estado estado-enviado">● ${estado}</span>`;
-        if (e.includes('cancel')) return `<span class="estado estado-pendiente">● ${estado}</span>`;
+        const e = (estado || '').toLowerCase().trim();
+        if (e.includes('pend'))     return `<span class="estado estado-pendiente">${estado}</span>`;
+        if (e.includes('proces') || e === 'en_proceso') return `<span class="estado estado-procesando">${estado}</span>`;
+        if (e === 'enviado')        return `<span class="estado estado-enviado">${estado}</span>`;
+        if (e === 'entregado')      return `<span class="estado estado-entregado">${estado}</span>`;
+        if (e === 'cancelado')      return `<span class="estado estado-cancelado">${estado}</span>`;
         return `<span class="estado">${estado}</span>`;
+    }
+
+    function colorBotonEstado(estado) {
+        const e = (estado || '').toLowerCase().trim();
+        if (e.includes('pend'))    return 'btn-estado-pendiente';
+        if (e.includes('proces') || e === 'en_proceso') return 'btn-estado-procesando';
+        if (e === 'enviado')       return 'btn-estado-enviado';
+        if (e === 'entregado')     return 'btn-estado-entregado';
+        if (e === 'cancelado')     return 'btn-estado-cancelado';
+        return '';
     }
 
     // ---- Mostrar nombre del vendedor logueado ----
@@ -48,22 +60,89 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ---- KPIs del resumen ----
     async function cargarKPIs() {
         try {
-            const stats = await API.getDashboardStats();
+            const [stats, pedidos] = await Promise.all([API.getDashboardStats(), API.getPedidos()]);
 
+            // Ventas
             const ventasEl = document.getElementById('kpi-ventas');
             if (ventasEl) ventasEl.textContent = fmt(stats.ventas_mes?.total_ventas || 0);
 
+            // Pedidos
+            const total = pedidos.length;
+            const pendientes  = pedidos.filter(p => (p.estado_pedido||'').toLowerCase().includes('pend')).length;
+            const entregados  = pedidos.filter(p => (p.estado_pedido||'').toLowerCase() === 'entregado').length;
+            const cancelados  = pedidos.filter(p => (p.estado_pedido||'').toLowerCase() === 'cancelado').length;
+            const totalMonto  = pedidos.reduce((s,p) => s + Number(p.total||0), 0);
+            const promedio    = total > 0 ? totalMonto / total : 0;
+            const tasaExito   = total > 0 ? Math.round((entregados / total) * 100) : 0;
+
             const pedidosEl = document.getElementById('kpi-pedidos');
-            if (pedidosEl) pedidosEl.textContent = stats.total_pedidos || 0;
+            if (pedidosEl) pedidosEl.textContent = total;
 
             const pedidosPendEl = document.getElementById('kpi-pedidos-sub');
-            if (pedidosPendEl) pedidosPendEl.textContent = `${stats.pedidos_pendientes || 0} pendientes`;
+            if (pedidosPendEl) pedidosPendEl.textContent = `${pendientes} pendientes`;
+
+            const promedioEl = document.getElementById('kpi-promedio');
+            if (promedioEl) promedioEl.textContent = fmt(promedio);
+
+            const entregadosEl = document.getElementById('kpi-entregados');
+            if (entregadosEl) entregadosEl.textContent = entregados;
+
+            const tasaEl = document.getElementById('kpi-tasa');
+            if (tasaEl) tasaEl.textContent = `${tasaExito}% tasa éxito`;
+
+            const canceladosEl = document.getElementById('kpi-cancelados');
+            if (canceladosEl) canceladosEl.textContent = cancelados;
 
             const stockEl = document.getElementById('kpi-stock');
             if (stockEl) stockEl.textContent = (stats.total_productos || 0).toLocaleString('es-CO');
 
             const provsEl = document.getElementById('kpi-proveedores');
             if (provsEl) provsEl.textContent = stats.total_proveedores || 0;
+
+            // Barras de distribución de estados
+            const conteos = {
+                'Pendiente':  pendientes,
+                'En Proceso': pedidos.filter(p => (p.estado_pedido||'').toLowerCase().includes('proce') || p.estado_pedido === 'en_proceso').length,
+                'Enviado':    pedidos.filter(p => (p.estado_pedido||'').toLowerCase() === 'enviado').length,
+                'Entregado':  entregados,
+                'Cancelado':  cancelados,
+            };
+            const colores = { 'Pendiente':'#f59e0b','En Proceso':'#3b82f6','Enviado':'#6366f1','Entregado':'#10b981','Cancelado':'#ef4444' };
+            const barrasEl = document.getElementById('barras-estados');
+            if (barrasEl && total > 0) {
+                barrasEl.innerHTML = Object.entries(conteos).map(([label, cnt]) => {
+                    const pct = Math.round((cnt / total) * 100);
+                    return `
+                    <div class="fila-barra">
+                        <span class="etiqueta-barra">${label}</span>
+                        <div class="pista-barra">
+                            <div class="relleno-barra" style="width:${pct}%;background:${colores[label]}"></div>
+                        </div>
+                        <span class="valor-barra">${cnt} <small>(${pct}%)</small></span>
+                    </div>`;
+                }).join('');
+            } else if (barrasEl) {
+                barrasEl.innerHTML = '<p style="padding:20px;text-align:center;color:#64748b">Sin datos de pedidos aún.</p>';
+            }
+
+            // Tabla de pedidos recientes (últimos 10)
+            const tbodyR = document.getElementById('tbody-recientes');
+            if (tbodyR) {
+                const recientes = [...pedidos].sort((a,b) => new Date(b.fecha_pedido) - new Date(a.fecha_pedido)).slice(0,10);
+                tbodyR.innerHTML = recientes.length === 0
+                    ? `<tr><td colspan="5" style="text-align:center;padding:16px;color:#64748b">Sin pedidos recientes.</td></tr>`
+                    : recientes.map(p => {
+                        const cliente = `${p.nombre_cliente||''} ${p.apellido_cliente||''}`.trim() || 'Sin cliente';
+                        const fecha = p.fecha_pedido ? new Date(p.fecha_pedido).toLocaleDateString('es-CO') : 'N/A';
+                        return `<tr>
+                            <td><strong>#${p.id_pedido}</strong></td>
+                            <td>${cliente}</td>
+                            <td><strong>${fmt(p.total)}</strong></td>
+                            <td>${insigniaEstadoPedido(p.estado_pedido)}</td>
+                            <td>${fecha}</td>
+                        </tr>`;
+                    }).join('');
+            }
 
         } catch (err) {
             console.warn('Error cargando KPIs vendedor:', err.message);
@@ -95,41 +174,69 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const tr = document.createElement('tr');
                 const cliente = `${p.nombre_cliente || ''} ${p.apellido_cliente || ''}`.trim() || 'Sin cliente';
                 const fecha = p.fecha_pedido ? new Date(p.fecha_pedido).toLocaleDateString('es-CO') : 'N/A';
+                const estadoActual = p.estado_pedido || 'pendiente';
                 tr.innerHTML = `
                     <td><strong>#${p.id_pedido}</strong></td>
                     <td>${cliente}</td>
                     <td><strong>${fmt(p.total)}</strong></td>
-                    <td>${insigniaEstadoPedido(p.estado_pedido)}</td>
+                    <td>${insigniaEstadoPedido(estadoActual)}</td>
                     <td>${fecha}</td>
                     <td>
-                        <button class="btn-accion btn-ver-pedido" data-id="${p.id_pedido}" title="Ver detalles">
-                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                        </button>
-                        <select class="seleccion-estado-pedido" data-id="${p.id_pedido}" style="font-size:11px;padding:3px 6px;border-radius:6px;border:1px solid #e2e8f0;margin-left:4px">
-                            <option value="pendiente" ${p.estado_pedido === 'pendiente' ? 'selected' : ''}>Pendiente</option>
-                            <option value="en_proceso" ${p.estado_pedido === 'en_proceso' || p.estado_pedido === 'en proceso' ? 'selected' : ''}>En Proceso</option>
-                            <option value="enviado" ${p.estado_pedido === 'enviado' ? 'selected' : ''}>Enviado</option>
-                            <option value="entregado" ${p.estado_pedido === 'entregado' ? 'selected' : ''}>Entregado</option>
-                            <option value="cancelado" ${p.estado_pedido === 'cancelado' ? 'selected' : ''}>Cancelado</option>
-                        </select>
+                        <div class="grupo-botones-estado">
+                            <button class="btn-accion btn-ver-pedido" data-id="${p.id_pedido}" title="Ver detalles">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                            <div class="dropdown-estado">
+                                <button class="btn-cambiar-estado ${colorBotonEstado(estadoActual)}" data-id="${p.id_pedido}" title="Cambiar estado">
+                                    ${estadoActual.charAt(0).toUpperCase() + estadoActual.slice(1).replace('_',' ')} <i class="fas fa-chevron-down" style="font-size:10px;margin-left:4px"></i>
+                                </button>
+                                <div class="menu-dropdown" id="menu-${p.id_pedido}">
+                                    <button class="opcion-estado" data-id="${p.id_pedido}" data-val="pendiente">Pendiente</button>
+                                    <button class="opcion-estado" data-id="${p.id_pedido}" data-val="en_proceso">En proceso</button>
+                                    <button class="opcion-estado" data-id="${p.id_pedido}" data-val="enviado">Enviado</button>
+                                    <button class="opcion-estado" data-id="${p.id_pedido}" data-val="entregado">Entregado</button>
+                                    <button class="opcion-estado" data-id="${p.id_pedido}" data-val="cancelado">Cancelado</button>
+                                </div>
+                            </div>
+                        </div>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
 
-            // Cambiar estado de pedido
-            document.querySelectorAll('.seleccion-estado-pedido').forEach(sel => {
-                sel.addEventListener('change', async function() {
+            // Cambiar estado de pedido con dropdown
+            document.querySelectorAll('.btn-cambiar-estado').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
                     const id = this.getAttribute('data-id');
+                    const menu = document.getElementById(`menu-${id}`);
+                    // Cerrar todos los otros
+                    document.querySelectorAll('.menu-dropdown.abierto').forEach(m => {
+                        if (m !== menu) m.classList.remove('abierto');
+                    });
+                    menu.classList.toggle('abierto');
+                });
+            });
+
+            document.querySelectorAll('.opcion-estado').forEach(opt => {
+                opt.addEventListener('click', async function(e) {
+                    e.stopPropagation();
+                    const id = this.getAttribute('data-id');
+                    const val = this.getAttribute('data-val');
                     try {
-                        await API.actualizarEstadoPedido(id, this.value);
+                        await API.actualizarEstadoPedido(id, val);
                         await cargarPedidos(busqueda);
                     } catch (err) { alert('Error al actualizar estado: ' + err.message); }
                 });
             });
+
+            // Cerrar dropdowns al hacer click fuera
+            document.addEventListener('click', () => {
+                document.querySelectorAll('.menu-dropdown.abierto').forEach(m => m.classList.remove('abierto'));
+            }, { once: false });
 
         } catch (err) {
             if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error: ${err.message}</td></tr>`;
@@ -143,65 +250,109 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ---- Tabla de proveedores ----
-    async function cargarProveedores() {
+    let listaProveedores = [];
+    async function cargarProveedores(busqueda = '') {
         const tbody = document.getElementById('tbody-proveedores');
         if (!tbody) return;
         try {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando proveedores...</td></tr>`;
-            const provs = await API.getProveedores();
+            if (listaProveedores.length === 0 || !busqueda) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando proveedores...</td></tr>`;
+                listaProveedores = await API.getProveedores();
+            }
+
+            const term = (busqueda || '').toLowerCase().trim();
+            const provs = listaProveedores.filter(p => {
+                if (!term) return true;
+                const nombre = (p.nombre_proveedor || '').toLowerCase();
+                const contacto = (p.contacto || '').toLowerCase();
+                const correo = (p.correo || '').toLowerCase();
+                const tel = (p.telefono || '').toLowerCase();
+                const dir = (p.direccion || '').toLowerCase();
+                return nombre.includes(term) || contacto.includes(term) || correo.includes(term) || tel.includes(term) || dir.includes(term);
+            });
 
             tbody.innerHTML = '';
             if (provs.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b">No hay proveedores registrados.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#64748b">No se encontraron proveedores registrados.</td></tr>`;
                 return;
             }
             provs.forEach(p => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td><strong>${p.nombre_proveedor}</strong></td>
-                    <td>${p.correo ? `<a href="mailto:${p.correo}" style="color:var(--naranja)">${p.correo}</a>` : p.telefono || 'Sin contacto'}</td>
-                    <td>${p.telefono || 'N/A'}</td>
-                    <td><span class="texto-verde">★ 5.0</span></td>
-                    <td><span class="estado estado-enviado">● Activo</span></td>
+                    <td>${p.contacto || 'Sin contacto'}</td>
+                    <td>${p.telefono || 'Sin teléfono'}</td>
+                    <td>${p.correo ? `<a href="mailto:${p.correo}" style="color:var(--naranja);text-decoration:none">${p.correo}</a>` : 'Sin correo'}</td>
+                    <td>${p.direccion || 'N/A'}</td>
+                    <td><strong>${p.total_productos || 0}</strong> prod.</td>
                 `;
                 tbody.appendChild(tr);
             });
         } catch (err) {
-            if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#ef4444">Error: ${err.message}</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#ef4444">Error: ${err.message}</td></tr>`;
         }
     }
 
+    const busquedaProv = document.getElementById('busqueda-proveedores');
+    if (busquedaProv) {
+        busquedaProv.addEventListener('input', () => cargarProveedores(busquedaProv.value));
+    }
+
     // ---- Tabla de stock ----
-    async function cargarStock() {
+    let listaStock = [];
+    async function cargarStock(busqueda = '') {
         const tbody = document.getElementById('tbody-stock');
         if (!tbody) return;
         try {
-            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando inventario...</td></tr>`;
-            const productos = await API.getProductos();
+            if (listaStock.length === 0 || !busqueda) {
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#64748b"><i class="fas fa-spinner fa-spin"></i> Cargando inventario...</td></tr>`;
+                try {
+                    listaStock = await API.getInventario();
+                } catch (e) {
+                    listaStock = await API.getProductos();
+                }
+            }
+
+            const term = (busqueda || '').toLowerCase().trim();
+            const productos = listaStock.filter(p => {
+                if (!term) return true;
+                const nombre = (p.nombre_producto || '').toLowerCase();
+                const id = String(p.id_producto || '');
+                const cat = (p.nombre_categoria || '').toLowerCase();
+                const prov = (p.nombre_proveedor || '').toLowerCase();
+                return nombre.includes(term) || id.includes(term) || cat.includes(term) || prov.includes(term);
+            });
 
             tbody.innerHTML = '';
             if (productos.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#64748b">No hay productos registrados.</td></tr>`;
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#64748b">No se encontraron productos en el inventario.</td></tr>`;
                 return;
             }
             productos.forEach(p => {
-                const stock = Number(p.stock) || 0;
+                const stock = Number(p.cantidad_disponible !== undefined ? p.cantidad_disponible : p.stock) || 0;
+                const min = Number(p.cantidad_minima) || 10;
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>
                         <strong>${p.nombre_producto}</strong><br>
-                        <span style="font-size:0.75rem;color:var(--texto-secundario)">#${p.id_producto}</span>
+                        <span style="font-size:0.75rem;color:var(--texto-secundario)">ID: #${p.id_producto}</span>
                     </td>
                     <td>${p.nombre_categoria || 'Sin categoría'}</td>
+                    <td><strong>${fmt(p.precio)}</strong></td>
                     <td>${p.nombre_proveedor || 'N/A'}</td>
-                    <td><strong>${stock}</strong></td>
-                    <td>${insigniaStock(stock)}</td>
+                    <td><strong>${stock}</strong>${p.cantidad_minima !== undefined ? ` <small style="color:var(--texto-secundario)">(mín. ${min})</small>` : ''}</td>
+                    <td>${insigniaStock(stock, min)}</td>
                 `;
                 tbody.appendChild(tr);
             });
         } catch (err) {
-            if (tbody) tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:20px;color:#ef4444">Error: ${err.message}</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#ef4444">Error: ${err.message}</td></tr>`;
         }
+    }
+
+    const busquedaStk = document.getElementById('busqueda-stock');
+    if (busquedaStk) {
+        busquedaStk.addEventListener('input', () => cargarStock(busquedaStk.value));
     }
 
     // ---- Cerrar sesión ----

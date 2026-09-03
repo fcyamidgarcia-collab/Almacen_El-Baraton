@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     function normalizarEstado(estado) {
         const e = (estado || 'pendiente').toLowerCase();
-        if (e.includes('en_proceso') || e.includes('proces')) return { etiqueta: '● procesando', clase: 'estado-procesando' };
-        if (e.includes('envi')) return { etiqueta: '● enviado', clase: 'estado-enviado' };
-        if (e.includes('entreg') || e.includes('complet')) return { etiqueta: '● completada', clase: 'estado-enviado' };
-        if (e.includes('cancel')) return { etiqueta: '● cancelado', clase: 'estado-cancelado' };
-        return { etiqueta: '● pendiente', clase: 'estado-pendiente' };
+        if (e.includes('en_proceso') || e.includes('proces')) return { etiqueta: 'Procesando', clase: 'estado-procesando' };
+        if (e.includes('envi')) return { etiqueta: 'Enviado', clase: 'estado-enviado' };
+        if (e.includes('entreg') || e.includes('complet')) return { etiqueta: 'Completada', clase: 'estado-enviado' };
+        if (e.includes('cancel')) return { etiqueta: 'Cancelado', clase: 'estado-cancelado' };
+        return { etiqueta: 'Pendiente', clase: 'estado-pendiente' };
     }
 
     async function cargarEstadisticas() {
