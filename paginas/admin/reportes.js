@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                         <td><strong>${item.cantidad_disponible}</strong></td>
                         <td>${item.cantidad_minima}</td>
                         <td>${item.ubicacion || 'N/A'}</td>
-                        <td><span class="estado ${estadoClase}">● ${estadoTexto}</span></td>
+                        <td><span class="estado ${estadoClase}">${estadoTexto}</span></td>
                     `;
                     tbodyInv.appendChild(tr);
                 });
