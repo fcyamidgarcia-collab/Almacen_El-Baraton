@@ -109,10 +109,13 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const selTipo = document.getElementById('cliTipoDoc');
                 if (selTipo) selTipo.value = tipoDoc;
                 document.getElementById('cliNit').value = numDoc;
+                const elCorreo = document.getElementById('cliCorreo');
+                if (elCorreo) elCorreo.value = cli.correo || '';
                 document.getElementById('cliContacto').value = cli.telefono || '';
                 document.getElementById('cliDireccion').value = cli.direccion || '';
                 document.getElementById('cliCiudad').value = cli.ciudad || '';
 
+                limpiarTodosLosErrores();
                 modal.classList.add('activo');
             });
         });
@@ -137,17 +140,25 @@ document.addEventListener('DOMContentLoaded', async () => {
         });
     }
 
+    function cerrarModal() {
+        modal.classList.remove('activo');
+        form.reset();
+        limpiarTodosLosErrores();
+        modoEdicion = null;
+    }
+
     if (btnNuevo) {
         btnNuevo.addEventListener('click', () => {
             modoEdicion = null;
             if (modalTitulo) modalTitulo.textContent = 'Registrar Nuevo Cliente';
             form.reset();
+            limpiarTodosLosErrores();
             modal.classList.add('activo');
         });
     }
 
-    if (btnCerrar) btnCerrar.addEventListener('click', () => modal.classList.remove('activo'));
-    if (btnCancelar) btnCancelar.addEventListener('click', () => modal.classList.remove('activo'));
+    if (btnCerrar) btnCerrar.addEventListener('click', cerrarModal);
+    if (btnCancelar) btnCancelar.addEventListener('click', cerrarModal);
 
     // Helper de error en modal cliente
     function mostrarErrorCli(input, msg) {
@@ -166,7 +177,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (sig && sig.classList.contains('error-cli-msg')) sig.remove();
     }
 
-    ['cliNombre', 'cliApellido', 'cliNit', 'cliContacto', 'cliDireccion', 'cliCiudad'].forEach(id => {
+    function limpiarTodosLosErrores() {
+        ['cliNombre', 'cliApellido', 'cliNit', 'cliCorreo', 'cliContacto', 'cliDireccion', 'cliCiudad'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) limpiarErrorCli(el);
+        });
+    }
+
+    ['cliNombre', 'cliApellido', 'cliNit', 'cliCorreo', 'cliContacto', 'cliDireccion', 'cliCiudad'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', () => limpiarErrorCli(el));
     });
@@ -179,19 +197,22 @@ document.addEventListener('DOMContentLoaded', async () => {
             const elApellido = document.getElementById('cliApellido');
             const elTipoDoc = document.getElementById('cliTipoDoc');
             const elNit = document.getElementById('cliNit');
+            const elCorreo = document.getElementById('cliCorreo');
             const elContacto = document.getElementById('cliContacto');
             const elDireccion = document.getElementById('cliDireccion');
             const elCiudad = document.getElementById('cliCiudad');
 
             const nombre = elNombre.value.trim();
-            const apellido = elApellido.value.trim();
+            const apellido = elApellido ? elApellido.value.trim() : '';
             const tipoDoc = elTipoDoc ? elTipoDoc.value : 'NIT';
             const documento_identidad = elNit.value.trim();
+            const correo = elCorreo ? elCorreo.value.trim() : '';
             const telefono = elContacto.value.trim();
             const direccion = elDireccion.value.trim();
             const ciudad = elCiudad.value.trim();
 
-            const telefonoRegex = /^[+]?[\d\s-]{7,15}$/;
+            const telefonoRegex = /^[+]?[\d\s().-]{7,20}$/;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             let esValido = true;
 
             if (!nombre || nombre.length < 2) {
@@ -201,18 +222,26 @@ document.addEventListener('DOMContentLoaded', async () => {
                 limpiarErrorCli(elNombre);
             }
 
-            if (!apellido || apellido.length < 2) {
-                mostrarErrorCli(elApellido, 'El apellido debe tener al menos 2 caracteres.');
+            // Apellido es opcional; si se proporciona debe tener al menos 2 caracteres
+            if (apellido && apellido.length < 2) {
+                mostrarErrorCli(elApellido, 'Si ingresas apellido o razón complementaria, debe tener al menos 2 caracteres.');
                 esValido = false;
-            } else {
+            } else if (elApellido) {
                 limpiarErrorCli(elApellido);
             }
 
-            if (!documento_identidad || documento_identidad.length < 5) {
-                mostrarErrorCli(elNit, 'El documento o NIT debe tener al menos 5 caracteres.');
+            if (!documento_identidad || documento_identidad.length < 4) {
+                mostrarErrorCli(elNit, 'El documento o NIT debe tener al menos 4 caracteres.');
                 esValido = false;
             } else {
                 limpiarErrorCli(elNit);
+            }
+
+            if (correo && !emailRegex.test(correo)) {
+                mostrarErrorCli(elCorreo, 'Ingresa un formato de correo electrónico válido.');
+                esValido = false;
+            } else if (elCorreo) {
+                limpiarErrorCli(elCorreo);
             }
 
             if (telefono && !telefonoRegex.test(telefono)) {
@@ -229,7 +258,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 limpiarErrorCli(elDireccion);
             }
 
-            if (!ciudad || ciudad.length < 3) {
+            if (!ciudad || ciudad.length < 2) {
                 mostrarErrorCli(elCiudad, 'Ingresa una ciudad válida.');
                 esValido = false;
             } else {
@@ -247,6 +276,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tipo_documento: tipoDoc,
                 documento_identidad: `${tipoDoc}: ${documento_identidad}`,
                 numero_documento: documento_identidad,
+                correo: correo || null,
                 telefono,
                 direccion,
                 ciudad,
@@ -265,9 +295,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                     alert('¡Cliente registrado exitosamente en MySQL!');
                 }
 
-                modal.classList.remove('activo');
-                form.reset();
-                modoEdicion = null;
+                cerrarModal();
                 await cargar();
             } catch (err) {
                 alert('Error al procesar cliente: ' + err.message);
