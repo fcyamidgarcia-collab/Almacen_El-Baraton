@@ -5,8 +5,8 @@
     'use strict';
 
     /**
-     * Configuración de rutas protegidas
-     * Especifica qué rol(es) pueden acceder a cada ruta
+      Configuración de rutas protegidas
+      Especifica qué rol(es) pueden acceder a cada ruta
      */
     const RUTAS_PROTEGIDAS = {
         'admin': ['administrador', 'admin'],
@@ -15,7 +15,7 @@
     };
 
     /**
-     * Obtener el rol de ruta actual basado en la URL
+      Obtener el rol de ruta actual basado en la URL
      */
     function obtenerRutaActual() {
         const path = window.location.pathname.replace(/\\/g, '/').toLowerCase();
@@ -28,7 +28,7 @@
     }
 
     /**
-     * Obtener usuario autenticado de localStorage
+      Obtener usuario autenticado de localStorage
      */
     function obtenerUsuario() {
         try {
@@ -40,14 +40,14 @@
     }
 
     /**
-     * Obtener token de autenticación
+      Obtener token de autenticación
      */
     function obtenerToken() {
         return localStorage.getItem('baraton_token') || null;
     }
 
     /**
-     * Normalizar nombre de rol para comparación
+      Normalizar nombre de rol para comparación
      */
     function normalizarRol(rol) {
         if (!rol) return '';
@@ -55,7 +55,7 @@
     }
 
     /**
-     * Verificar si el usuario tiene permiso para acceder a la ruta actual
+      Verificar si el usuario tiene permiso para acceder a la ruta actual
      */
     function verificarAcceso() {
         const rutaActual = obtenerRutaActual();
@@ -97,7 +97,7 @@
     }
 
     /**
-     * Redirigir a la página de login
+      Redirigir a la página de login
      */
     function redirigirAlLogin() {
         // Detectar la ruta base según la ubicación actual
@@ -112,7 +112,7 @@
     }
 
     /**
-     * Redirigir a página de acceso denegado
+      Redirigir a página de acceso denegado
      */
     function redirigirAccesoDenegado() {
         const rutaBase = '../';
@@ -121,7 +121,7 @@
 
     /**
      * Inicializar protección de rutas
-     * Se ejecuta cuando el DOM está listo
+      Se ejecuta cuando el DOM está listo
      */
     function inicializarProteccion() {
         const rutaActual = obtenerRutaActual();
