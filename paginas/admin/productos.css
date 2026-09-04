@@ -1,8 +1,8 @@
 @import url('dashboard.css');
 
-/* ==========================================
-   PRODUCTOS CSS (ESPAÑOL)
-   ========================================== */
+/*
+   PRODUCTOS CSS 
+ */
 :root {
     --oscuro: #111827;
     --naranja: #e67e22;
@@ -28,3 +28,61 @@
 .estado-normal { background: var(--estado-normal-fondo); color: var(--estado-normal); }
 .estado-bajo { background: var(--estado-bajo-fondo); color: var(--estado-bajo); }
 .estado-agotado { background: var(--estado-agotado-fondo); color: var(--estado-agotado); }
+
+@media (max-width: 768px) {
+    .tarjeta-datos {
+        width: 100%;
+        overflow: hidden;
+    }
+
+    .tarjeta-datos .encabezado-tarjeta,
+    .tarjeta-datos .barra-herramientas-pedidos {
+        align-items: stretch;
+    }
+
+    .tarjeta-datos .acciones-encabezado-pedidos,
+    .tarjeta-datos .grupo-filtros {
+        width: 100%;
+    }
+
+    .tarjeta-datos .acciones-encabezado-pedidos .boton {
+        flex: 1 1 0;
+    }
+
+    .tarjeta-datos .grupo-filtros {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .tarjeta-datos .contenedor-entrada-busqueda,
+    .tarjeta-datos .contenedor-entrada-busqueda input,
+    .tarjeta-datos .seleccion-filtro {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .tarjeta-datos .pestanas-estado {
+        flex-wrap: nowrap;
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .tarjeta-datos .boton-pestana {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .tarjeta-datos .acciones-encabezado-pedidos {
+        flex-direction: column;
+    }
+
+    .tarjeta-datos .acciones-encabezado-pedidos .boton {
+        width: 100%;
+    }
+
+    .tarjeta-datos .encabezado-tarjeta h2 {
+        font-size: 1rem;
+    }
+}

@@ -1,7 +1,7 @@
-/* ==========================================
+/*
    SISTEMA DE ESTILOS DE ADMINISTRACIÓN
-   Industrial Supply Co.
-   ========================================== */
+  
+   */
 
 :root {
     --oscuro: #111827;
@@ -50,9 +50,9 @@ a {
     color: inherit;
 }
 
-/* ==========================================
+/* 
    ENCABEZADO GLOBAL (HEADER)
-   ========================================== */
+*/
 header {
     display: flex;
     justify-content: space-between;
@@ -969,9 +969,48 @@ footer .pie-inferior, footer .footer-bottom {
 }
 
 @media (max-width: 768px) {
-    .barra-lateral, .sidebar { display: none; }
+    .diseno-panel, .dashboard-layout { display: block; }
+    .barra-lateral, .sidebar {
+        display: flex;
+        width: 100%;
+        min-height: auto;
+    }
+    .encabezado-barra-lateral, .sidebar-header {
+        min-height: 58px;
+        height: auto;
+    }
+    .menu-barra-lateral, .sidebar-menu {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        padding: 10px 16px;
+        -webkit-overflow-scrolling: touch;
+    }
+    .seccion-menu, .menu-section { display: contents; }
+    .titulo-menu, .menu-title,
+    .pie-barra-lateral, .sidebar-footer { display: none; }
+    .item-menu, .menu-item {
+        flex: 0 0 auto;
+        margin-bottom: 0;
+        white-space: nowrap;
+    }
     .rejilla-kpi, .kpi-grid { grid-template-columns: 1fr; }
     .rejilla-formulario, .form-grid { grid-template-columns: 1fr; }
+    .cuerpo-panel, .dashboard-body { padding: 24px 16px; }
+    .tabla-responsiva, .table-responsive {
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+    .tabla-datos, .data-table { min-width: 620px; }
+    .tabla-datos th, .data-table th,
+    .tabla-datos td, .data-table td { padding-left: 14px; padding-right: 14px; }
+    .encabezado-filtros, .contenedor-encabezado {
+        width: 100%;
+    }
+    .encabezado-filtros > *, .contenedor-encabezado > * {
+        max-width: 100%;
+    }
 }
 
 @media (max-width: 900px) {
@@ -991,4 +1030,10 @@ footer .pie-inferior, footer .footer-bottom {
     header .barra-busqueda, header .search-bar {
         width: 100%;
     }
+    .cuerpo-panel, .dashboard-body { padding: 16px 12px; }
+    .contenedor-modal, .modal-container { max-height: calc(100vh - 24px); }
+    .encabezado-modal, .modal-header,
+    .cuerpo-modal, .modal-body,
+    .pie-modal, .modal-footer { padding-left: 16px; padding-right: 16px; }
+    .pie-tabla, .table-footer { padding: 14px 16px; }
 }
