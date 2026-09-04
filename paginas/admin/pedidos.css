@@ -1,8 +1,8 @@
 @import url('dashboard.css');
 
-/* ==========================================
-   PEDIDOS CSS (ESPAÑOL)
-   ========================================== */
+/* 
+   PEDIDOS CSS 
+ */
 :root {
     --oscuro: #111827;
     --oscuro-secundario: #1f2937;
@@ -592,4 +592,53 @@
     gap: 10px;
     font-size: 0.86rem;
     border-left: 4px solid var(--naranja);
+}
+
+@media (max-width: 600px) {
+    .contenedor-encabezado-pedidos,
+    .barra-herramientas-pedidos,
+    .pie-tabla {
+        align-items: stretch;
+    }
+
+    .acciones-encabezado-pedidos,
+    .contenedor-entrada-busqueda,
+    .control-actualizador {
+        width: 100%;
+    }
+
+    .acciones-encabezado-pedidos .boton,
+    .contenedor-entrada-busqueda input,
+    .control-actualizador select {
+        width: 100%;
+    }
+
+    .pestanas-estado {
+        max-width: 100%;
+        overflow-x: auto;
+    }
+
+    .boton-pestana {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .rejilla-info-pedido,
+    .rejilla-formulario {
+        grid-template-columns: 1fr;
+    }
+
+    .grupo-formulario.ancho-completo {
+        grid-column: auto;
+    }
+
+    .seguimiento-pasos-pedido {
+        min-width: 430px;
+    }
+
+    .contenedor-notificaciones {
+        left: 12px;
+        right: 12px;
+        bottom: 12px;
+    }
 }
