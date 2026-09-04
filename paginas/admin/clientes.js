@@ -95,9 +95,20 @@ document.addEventListener('DOMContentLoaded', async () => {
                 modoEdicion = id;
                 if (modalTitulo) modalTitulo.textContent = `Editar Cliente #${id}`;
 
+                let rawDoc = cli.documento_identidad || '';
+                let tipoDoc = cli.tipo_documento || 'NIT';
+                let numDoc = rawDoc;
+                if (rawDoc.includes(':')) {
+                    const p = rawDoc.split(':');
+                    tipoDoc = p[0].trim().toUpperCase();
+                    numDoc = p.slice(1).join(':').trim();
+                }
+
                 document.getElementById('cliNombre').value = cli.nombre || '';
                 document.getElementById('cliApellido').value = cli.apellido || '';
-                document.getElementById('cliNit').value = cli.documento_identidad || '';
+                const selTipo = document.getElementById('cliTipoDoc');
+                if (selTipo) selTipo.value = tipoDoc;
+                document.getElementById('cliNit').value = numDoc;
                 document.getElementById('cliContacto').value = cli.telefono || '';
                 document.getElementById('cliDireccion').value = cli.direccion || '';
                 document.getElementById('cliCiudad').value = cli.ciudad || '';
@@ -166,6 +177,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const elNombre = document.getElementById('cliNombre');
             const elApellido = document.getElementById('cliApellido');
+            const elTipoDoc = document.getElementById('cliTipoDoc');
             const elNit = document.getElementById('cliNit');
             const elContacto = document.getElementById('cliContacto');
             const elDireccion = document.getElementById('cliDireccion');
@@ -173,6 +185,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const nombre = elNombre.value.trim();
             const apellido = elApellido.value.trim();
+            const tipoDoc = elTipoDoc ? elTipoDoc.value : 'NIT';
             const documento_identidad = elNit.value.trim();
             const telefono = elContacto.value.trim();
             const direccion = elDireccion.value.trim();
@@ -231,7 +244,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const payload = {
                 nombre,
                 apellido,
-                documento_identidad,
+                tipo_documento: tipoDoc,
+                documento_identidad: `${tipoDoc}: ${documento_identidad}`,
+                numero_documento: documento_identidad,
                 telefono,
                 direccion,
                 ciudad,

@@ -179,7 +179,9 @@ if (formContacto) {
         // Guardar mensaje en base de datos / API
         try {
             if (window.API && API.enviarMensajeContacto) {
+                const usuarioLog = (window.API && API.getUsuarioActual) ? API.getUsuarioActual() : null;
                 await API.enviarMensajeContacto({
+                    id_usuario: usuarioLog?.id_usuario || null,
                     nombre_completo: nombre,
                     email: email,
                     telefono: tel,

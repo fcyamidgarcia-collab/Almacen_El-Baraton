@@ -1,4 +1,4 @@
-// API - ALMACEN EL BARATON
+// API - Almacen El Baraton
 // Conecta el Frontend con el Servidor Node.js y MySQL
 
 const API_BASE_URL = window.location.origin.includes(':3000')

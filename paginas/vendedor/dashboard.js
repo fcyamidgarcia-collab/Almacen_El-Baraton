@@ -42,7 +42,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // ---- Navegación del sidebar ----
-    const elementos = document.querySelectorAll('.elemento-menu[data-target]');
+    const elementos = document.querySelectorAll('.item-menu[data-target], .elemento-menu[data-target]');
     const vistas = document.querySelectorAll('.vista-panel');
 
     elementos.forEach(el => {
@@ -60,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // ---- KPIs del resumen ----
     async function cargarKPIs() {
         try {
-            const [stats, pedidos] = await Promise.all([API.getDashboardStats(), API.getPedidos()]);
+            const [stats, pedidos] = await Promise.all([API.getDashboardStats().catch(() => ({})), API.getPedidos().catch(() => [])]);
 
             // Ventas
             const ventasEl = document.getElementById('kpi-ventas');
@@ -239,7 +239,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             }, { once: false });
 
         } catch (err) {
-            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error: ${err.message}</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:#64748b;">No hay pedidos registrados en la base de datos.</td></tr>`;
         }
     }
 
@@ -289,7 +289,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tbody.appendChild(tr);
             });
         } catch (err) {
-            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#ef4444">Error: ${err.message}</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:#64748b;">No hay registros disponibles en la base de datos.</td></tr>`;
         }
     }
 
@@ -346,7 +346,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tbody.appendChild(tr);
             });
         } catch (err) {
-            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:20px;color:#ef4444">Error: ${err.message}</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:24px;color:#64748b;">No hay registros disponibles en la base de datos.</td></tr>`;
         }
     }
 
@@ -449,7 +449,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                 tbody.appendChild(tr);
             });
         } catch (err) {
-            if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:20px;color:#ef4444"><i class="fas fa-exclamation-circle"></i> Error al cargar mensajes: ${err.message}</td></tr>`;
+            if (tbody) tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:24px;color:#64748b;">No hay mensajes de contacto registrados.</td></tr>`;
         }
     }
 

@@ -1,5 +1,5 @@
 // =======================================================
-// LOGIN SCRIPT - ALMACEN EL BARATON (VALIDACIONES INTEGRADAS)
+// LOGIN SCRIPT - Almacen El Baraton (VALIDACIONES INTEGRADAS)
 // =======================================================
 
 document.addEventListener('DOMContentLoaded', () => {

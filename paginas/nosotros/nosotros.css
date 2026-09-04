@@ -1,9 +1,48 @@
-/* ==========================================================================
-   NOSOTROS.CSS — Diseño Premium Cinematográfico
-   Almacen El Baraton — El Baratón
-   ========================================================================== */
+:root {
+    --oscuro: #1e293b;
+    --nav-fondo: #0f172a;
+    --naranja: #e67e22;
+    --naranja-hover: #d35400;
+    --naranja-claro: rgba(230, 126, 34, 0.1);
+    --blanco: #ffffff;
+    --gris: #64748b;
+    --texto-oscuro: #0f172a;
+    --borde: #e2e8f0;
+    --tarjeta: #ffffff;
+    --fondo-claro: #f8fafc;
+    --fuente: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --radio: 16px;
+    --sombra: 0 10px 40px -10px rgba(15, 23, 42, 0.08);
+    --transicion: all 0.3s ease;
+}
 
-/* ========== HERO CINEMATOGRÁFICO ========== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--fuente);
+    color: var(--texto-oscuro);
+    background: #ffffff;
+    line-height: 1.6;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+ul {
+    list-style: none;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
 .hero-nosotros {
     position: relative;
     min-height: 520px;
@@ -68,7 +107,6 @@
     line-height: 1.7;
 }
 
-/* Stats strip */
 .hero-stats {
     display: flex;
     align-items: center;
@@ -116,7 +154,6 @@
     flex-shrink: 0;
 }
 
-/* ========== ETIQUETA DE SECCIÓN ========== */
 .seccion-etiqueta {
     display: inline-block;
     font-size: 0.72rem;
@@ -127,7 +164,6 @@
     text-transform: uppercase;
 }
 
-/* ========== MISIÓN Y VALORES ========== */
 .mision-seccion {
     padding: 80px 24px;
     background: #ffffff;
@@ -158,7 +194,6 @@
     line-height: 1.7;
 }
 
-/* Valores Grid */
 .valores-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -224,7 +259,6 @@
     line-height: 1.65;
 }
 
-/* ========== EVOLUCIÓN / TIMELINE MODERNO ========== */
 .evolucion-seccion {
     padding: 80px 24px;
     background: #f8fafc;
@@ -355,7 +389,6 @@
     box-shadow: 0 12px 40px rgba(230, 126, 34, 0.18);
 }
 
-/* ========== LIDERAZGO ========== */
 .liderazgo-seccion {
     padding: 80px 24px;
     background: #ffffff;
@@ -470,7 +503,6 @@
     line-height: 1.65;
 }
 
-/* ========== CTA SECCIÓN FINAL ========== */
 .cta-seccion {
     padding: 80px 24px;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #0f172a 100%);
@@ -556,7 +588,6 @@
     border-color: rgba(255, 255, 255, 0.35);
 }
 
-/* ========== RESPONSIVE ========== */
 @media (max-width: 768px) {
     .hero-contenido-nosotros h1 {
         font-size: 2rem;
@@ -603,7 +634,6 @@
     }
 }
 
-/* ========== GLOBAL HEADER & FOOTER (inherited from other pages) ========== */
 header {
     display: flex;
     justify-content: space-between;
@@ -681,7 +711,6 @@ header .iconos-encabezado a:hover, header .header-icons a:hover, header .iconos-
     color: var(--naranja, #e67e22);
 }
 
-/* Footer */
 footer {
     background: #0f172a;
     color: #cbd5e1;
@@ -820,7 +849,6 @@ footer .pie-inferior, footer .footer-bottom, footer .parte-inferior-pie {
     margin-right: auto;
 }
 
-/* RESPONSIVO */
 @media (max-width: 900px) {
     footer .pie-superior, footer .footer-top, footer .parte-superior-pie {
         grid-template-columns: 1fr 1fr;
@@ -837,5 +865,120 @@ footer .pie-inferior, footer .footer-bottom, footer .parte-inferior-pie {
     }
     header .barra-busqueda, header .search-bar {
         width: 100%;
+    }
+}
+
+@media (max-width: 768px) {
+    header, .encabezado, .barra-nav {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 10px 16px !important;
+        gap: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    header .logo, .encabezado .logo, .barra-nav .logo {
+        font-size: 1.05rem !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        order: 1 !important;
+    }
+    header .iconos-encabezado, .encabezado .iconos-encabezado,
+    header .header-icons, .iconos-cabecera {
+        order: 2 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        flex: 0 0 auto !important;
+    }
+    header .barra-busqueda, .encabezado .barra-busqueda,
+    header .search-bar, .barra-nav .barra-busqueda {
+        order: 3 !important;
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    header nav, .encabezado nav, .barra-nav nav {
+        order: 4 !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: flex-start !important;
+        gap: 14px !important;
+        overflow-x: auto !important;
+        padding: 4px 0 2px 0 !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    header nav::-webkit-scrollbar, .encabezado nav::-webkit-scrollbar, .barra-nav nav::-webkit-scrollbar {
+        display: none !important;
+    }
+    header nav a, .encabezado nav a, .barra-nav nav a {
+        white-space: nowrap !important;
+        font-size: 0.88rem !important;
+        padding: 4px 6px !important;
+    }
+    footer {
+        padding: 2rem 1rem 1rem !important;
+    }
+    footer .pie-superior, footer .footer-top, footer .parte-superior-pie {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    header, .encabezado, .barra-nav {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+    }
+    header .logo, .encabezado .logo, .barra-nav .logo {
+        font-size: 0.98rem !important;
+    }
+    header nav a, .encabezado nav a, .barra-nav nav a {
+        font-size: 0.82rem !important;
+    }
+    footer .pie-superior, footer .footer-top, footer .parte-superior-pie {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+    }
+    footer .columna-contacto .iconos-sociales, footer .contact-col .social-icons, footer .col-contacto .iconos-sociales {
+        justify-content: center !important;
+    }
+    footer .formulario-boletin, footer .newsletter-form, footer .boletin-form {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+    footer .formulario-boletin input, footer .formulario-boletin button {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 4px !important;
+        margin-bottom: 6px !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-nosotros {
+        min-height: 420px !important;
+        padding: 30px 16px !important;
+    }
+    .hero-stats {
+        flex-direction: column !important;
+        gap: 16px !important;
+        padding: 18px 20px !important;
+        max-width: 100% !important;
+    }
+    .stat-divider {
+        display: none !important;
+    }
+    .valores-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .timeline-item {
+        flex-direction: column !important;
+        align-items: flex-start !important;
     }
 }

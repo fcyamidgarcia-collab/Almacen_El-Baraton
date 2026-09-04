@@ -607,6 +607,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             e.preventDefault();
 
             const elEmpresa = document.getElementById('nuevoNombreCliente');
+            const elTipoDoc = document.getElementById('nuevoTipoDoc');
+            const elNumDoc = document.getElementById('nuevoNumDoc');
             const elResponsable = document.getElementById('nuevoNombreContacto');
             const elEmail = document.getElementById('nuevoEmailContacto');
             const elDireccion = document.getElementById('nuevaDireccionEntrega');
@@ -617,6 +619,8 @@ document.addEventListener('DOMContentLoaded', async () => {
             const elEstado = document.getElementById('nuevoEstadoPedido');
 
             const nombreEmpresa = elEmpresa.value.trim();
+            const tipoDoc = elTipoDoc ? elTipoDoc.value : 'NIT';
+            const numDoc = elNumDoc ? elNumDoc.value.trim() : '';
             const responsable = elResponsable.value.trim();
             const email = elEmail.value.trim();
             const direccion = elDireccion.value.trim();
@@ -698,11 +702,14 @@ document.addEventListener('DOMContentLoaded', async () => {
                 if (prods && prods.length > 0) idProducto = prods[0].id_producto;
             } catch (_) {}
 
+            const docFinal = numDoc ? `${tipoDoc}: ${numDoc}` : `NIT-${Date.now().toString().slice(-8)}`;
             const nuevoPedidoData = {
-                documento_identidad: `NIT-${Date.now().toString().slice(-8)}`,
+                tipo_documento: tipoDoc,
+                documento_identidad: docFinal,
+                numero_documento: numDoc || null,
                 direccion_entrega: `${direccion}, ${ciudad}`,
                 metodo_pago: metodoPago,
-                observaciones: `Pedido Admin | Empresa: ${nombreEmpresa} | Contacto: ${responsable} | Ref: ${nombreProducto}`,
+                observaciones: `Pedido Admin | Empresa: ${nombreEmpresa} | Doc: ${tipoDoc} ${numDoc} | Contacto: ${responsable} | Ref: ${nombreProducto}`,
                 items: [{
                     id_producto: idProducto,
                     cantidad: 1,

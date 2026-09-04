@@ -124,6 +124,7 @@
                             <thead>
                                 <tr>
                                     <th>USUARIO / NOMBRE</th>
+                                    <th>DOCUMENTO</th>
                                     <th>CORREO ELECTRÓNICO</th>
                                     <th>ROL</th>
                                     <th>ÚLTIMO ACCESO</th>
@@ -156,6 +157,20 @@
                         <div class="grupo-formulario">
                             <label>Apellido *</label>
                             <input type="text" id="usrApellido" required placeholder="Ej: Pérez" class="entrada-filtro">
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Tipo de Documento</label>
+                            <select id="usrTipoDoc" class="seleccion-filtro">
+                                <option value="CC" selected>Cédula de Ciudadanía (CC)</option>
+                                <option value="NIT">NIT (Empresas)</option>
+                                <option value="CE">Cédula de Extranjería (CE)</option>
+                                <option value="TI">Tarjeta de Identidad (TI)</option>
+                                <option value="PAS">Pasaporte (PAS)</option>
+                            </select>
+                        </div>
+                        <div class="grupo-formulario">
+                            <label>Número de Documento</label>
+                            <input type="text" id="usrDocumento" placeholder="Ej: 1020304050" class="entrada-filtro">
                         </div>
                         <div class="grupo-formulario">
                             <label>Correo Electrónico *</label>

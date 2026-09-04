@@ -63,12 +63,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (elIdHeader) elIdHeader.textContent = `ID Usuario: #${usuario.id_usuario}${clienteData?.id_cliente ? ` | ID Cliente: #${clienteData.id_cliente}` : ''}`;
 
         // 2. Tarjeta de contacto y facturación
+        const elTipoDoc = document.getElementById('perfil-tipo-documento');
         const elDoc = document.getElementById('perfil-documento');
         const elTel = document.getElementById('perfil-telefono');
         const elDir = document.getElementById('perfil-direccion');
         const elCiu = document.getElementById('perfil-ciudad');
 
-        if (elDoc) elDoc.textContent = clienteData?.documento_identidad || 'No registrado';
+        let rawDoc = clienteData?.documento_identidad || usuario?.documento_identidad || '';
+        let tipoDocDetectado = clienteData?.tipo_documento || usuario?.tipo_documento || 'CC';
+        let numDocLimpio = rawDoc;
+        if (rawDoc && rawDoc.includes(':')) {
+            const partes = rawDoc.split(':');
+            tipoDocDetectado = partes[0].trim().toUpperCase();
+            numDocLimpio = partes.slice(1).join(':').trim();
+        }
+
+        if (elTipoDoc) elTipoDoc.textContent = tipoDocDetectado;
+        if (elDoc) elDoc.textContent = numDocLimpio || 'No registrado';
         if (elTel) elTel.textContent = clienteData?.telefono || usuario.telefono || 'No registrado';
         if (elDir) elDir.textContent = clienteData?.direccion || usuario.direccion || 'No registrada';
         if (elCiu) elCiu.textContent = clienteData?.ciudad || 'Bogotá D.C.';
@@ -221,7 +232,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (!modalPerfil) return;
         document.getElementById('edit-nombre').value = usuario.nombre || '';
         document.getElementById('edit-apellido').value = usuario.apellido || '';
-        document.getElementById('edit-documento').value = clienteData?.documento_identidad || '';
+
+        let rawDoc = clienteData?.documento_identidad || usuario?.documento_identidad || '';
+        let tipoDocDetectado = clienteData?.tipo_documento || usuario?.tipo_documento || 'CC';
+        let numDocLimpio = rawDoc;
+        if (rawDoc && rawDoc.includes(':')) {
+            const partes = rawDoc.split(':');
+            tipoDocDetectado = partes[0].trim().toUpperCase();
+            numDocLimpio = partes.slice(1).join(':').trim();
+        }
+
+        const selTipo = document.getElementById('edit-tipo-doc');
+        if (selTipo) selTipo.value = tipoDocDetectado || 'CC';
+        document.getElementById('edit-documento').value = numDocLimpio || '';
         document.getElementById('edit-telefono').value = clienteData?.telefono || usuario.telefono || '';
         document.getElementById('edit-direccion').value = clienteData?.direccion || usuario.direccion || '';
         document.getElementById('edit-ciudad').value = clienteData?.ciudad || 'Bogotá D.C.';
@@ -271,6 +294,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const inputNombre = document.getElementById('edit-nombre');
             const inputApellido = document.getElementById('edit-apellido');
+            const selectTipoDoc = document.getElementById('edit-tipo-doc');
             const inputDocumento = document.getElementById('edit-documento');
             const inputTelefono = document.getElementById('edit-telefono');
             const inputDireccion = document.getElementById('edit-direccion');
@@ -278,6 +302,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
             const nombre = inputNombre?.value.trim() || '';
             const apellido = inputApellido?.value.trim() || '';
+            const tipoDoc = selectTipoDoc?.value || 'CC';
             const doc = inputDocumento?.value.trim() || '';
             const tel = inputTelefono?.value.trim() || '';
             const dir = inputDireccion?.value.trim() || '';
@@ -336,7 +361,9 @@ document.addEventListener('DOMContentLoaded', async () => {
             const datos = {
                 nombre,
                 apellido,
-                documento_identidad: doc,
+                tipo_documento: tipoDoc,
+                documento_identidad: doc ? `${tipoDoc}: ${doc}` : '',
+                numero_documento: doc,
                 telefono: tel,
                 direccion: dir,
                 ciudad: ciu

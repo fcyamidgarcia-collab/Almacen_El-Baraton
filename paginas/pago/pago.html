@@ -64,13 +64,23 @@
                             </div>
                             <div class="grupo-input-fila">
                                 <div class="grupo-input mitad">
-                                    <label>Documento de Identidad / NIT</label>
-                                    <input type="text" id="documento" placeholder="Ej. 1020304050">
+                                    <label>Tipo de Documento</label>
+                                    <select id="tipo_documento">
+                                        <option value="CC">Cédula de Ciudadanía (CC)</option>
+                                        <option value="NIT">NIT (Empresas)</option>
+                                        <option value="CE">Cédula de Extranjería (CE)</option>
+                                        <option value="TI">Tarjeta de Identidad (TI)</option>
+                                        <option value="PAS">Pasaporte (PAS)</option>
+                                    </select>
                                 </div>
                                 <div class="grupo-input mitad">
-                                    <label>Teléfono / Celular de contacto</label>
-                                    <input type="text" id="telefono" placeholder="Ej. 300 123 4567">
+                                    <label>Número de Documento / NIT</label>
+                                    <input type="text" id="documento" placeholder="Ej. 1020304050">
                                 </div>
+                            </div>
+                            <div class="grupo-input completo">
+                                <label>Teléfono / Celular de contacto</label>
+                                <input type="text" id="telefono" placeholder="Ej. 300 123 4567">
                             </div>
                             <div class="grupo-input completo">
                                 <label>Dirección de entrega completa</label>

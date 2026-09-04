@@ -1,11 +1,3 @@
-/* ==========================================================================
-   SISTEMA GLOBAL DE MODO OSCURO (DARK MODE) - Almacen El Baraton
-   Diseño Premium, Integración Nativa y Cero Inconsistencias Visuales
-   ========================================================================== */
-
-/* ==========================================================================
-   1. INTEGRACIÓN DEL HEADER Y BOTÓN EN EL ENCABEZADO
-   ========================================================================== */
 header, .encabezado, .barra-nav {
     display: flex !important;
     align-items: center !important;
@@ -29,7 +21,6 @@ header .iconos-encabezado, .encabezado .iconos-encabezado, .iconos-cabecera, .he
     padding: 0 !important;
 }
 
-/* El botón de modo oscuro idéntico a los otros iconos del header */
 header .iconos-encabezado a.btn-modo-oscuro,
 header .iconos-encabezado .btn-modo-oscuro,
 .btn-modo-oscuro {
@@ -61,11 +52,10 @@ header .iconos-encabezado .btn-modo-oscuro:hover,
     transform: scale(1.1) rotate(15deg) !important;
 }
 
-/* Estado del botón en Modo Oscuro */
 html.dark-mode header .iconos-encabezado a.btn-modo-oscuro,
 html.dark-mode header .iconos-encabezado .btn-modo-oscuro,
 html.dark-mode .btn-modo-oscuro {
-    color: #fbbf24 !important; /* Ámbar radiante */
+    color: #fbbf24 !important;
     background: transparent !important;
 }
 
@@ -78,9 +68,6 @@ html.dark-mode .btn-modo-oscuro:hover {
     transform: scale(1.15) rotate(45deg) !important;
 }
 
-/* ==========================================================================
-   2. VARIABLES RAÍZ EN MODO OSCURO
-   ========================================================================== */
 html.dark-mode {
     --oscuro: #090d16;
     --oscuro-secundario: #0f172a;
@@ -112,14 +99,10 @@ html.dark-mode {
     color-scheme: dark;
 }
 
-/* Transiciones */
 body, header, aside, main, section, footer, div, nav, .tarjeta, input, select, textarea, button, a {
     transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease;
 }
 
-/* ==========================================================================
-   3. FONDOS GENERALES (ELIMINACIÓN RADICAL DE FONDOS BLANCOS/CLAROS)
-   ========================================================================== */
 html.dark-mode,
 html.dark-mode body,
 html.dark-mode main,
@@ -146,9 +129,6 @@ html.dark-mode .hero-overlay {
     color: #e2e8f0 !important;
 }
 
-/* ==========================================================================
-   4. SUPERFICIES, CAJAS, PANELES Y TARJETAS EN MODO OSCURO
-   ========================================================================== */
 html.dark-mode .caja-blanca,
 html.dark-mode .tarjeta,
 html.dark-mode .tarjeta-perfil,
@@ -206,9 +186,6 @@ html.dark-mode [class*="box-"] {
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.45) !important;
 }
 
-/* ==========================================================================
-   5. SECCIÓN TIENDA (PRODUCTOS.HTML) - CERO PARCHES BLANCOS
-   ========================================================================== */
 html.dark-mode .barra-superior {
     background: #151e2d !important;
     border-color: #26354a !important;
@@ -284,9 +261,6 @@ html.dark-mode .insignia-oscura {
     border: 1px solid #26354a !important;
 }
 
-/* ==========================================================================
-   6. SECCIÓN NOSOTROS (NOSOTROS.HTML) - CERO PARCHES BLANCOS
-   ========================================================================== */
 html.dark-mode .mision-seccion {
     background-color: #090d16 !important;
     background: #090d16 !important;
@@ -398,9 +372,6 @@ html.dark-mode .lider-info .descripcion {
     color: #cbd5e1 !important;
 }
 
-/* ==========================================================================
-   7. SECCIÓN TÉRMINOS Y POLÍTICA DE PRIVACIDAD
-   ========================================================================== */
 html.dark-mode .caja-aviso,
 html.dark-mode .aviso-box,
 html.dark-mode .alert-info {
@@ -423,9 +394,6 @@ html.dark-mode .aviso-box p {
     color: #94a3b8 !important;
 }
 
-/* ==========================================================================
-   8. TIPOGRAFÍA Y TEXTOS GLOBALES
-   ========================================================================== */
 html.dark-mode h1,
 html.dark-mode h2,
 html.dark-mode h3,
@@ -459,9 +427,6 @@ html.dark-mode .conteo-categoria {
     color: #94a3b8 !important;
 }
 
-/* ==========================================================================
-   9. HEADER Y NAVEGACIÓN EN MODO OSCURO
-   ========================================================================== */
 html.dark-mode header,
 html.dark-mode .encabezado,
 html.dark-mode .barra-nav {
@@ -521,9 +486,6 @@ html.dark-mode .encabezado .iconos-encabezado a:hover:not(.btn-modo-oscuro) {
     color: #e67e22 !important;
 }
 
-/* ==========================================================================
-   10. SIDEBAR Y MENÚS LATERALES (ADMIN, VENDEDOR Y PERFIL)
-   ========================================================================== */
 html.dark-mode .barra-lateral,
 html.dark-mode .sidebar,
 html.dark-mode aside {
@@ -565,9 +527,6 @@ html.dark-mode .sidebar-footer {
     background: #090d16 !important;
 }
 
-/* ==========================================================================
-   11. TABLAS, INPUTS Y FORMULARIOS
-   ========================================================================== */
 html.dark-mode table {
     background: #0f172a !important;
     border-color: #26354a !important;
@@ -606,9 +565,6 @@ html.dark-mode textarea:focus {
     box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2) !important;
 }
 
-/* ==========================================================================
-   12. LÍNEAS DIVISORIAS, BOTONES SECUNDARIOS Y PIE DE PÁGINA
-   ========================================================================== */
 html.dark-mode hr,
 html.dark-mode .divisor,
 html.dark-mode [class*="divisor"],
@@ -657,9 +613,6 @@ html.dark-mode .pie-pagina {
     border-top: 1px solid #1e293b !important;
 }
 
-/* ==========================================================================
-   13. FAQ EN MODO OSCURO
-   ========================================================================== */
 html.dark-mode .faq-bg-overlay {
     background: rgba(15, 23, 42, 0.93) !important;
 }
@@ -682,9 +635,98 @@ html.dark-mode .faq-respuesta p {
     color: #94a3b8 !important;
 }
 
-/* ==========================================================================
-   14. HERO WAVE EN MODO OSCURO
-   ========================================================================== */
 html.dark-mode .hero-wave svg path {
     fill: var(--fondo-body) !important;
+}
+
+@media (max-width: 768px) {
+    header, .encabezado, .barra-nav {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        padding: 10px 16px !important;
+        gap: 10px !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    header .logo, .encabezado .logo, .barra-nav .logo {
+        font-size: 1.05rem !important;
+        min-width: 0 !important;
+        flex: 1 1 auto !important;
+        order: 1 !important;
+    }
+    header .iconos-encabezado, .encabezado .iconos-encabezado,
+    header .header-icons, .iconos-cabecera {
+        order: 2 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 12px !important;
+        flex: 0 0 auto !important;
+    }
+    header .barra-busqueda, .encabezado .barra-busqueda,
+    header .search-bar, .barra-nav .barra-busqueda {
+        order: 3 !important;
+        flex: 1 1 100% !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        margin: 0 !important;
+        box-sizing: border-box !important;
+    }
+    header nav, .encabezado nav, .barra-nav nav {
+        order: 4 !important;
+        width: 100% !important;
+        display: flex !important;
+        justify-content: flex-start !important;
+        gap: 14px !important;
+        overflow-x: auto !important;
+        padding: 4px 0 2px 0 !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    header nav::-webkit-scrollbar, .encabezado nav::-webkit-scrollbar, .barra-nav nav::-webkit-scrollbar {
+        display: none !important;
+    }
+    header nav a, .encabezado nav a, .barra-nav nav a {
+        white-space: nowrap !important;
+        font-size: 0.88rem !important;
+        padding: 4px 6px !important;
+    }
+    footer {
+        padding: 2rem 1rem 1rem !important;
+    }
+    footer .pie-superior, footer .footer-top, footer .parte-superior-pie {
+        grid-template-columns: 1fr 1fr !important;
+        gap: 1.5rem !important;
+    }
+}
+
+@media (max-width: 480px) {
+    header, .encabezado, .barra-nav {
+        padding: 8px 12px !important;
+        gap: 8px !important;
+    }
+    header .logo, .encabezado .logo, .barra-nav .logo {
+        font-size: 0.98rem !important;
+    }
+    header nav a, .encabezado nav a, .barra-nav nav a {
+        font-size: 0.82rem !important;
+    }
+    footer .pie-superior, footer .footer-top, footer .parte-superior-pie {
+        grid-template-columns: 1fr !important;
+        text-align: center !important;
+    }
+    footer .columna-contacto .iconos-sociales, footer .contact-col .social-icons, footer .col-contacto .iconos-sociales {
+        justify-content: center !important;
+    }
+    footer .formulario-boletin, footer .newsletter-form, footer .boletin-form {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
+    footer .formulario-boletin input, footer .formulario-boletin button {
+        width: 100% !important;
+        max-width: 100% !important;
+        border-radius: 4px !important;
+        margin-bottom: 6px !important;
+    }
 }

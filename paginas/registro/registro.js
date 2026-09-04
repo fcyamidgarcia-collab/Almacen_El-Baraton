@@ -1,5 +1,5 @@
 // =======================================================
-// REGISTRO SCRIPT - ALMACEN EL BARATON (VALIDACIONES INTEGRADAS)
+// REGISTRO SCRIPT - Almacen El Baraton (VALIDACIONES INTEGRADAS)
 // =======================================================
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -232,7 +232,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 email: correo,
                 password: contrasena,
                 telefono,
-                nit
+                nit,
+                tipo_documento: tipoDoc.toUpperCase(),
+                numero_documento: numDoc,
+                documento_identidad: numDoc
             });
 
             // Notificación visual de éxito en el botón antes de redirigir

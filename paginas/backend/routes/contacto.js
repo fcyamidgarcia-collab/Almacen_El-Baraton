@@ -21,7 +21,7 @@ router.get('/', async (req, res) => {
 // POST /api/contacto - Guardar un nuevo mensaje de contacto
 router.post('/', async (req, res) => {
     try {
-        const { nombre_completo, nombre, email, telefono, asunto, mensaje } = req.body;
+        const { id_usuario, nombre_completo, nombre, email, telefono, asunto, mensaje } = req.body;
         const nombreFinal = (nombre_completo || nombre || '').trim();
 
         if (!nombreFinal || !email || !mensaje) {
@@ -29,9 +29,9 @@ router.post('/', async (req, res) => {
         }
 
         const [resultado] = await pool.query(
-            `INSERT INTO contacto (nombre_completo, email, telefono, asunto, mensaje, fecha_envio)
-             VALUES (?, ?, ?, ?, ?, NOW())`,
-            [nombreFinal, email.trim(), telefono ? telefono.trim() : null, asunto || 'Otro', mensaje.trim()]
+            `INSERT INTO contacto (id_usuario, nombre_completo, email, telefono, asunto, mensaje, fecha_envio)
+             VALUES (?, ?, ?, ?, ?, ?, NOW())`,
+            [id_usuario || null, nombreFinal, email.trim(), telefono ? telefono.trim() : null, asunto || 'Otro', mensaje.trim()]
         );
 
         res.status(201).json({

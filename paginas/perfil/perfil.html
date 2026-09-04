@@ -130,7 +130,8 @@
                             <span class="badge-orden" id="perfil-badge-estado" style="font-size: 0.75rem; background: #ecfdf5; color: #059669; padding: 2px 8px; border-radius: 12px;">Activo</span>
                         </div>
                         <div style="font-size: 0.85rem; color: var(--texto-secundario); display: flex; flex-direction: column; gap: 6px;">
-                            <p><strong style="color: var(--texto-oscuro);">Documento:</strong> <span id="perfil-documento">No registrado</span></p>
+                            <p><strong style="color: var(--texto-oscuro);">Tipo de Documento:</strong> <span id="perfil-tipo-documento">CC</span></p>
+                            <p><strong style="color: var(--texto-oscuro);">Número de Documento:</strong> <span id="perfil-documento">No registrado</span></p>
                             <p><strong style="color: var(--texto-oscuro);">Teléfono:</strong> <span id="perfil-telefono">No registrado</span></p>
                             <p><strong style="color: var(--texto-oscuro);">Dirección:</strong> <span id="perfil-direccion">No registrada</span></p>
                             <p><strong style="color: var(--texto-oscuro);">Ciudad:</strong> <span id="perfil-ciudad">Bogotá D.C.</span></p>
@@ -171,7 +172,7 @@
                                 <i class="fas fa-shield-alt" style="font-size: 1.3rem; color: var(--naranja);"></i>
                                 <h4>Tipo de Cuenta</h4>
                             </div>
-                            <p id="perfil-tipo-cuenta-desc">Cuenta autenticada en Almacén El Baratón con acceso protegido por token.</p>
+                            <p id="perfil-tipo-cuenta-desc">Cuenta autenticada en Almacen El Baraton con acceso protegido por token.</p>
                             <button class="btn-solid-brown w-full mt-16 btn-cerrar-sesion" style="cursor: pointer;"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
                         </div>
                     </div>
@@ -226,7 +227,7 @@
                 <div id="pagos" class="seccion-tab">
                     <div class="perfil-header">
                         <h1>Métodos de Pago Aceptados</h1>
-                        <p>Información y métodos de pago disponibles para tus compras en Almacén El Baratón.</p>
+                        <p>Información y métodos de pago disponibles para tus compras en Almacen El Baraton.</p>
                     </div>
                     <div class="tarjeta-seccion mt-24" style="padding: 24px;">
                         <div class="grid-2-col">
@@ -355,9 +356,21 @@
                     <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Apellido:</label>
                     <input type="text" id="edit-apellido" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;">
                 </div>
-                <div>
-                    <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Documento de Identidad / NIT:</label>
-                    <input type="text" id="edit-documento" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;" placeholder="Ej. 1020304050">
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                    <div>
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Tipo de Documento:</label>
+                        <select id="edit-tipo-doc" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem; background:#fff; font-family:inherit;">
+                            <option value="CC">Cédula de Ciudadanía (CC)</option>
+                            <option value="NIT">NIT (Empresas)</option>
+                            <option value="CE">Cédula de Extranjería (CE)</option>
+                            <option value="TI">Tarjeta de Identidad (TI)</option>
+                            <option value="PAS">Pasaporte (PAS)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Número de Documento / NIT:</label>
+                        <input type="text" id="edit-documento" style="width:100%; padding:9px 12px; border:1px solid #cbd5e1; border-radius:6px; font-size:0.9rem;" placeholder="Ej. 1020304050">
+                    </div>
                 </div>
                 <div>
                     <label style="display:block; font-size:0.85rem; font-weight:600; margin-bottom:4px; color:#334155;">Teléfono / Celular:</label>

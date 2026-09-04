@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const campos = {
         nombre: document.getElementById('nombre'),
         email: document.getElementById('email'),
+        tipo_documento: document.getElementById('tipo_documento'),
         documento: document.getElementById('documento'),
         telefono: document.getElementById('telefono'),
         direccion: document.getElementById('direccion'),
@@ -61,7 +62,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const clienteData = await API.getClientePorUsuario(user.id_usuario);
         if (clienteData) {
-            if (campos.documento && clienteData.documento_identidad) campos.documento.value = clienteData.documento_identidad;
+            let rawDoc = clienteData.documento_identidad || '';
+            let tipoDoc = clienteData.tipo_documento || 'CC';
+            let numDoc = rawDoc;
+            if (rawDoc && rawDoc.includes(':')) {
+                const p = rawDoc.split(':');
+                tipoDoc = p[0].trim().toUpperCase();
+                numDoc = p.slice(1).join(':').trim();
+            }
+            if (campos.tipo_documento) campos.tipo_documento.value = tipoDoc;
+            if (campos.documento) campos.documento.value = numDoc;
             if (campos.telefono && clienteData.telefono) campos.telefono.value = clienteData.telefono;
             if (campos.direccion && clienteData.direccion) campos.direccion.value = clienteData.direccion;
             if (campos.ciudad && clienteData.ciudad) campos.ciudad.value = clienteData.ciudad;
@@ -178,6 +188,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const nombre = campos.nombre?.value.trim() || '';
         const email = campos.email?.value.trim() || '';
+        const tipoDoc = campos.tipo_documento?.value || 'CC';
         const documento = campos.documento?.value.trim() || '';
         const telefono = campos.telefono?.value.trim() || '';
         const direccion = campos.direccion?.value.trim() || '';
@@ -308,11 +319,13 @@ document.addEventListener('DOMContentLoaded', async () => {
             const datosPedido = {
                 id_usuario: user.id_usuario,
                 id_cliente,
-                documento_identidad: documento || null,
+                tipo_documento: tipoDoc,
+                documento_identidad: documento ? `${tipoDoc}: ${documento}` : null,
+                numero_documento: documento || null,
                 items,
                 direccion_entrega: `${direccion}, ${ciudad}`,
                 metodo_pago: metodoPago,
-                observaciones: `Pedido web | Cliente: ${nombre} | Tel: ${telefono}${nombreArchivoComprobante ? ` | Comprobante: ${nombreArchivoComprobante}` : ''}`
+                observaciones: `Pedido web | Cliente: ${nombre} | Doc: ${tipoDoc} ${documento} | Tel: ${telefono}${nombreArchivoComprobante ? ` | Comprobante: ${nombreArchivoComprobante}` : ''}`
             };
 
             const resultado = await API.crearPedido(datosPedido);

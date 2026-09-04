@@ -36,7 +36,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         const stockBajo = stock > 0 && stock < 10;
 
         // Título de la página
-        document.title = `${p.nombre_producto} - El Baratón`;
+        document.title = `${p.nombre_producto} - Almacen El Baraton`;
 
         // Breadcrumb
         const breadCat = document.getElementById('bread-categoria');
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         // Marca / Proveedor
         const brandEl = document.getElementById('prod-marca');
-        if (brandEl) brandEl.textContent = (p.nombre_proveedor || 'EL BARATÓN').toUpperCase();
+        if (brandEl) brandEl.textContent = (p.nombre_proveedor || 'Almacen El Baraton').toUpperCase();
 
         // Título
         const tituloEl = document.getElementById('prod-titulo');
@@ -265,7 +265,7 @@ document.addEventListener('DOMContentLoaded', async () => {
                                 `<i class="fas fa-tools fa-3x" style="color:#cbd5e1"></i>`}
                             </div>
                             <h4 class="fbt-title">${r.nombre_producto}</h4>
-                            <span class="fbt-brand">${(r.nombre_proveedor || 'El Baratón').toUpperCase()}</span>
+                            <span class="fbt-brand">${(r.nombre_proveedor || 'Almacen El Baraton').toUpperCase()}</span>
                             <div class="fbt-price">${fmt(r.precio)}</div>
                         `;
                         card.addEventListener('click', () => {

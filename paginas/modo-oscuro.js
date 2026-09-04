@@ -1,6 +1,6 @@
 /**
  * SISTEMA GLOBAL DE MODO OSCURO (DARK MODE)
- * Almacen El Baraton - El Baratón
+ * Almacen El Baraton - Almacen El Baraton
  */
 
 (function () {

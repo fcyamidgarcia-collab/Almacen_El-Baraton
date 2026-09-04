@@ -51,7 +51,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Reporte de Almacén El Baratón</title>
+    <title>Reporte de Almacen El Baraton</title>
     <style>
         @page { size: A4; margin: 16mm; }
         * { box-sizing: border-box; }
@@ -75,7 +75,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 </head>
 <body>
     <header>
-        <h1>Industrial Supply Co. | Almacén El Baratón</h1>
+        <h1>Almacen El Baraton</h1>
         <p>Reporte consolidado de ventas e inventario</p>
         <p class="fecha">Generado: ${new Date().toLocaleString('es-CO')}</p>
     </header>
@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     ${stockBajo ? `<table><thead><tr><th>Producto</th><th>Disponible</th><th>Mínimo</th></tr></thead><tbody>${stockBajo}</tbody></table>` : '<p class="vacio">No hay alertas de stock bajo.</p>'}
     <h2>Inventario actual</h2>
     ${inventarioRows ? `<table><thead><tr><th>Producto</th><th>Categoría</th><th>Disponible</th><th>Mínimo</th><th>Estado</th></tr></thead><tbody>${inventarioRows}</tbody></table>` : '<p class="vacio">No hay datos de inventario.</p>'}
-    <footer>Documento generado desde el panel administrativo de Almacén El Baratón.</footer>
+    <footer>Documento generado desde el panel administrativo de Almacen El Baraton.</footer>
 </body>
 </html>`);
         ventana.document.close();

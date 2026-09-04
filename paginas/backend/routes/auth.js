@@ -6,6 +6,13 @@ const jwt = require('jsonwebtoken');
 
 const JWT_SECRET = process.env.JWT_SECRET || 'almacen_el_baraton_secret_key_2026';
 
+async function hasColumn(table, column) {
+    try {
+        const [rows] = await pool.query(`SHOW COLUMNS FROM \`${table}\` LIKE ?`, [column]);
+        return rows.length > 0;
+    } catch { return false; }
+}
+
 // POST /api/auth/login
 router.post('/login', async (req, res) => {
     try {
@@ -93,7 +100,7 @@ router.post('/login', async (req, res) => {
 // POST /api/auth/registro
 router.post('/registro', async (req, res) => {
     try {
-        const { nombre, email, password, telefono, direccion, ciudad, nit } = req.body;
+        const { nombre, email, password, telefono, direccion, ciudad, nit, tipo_documento, numero_documento, documento_identidad } = req.body;
 
         if (!nombre || !email || !password) {
             return res.status(400).json({ error: 'Nombre, correo y contraseña son obligatorios' });
@@ -111,20 +118,41 @@ router.post('/registro', async (req, res) => {
         const pApellido = partesNombre.slice(1).join(' ') || '';
 
         // Rol 3 = cliente
-        const [resultUser] = await pool.query(
-            `INSERT INTO usuario (id_rol, nombre, apellido, correo, contrasena, fecha_registro, estado)
-             VALUES (3, ?, ?, ?, ?, NOW(), 'activo')`,
-            [pNombre, pApellido, email.trim(), contrasenaHash]
-        );
+        const hasTipoDocUser = await hasColumn('usuario', 'tipo_documento');
+        let resultUser;
+        if (hasTipoDocUser && tipo_documento) {
+            [resultUser] = await pool.query(
+                `INSERT INTO usuario (id_rol, nombre, apellido, correo, contrasena, tipo_documento, fecha_registro, estado)
+                 VALUES (3, ?, ?, ?, ?, ?, NOW(), 'activo')`,
+                [pNombre, pApellido, email.trim(), contrasenaHash, tipo_documento]
+            );
+        } else {
+            [resultUser] = await pool.query(
+                `INSERT INTO usuario (id_rol, nombre, apellido, correo, contrasena, fecha_registro, estado)
+                 VALUES (3, ?, ?, ?, ?, NOW(), 'activo')`,
+                [pNombre, pApellido, email.trim(), contrasenaHash]
+            );
+        }
 
         const id_usuario = resultUser.insertId;
 
         // Registrar en tabla cliente
-        const [resCli] = await pool.query(
-            `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
-             VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 'activo')`,
-            [id_usuario, pNombre, pApellido, nit || null, telefono || null, direccion || null, ciudad || 'Bogotá']
-        );
+        const docValor = nit || (tipo_documento && numero_documento ? `${tipo_documento}: ${numero_documento}` : documento_identidad) || null;
+        const hasTipoDocCli = await hasColumn('cliente', 'tipo_documento');
+        let resCli;
+        if (hasTipoDocCli && tipo_documento) {
+            [resCli] = await pool.query(
+                `INSERT INTO cliente (id_usuario, nombre, apellido, tipo_documento, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'activo')`,
+                [id_usuario, pNombre, pApellido, tipo_documento, docValor, telefono || null, direccion || null, ciudad || 'Bogotá']
+            );
+        } else {
+            [resCli] = await pool.query(
+                `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
+                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 'activo')`,
+                [id_usuario, pNombre, pApellido, docValor, telefono || null, direccion || null, ciudad || 'Bogotá']
+            );
+        }
 
         const token = jwt.sign(
             { id_usuario, correo: email, rol: 'cliente' },
@@ -164,7 +192,8 @@ router.get('/perfil/:id_usuario', async (req, res) => {
     try {
         const { id_usuario } = req.params;
         const [users] = await pool.query(
-            `SELECT u.id_usuario, u.nombre, u.apellido, u.correo, u.fecha_registro, u.estado, r.nombre_rol
+            `SELECT u.id_usuario, u.nombre, u.apellido, u.tipo_documento, u.documento_identidad,
+                    u.correo, u.fecha_registro, u.estado, r.nombre_rol
              FROM usuario u
              LEFT JOIN rol r ON u.id_rol = r.id_rol
              WHERE u.id_usuario = ? LIMIT 1`,
@@ -186,32 +215,65 @@ router.get('/perfil/:id_usuario', async (req, res) => {
 router.put('/perfil/:id_usuario', async (req, res) => {
     try {
         const { id_usuario } = req.params;
-        const { nombre, apellido, telefono, direccion, ciudad, documento_identidad } = req.body;
+        const { nombre, apellido, telefono, direccion, ciudad, documento_identidad, tipo_documento, numero_documento } = req.body;
 
         if (!nombre) {
             return res.status(400).json({ error: 'El nombre es obligatorio' });
         }
 
-        // Actualizar tabla usuario
-        await pool.query(
-            'UPDATE usuario SET nombre = ?, apellido = ? WHERE id_usuario = ?',
-            [nombre.trim(), apellido ? apellido.trim() : '', id_usuario]
-        );
+        const hasTipoDocUser = await hasColumn('usuario', 'tipo_documento');
+        const hasDocUser = await hasColumn('usuario', 'documento_identidad');
+        const numDocLimpio = numero_documento || (documento_identidad && documento_identidad.includes(':') ? documento_identidad.split(':')[1].trim() : documento_identidad);
+
+        let updateUsrSql = 'UPDATE usuario SET nombre = ?, apellido = ?';
+        const usrParams = [nombre.trim(), apellido ? apellido.trim() : ''];
+
+        if (hasTipoDocUser && tipo_documento) {
+            updateUsrSql += ', tipo_documento = ?';
+            usrParams.push(tipo_documento);
+        }
+        if (hasDocUser && numDocLimpio) {
+            updateUsrSql += ', documento_identidad = ?';
+            usrParams.push(numDocLimpio);
+        }
+        updateUsrSql += ' WHERE id_usuario = ?';
+        usrParams.push(id_usuario);
+
+        await pool.query(updateUsrSql, usrParams);
+
+        const docFinal = documento_identidad || (tipo_documento && numero_documento ? `${tipo_documento}: ${numero_documento}` : null);
+        const hasTipoDocCli = await hasColumn('cliente', 'tipo_documento');
 
         // Actualizar o insertar tabla cliente
         const [cliRows] = await pool.query('SELECT id_cliente FROM cliente WHERE id_usuario = ? LIMIT 1', [id_usuario]);
         if (cliRows.length > 0) {
-            await pool.query(
-                `UPDATE cliente SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, ciudad = ?, documento_identidad = COALESCE(?, documento_identidad)
-                 WHERE id_usuario = ?`,
-                [nombre.trim(), apellido ? apellido.trim() : '', telefono || null, direccion || null, ciudad || 'Bogotá', documento_identidad || null, id_usuario]
-            );
+            if (hasTipoDocCli && tipo_documento) {
+                await pool.query(
+                    `UPDATE cliente SET nombre = ?, apellido = ?, tipo_documento = ?, telefono = ?, direccion = ?, ciudad = ?, documento_identidad = COALESCE(?, documento_identidad)
+                     WHERE id_usuario = ?`,
+                    [nombre.trim(), apellido ? apellido.trim() : '', tipo_documento, telefono || null, direccion || null, ciudad || 'Bogotá', docFinal, id_usuario]
+                );
+            } else {
+                await pool.query(
+                    `UPDATE cliente SET nombre = ?, apellido = ?, telefono = ?, direccion = ?, ciudad = ?, documento_identidad = COALESCE(?, documento_identidad)
+                     WHERE id_usuario = ?`,
+                    [nombre.trim(), apellido ? apellido.trim() : '', telefono || null, direccion || null, ciudad || 'Bogotá', docFinal, id_usuario]
+                );
+            }
         } else {
-            await pool.query(
-                `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
-                 VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 'activo')`,
-                [id_usuario, nombre.trim(), apellido ? apellido.trim() : '', documento_identidad || `CC-${Date.now().toString().slice(-8)}`, telefono || null, direccion || null, ciudad || 'Bogotá']
-            );
+            if (hasTipoDocCli && tipo_documento) {
+                await pool.query(
+                    `INSERT INTO cliente (id_usuario, nombre, apellido, tipo_documento, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW(), 'activo')`,
+                    [id_usuario, nombre.trim(), apellido ? apellido.trim() : '', tipo_documento, docFinal || `CC-${Date.now().toString().slice(-8)}`, telefono || null, direccion || null, ciudad || 'Bogotá']
+                );
+            } else {
+                await pool.query(
+                    `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
+                     VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), 'activo')`,
+                    [id_usuario, nombre.trim(), apellido ? apellido.trim() : '', docFinal || `CC-${Date.now().toString().slice(-8)}`, telefono || null, direccion || null, ciudad || 'Bogotá']
+                );
+            }
         }
 
         res.json({ mensaje: 'Perfil actualizado exitosamente' });

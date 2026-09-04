@@ -71,20 +71,28 @@ router.get('/:id', async (req, res) => {
     }
 });
 
+async function hasColumn(table, column) {
+    try {
+        const [rows] = await pool.query(`SHOW COLUMNS FROM \`${table}\` LIKE ?`, [column]);
+        return rows.length > 0;
+    } catch { return false; }
+}
+
 // POST /api/pedidos - Crear pedido transaccional completo
 router.post('/', async (req, res) => {
     const conn = await pool.getConnection();
     try {
         await conn.beginTransaction();
 
-        let { id_cliente, id_usuario, items, direccion_entrega, metodo_pago, observaciones, documento_identidad } = req.body;
+        let { id_cliente, id_usuario, items, direccion_entrega, metodo_pago, observaciones, documento_identidad, tipo_documento, numero_documento } = req.body;
 
         if (!items || items.length === 0) {
             await conn.rollback();
             return res.status(400).json({ error: 'Se requieren items para el pedido' });
         }
 
-        const docIdentidad = documento_identidad || `CC-${Date.now().toString().slice(-8)}`;
+        const docIdentidad = documento_identidad || (tipo_documento && numero_documento ? `${tipo_documento}: ${numero_documento}` : `CC-${Date.now().toString().slice(-8)}`);
+        const hasTipoDocCli = await hasColumn('cliente', 'tipo_documento');
 
         // Si no hay id_cliente pero sí id_usuario, buscarlo o crearlo automáticamente
         if (!id_cliente && id_usuario) {
@@ -96,11 +104,20 @@ router.post('/', async (req, res) => {
                 const [usrRows] = await conn.query('SELECT * FROM usuario WHERE id_usuario = ? LIMIT 1', [id_usuario]);
                 if (usrRows.length > 0) {
                     const u = usrRows[0];
-                    const [resCli] = await conn.query(
-                        `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
-                         VALUES (?, ?, ?, ?, ?, ?, 'Bogotá', NOW(), 'activo')`,
-                        [id_usuario, u.nombre || 'Cliente', u.apellido || 'General', docIdentidad, u.telefono || null, direccion_entrega || '']
-                    );
+                    let resCli;
+                    if (hasTipoDocCli && tipo_documento) {
+                        [resCli] = await conn.query(
+                            `INSERT INTO cliente (id_usuario, nombre, apellido, tipo_documento, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
+                             VALUES (?, ?, ?, ?, ?, ?, ?, 'Bogotá', NOW(), 'activo')`,
+                            [id_usuario, u.nombre || 'Cliente', u.apellido || 'General', tipo_documento, docIdentidad, u.telefono || null, direccion_entrega || '']
+                        );
+                    } else {
+                        [resCli] = await conn.query(
+                            `INSERT INTO cliente (id_usuario, nombre, apellido, documento_identidad, telefono, direccion, ciudad, fecha_registro, estado)
+                             VALUES (?, ?, ?, ?, ?, ?, 'Bogotá', NOW(), 'activo')`,
+                            [id_usuario, u.nombre || 'Cliente', u.apellido || 'General', docIdentidad, u.telefono || null, direccion_entrega || '']
+                        );
+                    }
                     id_cliente = resCli.insertId;
                 }
             }

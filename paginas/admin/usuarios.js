@@ -35,10 +35,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         datos.forEach(u => {
             const tr = document.createElement('tr');
             const esActivo = u.estado === 'activo';
-            const rolNombre = u.nombre_rol || ROLES[u.id_rol] || 'cliente';
-            const fecha = u.fecha_registro ? new Date(u.fecha_registro).toLocaleDateString('es-CO') : 'N/A';
+            let rawDoc = u.documento_identidad || u.documento || '';
+            let tipoDoc = u.tipo_documento || 'CC';
+            let numDoc = rawDoc;
+            if (rawDoc && rawDoc.includes(':')) {
+                const p = rawDoc.split(':');
+                tipoDoc = p[0].trim().toUpperCase();
+                numDoc = p.slice(1).join(':').trim();
+            }
+            const docBadge = numDoc ? `<code>${tipoDoc}: ${numDoc}</code>` : '<span style="color:#94a3b8">N/A</span>';
+
             tr.innerHTML = `
                 <td><span class="nombre-usuario-tabla">${u.nombre} ${u.apellido || ''}</span></td>
+                <td>${docBadge}</td>
                 <td>${u.correo}</td>
                 <td><span class="insignia-rol">${rolNombre}</span></td>
                 <td>${fecha}</td>
@@ -62,9 +71,21 @@ document.addEventListener('DOMContentLoaded', async () => {
                 const id = parseInt(btn.getAttribute('data-id'));
                 const usr = datos.find(u => u.id_usuario === id);
                 if (!usr) return;
-                modoEdicion = id;
+                let rawDoc = usr.documento_identidad || usr.documento || '';
+                let tipoDoc = usr.tipo_documento || 'CC';
+                let numDoc = rawDoc;
+                if (rawDoc && rawDoc.includes(':')) {
+                    const p = rawDoc.split(':');
+                    tipoDoc = p[0].trim().toUpperCase();
+                    numDoc = p.slice(1).join(':').trim();
+                }
+
                 document.getElementById('usrNombre').value = usr.nombre || '';
                 document.getElementById('usrApellido').value = usr.apellido || '';
+                const selTipo = document.getElementById('usrTipoDoc');
+                if (selTipo) selTipo.value = tipoDoc;
+                const inDoc = document.getElementById('usrDocumento');
+                if (inDoc) inDoc.value = numDoc;
                 document.getElementById('usrEmail').value = usr.correo || '';
                 document.getElementById('usrPassword').value = '';
                 document.getElementById('usrRol').value = usr.id_rol || 3;
@@ -121,7 +142,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (sig && sig.classList.contains('error-usr-msg')) sig.remove();
     }
 
-    ['usrNombre', 'usrApellido', 'usrEmail', 'usrPassword', 'usrTelefono'].forEach(id => {
+    ['usrNombre', 'usrApellido', 'usrTipoDoc', 'usrDocumento', 'usrEmail', 'usrPassword', 'usrTelefono'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.addEventListener('input', () => limpiarErrorUsr(el));
     });
@@ -129,7 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     btnNuevo?.addEventListener('click', () => {
         modoEdicion = null;
         form.reset();
-        ['usrNombre', 'usrApellido', 'usrEmail', 'usrPassword', 'usrTelefono'].forEach(id => {
+        ['usrNombre', 'usrApellido', 'usrTipoDoc', 'usrDocumento', 'usrEmail', 'usrPassword', 'usrTelefono'].forEach(id => {
             const el = document.getElementById(id);
             if (el) limpiarErrorUsr(el);
         });
@@ -145,6 +166,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const elNombre = document.getElementById('usrNombre');
         const elApellido = document.getElementById('usrApellido');
+        const elTipoDoc = document.getElementById('usrTipoDoc');
+        const elDoc = document.getElementById('usrDocumento');
         const elEmail = document.getElementById('usrEmail');
         const elPass = document.getElementById('usrPassword');
         const elRol = document.getElementById('usrRol');
@@ -152,6 +175,8 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const nombre = elNombre.value.trim();
         const apellido = elApellido?.value.trim() || '';
+        const tipoDoc = elTipoDoc ? elTipoDoc.value : 'CC';
+        const documento = elDoc ? elDoc.value.trim() : '';
         const correo = elEmail.value.trim();
         const contrasena = elPass?.value.trim() || '';
         const id_rol = parseInt(elRol?.value) || 3;
@@ -194,7 +219,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         if (!esValido) return;
 
-        const payload = { nombre, apellido, correo, id_rol, estado: 'activo' };
+        const payload = {
+            nombre,
+            apellido,
+            correo,
+            id_rol,
+            estado: 'activo',
+            tipo_documento: tipoDoc,
+            documento_identidad: documento ? `${tipoDoc}: ${documento}` : null,
+            numero_documento: documento || null
+        };
         if (telefono) payload.telefono = telefono;
         if (contrasena) payload.contrasena = contrasena;
 

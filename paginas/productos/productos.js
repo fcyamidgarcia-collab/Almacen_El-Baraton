@@ -296,7 +296,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             else if (stockBajo) insigniasHTML = '<span class="insignia insignia-naranja">Pocas Existencias</span>';
             else insigniasHTML = '<span class="insignia insignia-oscura">En Existencia</span>';
 
-            const proveedor = (p.nombre_proveedor || 'EL BARATÓN').toUpperCase();
+            const proveedor = (p.nombre_proveedor || 'Almacen El Baraton').toUpperCase();
             const imagenHTML = p.imagen
                 ? `<img src="${p.imagen}" alt="${p.nombre_producto}" class="imagen-producto" style="height:150px;object-fit:contain;width:100%">`
                 : `<div style="height:150px;display:flex;align-items:center;justify-content:center;font-size:3.5rem;color:#cbd5e1;background:#f8fafc;border-radius:8px">
